@@ -1,0 +1,13 @@
+<Project>
+
+  <PropertyGroup>
+    <AngleSharpVersion>0.9.9</AngleSharpVersion>
+    <AspNetCoreVersion>2.0.0</AspNetCoreVersion>
+    <IdentityModelCoreVersion>2.1.4</IdentityModelCoreVersion>
+    <JetBrainsVersion>11.0.0</JetBrainsVersion>
+    <JsonNetVersion>10.0.3</JsonNetVersion>
+    <NetStandardImplicitPackageVersion>2.0.0</NetStandardImplicitPackageVersion>
+    <RuntimeFrameworkVersion>2.0.0</RuntimeFrameworkVersion>
+  </PropertyGroup>
+
+</Project>
