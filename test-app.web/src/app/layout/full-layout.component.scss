@@ -1,3 +1,23 @@
+
+.menu {
+  .loading {
+    i {
+      color: white;
+    }
+  }
+
+  .menu__right {
+    display: table-row;
+
+    li {
+      display: table-cell;
+      height: 40px;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
+}
+
 .statistic {
 
   .statistic__item {

@@ -5,7 +5,7 @@
     </button>
     <a class="navbar-brand" href="#">Each CASES</a>
 
-    <div class="collapse navbar-collapse" id="navbarsExampleContainer">
+    <div class="collapse navbar-collapse menu" id="navbarsExampleContainer">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
           <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
@@ -14,9 +14,22 @@
           <a class="nav-link" href="#">Link</a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-md-0">
-        <button (click)="loginSteam()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Войти через STEAM</button>
+      <form *ngIf="currentUser == null" class="form-inline my-2 my-md-0">
+        <button *ngIf="!isLoadingLogin" (click)="loginSteam()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Войти через STEAM</button>
+        <div *ngIf="isLoadingLogin" class="loading">
+            <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
+          <span class="sr-only">Loading...</span>
+        </div>
       </form>
+      <ul *ngIf="currentUser != null" class="navbar-nav pull-right menu__right">
+        <li class="nav-item active">
+            <img style="float:left; width:36px; padding-right: 6px;" [src]="currentUser.steamAvatar" alt="">
+            <h5 style="color: white; float: right;">{{ currentUser.userName }}</h5>
+        </li>
+        <li class="nav-item">
+            <button (click)="logout()" type="button" class="btn btn-link">Выход</button>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>

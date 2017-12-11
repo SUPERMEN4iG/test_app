@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -7,11 +8,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using test_app.api.Models;
 using test_app.api.Models.AccountViewModels;
@@ -296,7 +299,9 @@ namespace test_app.api.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
-                return View("Close");
+
+                //await GenerateToken(info);
+                return PartialView("Close", GenerateToken(info));
             }
             if (result.IsLockedOut)
             {
@@ -311,6 +316,40 @@ namespace test_app.api.Controllers
                 return RedirectToAction("ExternalLoginConfirmation");
                 //return View("ExternalLogin", new ExternalLoginViewModel { Email = email });
             }
+        }
+
+        private AuthResponseModel GenerateToken(ExternalLoginInfo info)
+        {
+            var now = DateTime.UtcNow;
+            var steamId = new Uri(info.ProviderKey).Segments.Last();
+
+            List<Claim> claims = new List<Claim>() {
+                new Claim(JwtRegisteredClaimNames.Sub, steamId),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, steamId)
+            };
+
+            ClaimsIdentity claimsIdentity =
+                new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
+                    ClaimsIdentity.DefaultRoleClaimType);
+
+            // создаем JWT-токен
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                notBefore: now,
+                claims: claimsIdentity.Claims,
+                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            var response = new AuthResponseModel
+            {
+                Token = encodedJwt,
+                Username = info.Principal.Identity.Name
+            };
+
+            // сериализация ответа
+            return response;
         }
 
         [HttpGet]
@@ -343,7 +382,7 @@ namespace test_app.api.Controllers
                 {
                     Id = steamId,
                     UserName = player.PersonaName,
-                    Email = null,
+                    Email = player.PersonaName,
                     SteamId = player.SteamId,
                     SteamUsername = player.PersonaName,
                     SteamAvatar = player.AvatarMedium,
@@ -358,7 +397,8 @@ namespace test_app.api.Controllers
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-                        return View("Close");
+                        //await GenerateToken(info);
+                        return PartialView("Close", GenerateToken(info));
                     }
                 }
                 AddErrors(result);
