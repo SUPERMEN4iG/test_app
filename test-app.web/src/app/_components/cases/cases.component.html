@@ -1,0 +1,12 @@
+<div *ngFor="let caseCategory of cases">
+  <h2>{{ caseCategory.category }}</h2>
+  <hr>
+
+  <div *ngFor="let case of caseCategory.cases" class="card" style="width: 20rem;">
+    <img class="card-img-top" [src]="case.image" alt="Card image cap">
+    <div class="card-block">
+      <h4 class="card-title">{{ case.staticName }}</h4>
+      <button [routerLink]="['../case', case.staticName]" class="btn btn-primary">${{ case.price }} USD</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+.lastwinners {
+  .lastwinners_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+
+    li { float: left; }
+
+    .lastwinners__item {
+      float: left;
+      width: 120px;
+      height: 100px;
+      background: rgba(45,43,46,0.7);
+      cursor: pointer;
+
+      .block {
+        display: flex;
+        width: 100%;
+        height: 100%;
+
+        img {
+          margin-left: auto;
+          margin-right: auto;
+          margin-top: auto;
+          margin-bottom: auto;
+        }
+      }
+
+      .block_caption {
+        background:rgba(0, 0, 0, 0.5);
+        width: 120px;
+        height: 100px;
+
+        display: none;
+        max-width: 120px;
+        position: absolute;
+        top: 0;
+        z-index: 999;
+        text-align: left;
+        padding: 0.5em;
+        font-weight: bold;
+        color: white;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
+
+      &:hover .block_caption {
+        display: block;
+      }
+    }
+  }
+}

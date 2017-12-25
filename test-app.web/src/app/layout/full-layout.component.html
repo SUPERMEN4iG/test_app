@@ -3,7 +3,7 @@
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleContainer" aria-controls="navbarsExampleContainer" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="#">Each CASES</a>
+    <a class="navbar-brand" [routerLink]="['/']">Each CASES</a>
 
     <div class="collapse navbar-collapse menu" id="navbarsExampleContainer">
       <ul class="navbar-nav mr-auto">
@@ -14,6 +14,7 @@
           <a class="nav-link" href="#">Link</a>
         </li>
       </ul>
+
       <form *ngIf="currentUser == null" class="form-inline my-2 my-md-0">
         <button *ngIf="!isLoadingLogin" (click)="loginSteam()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Войти через STEAM</button>
         <div *ngIf="isLoadingLogin" class="loading">
@@ -22,12 +23,18 @@
         </div>
       </form>
       <ul *ngIf="currentUser != null" class="navbar-nav pull-right menu__right">
-        <li class="nav-item active">
+        <li class="nav-item active" style="color: white;">
             <img style="float:left; width:36px; padding-right: 6px;" [src]="currentUser.steamAvatar" alt="">
-            <h5 style="color: white; float: right;">{{ currentUser.userName }}</h5>
-        </li>
-        <li class="nav-item">
-            <button (click)="logout()" type="button" class="btn btn-link">Выход</button>
+            <a class="btn-group" ngbDropdown style="cursor: pointer;">
+                <h5 style="float: right;" ngbDropdownToggle>{{ currentUser.userName }}</h5>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <button class="dropdown-item">{{ currentUser.balance }}$</button>
+                    <button [routerLink]="['/profile', currentUser.id]" class="dropdown-item">Profile</button>
+                    <button class="dropdown-item">Add funds</button>
+                    <div class="dropdown-divider"></div>
+                    <button (click)="logout();" class="dropdown-item">Logout</button>
+                </div>
+            </a>
         </li>
       </ul>
     </div>
@@ -72,16 +79,6 @@
 </nav>
 
 <div class="container">
+  <app-lastwinners></app-lastwinners>
   <router-outlet></router-outlet>
-
-  <div class="jumbotron">
-    <div class="col-sm-8 mx-auto">
-      <h1>Navbar examples</h1>
-      <p>This example is a quick exercise to illustrate how the navbar and its contents work. Some navbars extend the width of the viewport, others are confined within a <code>.container</code>. For positioning of navbars, checkout the <a href="../navbar-top/">top</a> and <a href="../navbar-top-fixed/">fixed top</a> examples.</p>
-      <p>At the smallest breakpoint, the collapse plugin is used to hide the links and show a menu button to toggle the collapsed content.</p>
-      <p>
-        <a class="btn btn-primary" href="../../components/navbar/" role="button">View navbar docs »</a>
-      </p>
-    </div>
-  </div>
 </div>

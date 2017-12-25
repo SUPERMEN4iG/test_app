@@ -15,9 +15,74 @@ namespace test_app.api.Data
         {
         }
 
+        public DbSet<Application> Applications { get; set; }
+
+        public DbSet<Case> Cases { get; set; }
+
+        public DbSet<Skin> Skins { get; set; }
+
+        public DbSet<CaseCategory> CaseCategories { get; set; }
+
+        public DbSet<StackCase> StackCases { get; set; }
+
+        public DbSet<StackCaseSkin> StackCaseSkins { get; set; }
+
+        public DbSet<Winner> Winners { get; set; }
+
+        public DbSet<Bot> Bots { get; set; }
+
+        public DbSet<CaseFaultLog> CaseFaultLogs { get; set; }
+
+        public DbSet<CaseSellLog> CaseSellLogs { get; set; }
+
+        public DbSet<CaseDiscount> CaseDiscounts { get; set; }
+
+        public DbSet<BotTradeoffer> BotTradeoffers { get; set; }
+
+        public DbSet<PurshaseBotQueue> PurshaseBotQueues { get; set; }
+
+        public DbSet<CasesDrop> CasesDrops { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Skin>()
+                .HasIndex(p => new { p.Id, p.MarketHashName }).IsUnique();
+
+            builder.Entity<CasesDrop>()
+                .HasKey(t => new { t.CaseId, t.SkinId });
+
+            builder.Entity<CasesDrop>()
+                .HasOne(cs => cs.Skin)
+                .WithMany(c => c.CaseSkins)
+                .HasForeignKey(cs => cs.SkinId);
+
+            builder.Entity<CasesDrop>()
+                .HasOne(cs => cs.Skin)
+                .WithMany(c => c.CaseSkins)
+                .HasForeignKey(cs => cs.SkinId);
+
+            builder.Entity<CasesDrop>()
+                .Property(x => x.Chance).HasColumnType("decimal(9, 8)");
+
+            builder.Entity<StackCaseSkin>()
+                .HasKey(t => new { t.StackCaseId, t.SkinId });
+
+            builder.Entity<StackCaseSkin>()
+                .HasOne(cs => cs.Skin)
+                .WithMany(c => c.StackCaseSkins)
+                .HasForeignKey(cs => cs.SkinId);
+
+            builder.Entity<StackCaseSkin>()
+                .HasOne(cs => cs.Skin)
+                .WithMany(c => c.StackCaseSkins)
+                .HasForeignKey(cs => cs.SkinId);
+
+            //builder.Entity<PurshaseBotQueue>()
+            //    .HasOne(x => x.Skin)
+            //    .WithOne().HasForeignKey(typeof(Skin), "MarketHashName");
+
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);

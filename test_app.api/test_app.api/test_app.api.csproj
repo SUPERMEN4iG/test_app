@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <Folder Include="Helper\Http\" />
+    <Folder Include="Models\Data\" />
   </ItemGroup>
 
 </Project>

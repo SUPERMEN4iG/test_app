@@ -13,5 +13,6 @@ namespace test_app.api.Models
         public int SteamProfileState { get; set; }
         public string SteamAvatar { get; set; }
         public string SteamUsername { get; set; }
+        public Decimal Balance { get; set; }
     }
 }

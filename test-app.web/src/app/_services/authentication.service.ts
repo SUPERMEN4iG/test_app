@@ -27,24 +27,31 @@ export class AuthenticationService {
     }
 
     getToken() {
-      return this.token;
+      return localStorage.getItem('access_token');
     }
 
-    login(access_token) {
-      this.token = access_token;
-      return this.http.get(`${this.apiEndPoint}getuserdata`)
+    init() {
+      if (this.getToken() != null) {
+        return this.http.get(`${this.apiEndPoint}getuserdata`)
         .map((response: any) => {
           const authData = response;
 
           if (authData && authData.id) {
-            this.token = access_token;
             localStorage.setItem('currentUser', JSON.stringify(authData));
-            localStorage.setItem('access_token', this.token);
             this.currentUser = authData;
             this.currentUser$.next(this.currentUser);
           }
           return authData;
         });
+      } else {
+        return Observable.of(null);
+      }
+    }
+
+    login(access_token) {
+      localStorage.setItem('access_token', access_token);
+
+      return this.init();
         // return this.http.post('/api/authenticate', JSON.stringify({ username, password }))
         //     .map((response: Response) => {
         //         const user = response.json();
@@ -63,6 +70,11 @@ export class AuthenticationService {
 
     isLogIn() {
       return this.currentUser != null;
+    }
+
+    updateUser(property: string, value: any) {
+      this.currentUser[property] = value;
+      this.currentUser$.next(this.currentUser);
     }
 
     logout() {

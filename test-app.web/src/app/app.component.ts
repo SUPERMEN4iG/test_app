@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { AuthenticationService } from './_services/authentication.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +9,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+
+  constructor(private _authService: AuthenticationService) {
+  }
+
+  ngOnInit() {
+    this._authService.init().subscribe((data) => {}, (err) => {});
+  }
 }

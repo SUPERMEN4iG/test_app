@@ -1,0 +1,47 @@
+<div *ngIf="user != null">
+  <div class="row" style="margin-bottom: 20px;">
+      <div class="card col-8">
+          <div class="card-block row">
+            <div class="col-2"><img [src]="user.steamAvatar" alt=""></div>
+            <div class="col-10">
+              <h4 class="card-title">{{ user.email }}</h4>
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Enter you Trade url">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="button">Save</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      <div class="card col-4">
+        <div class="card-block row">
+          <div class="input-group">
+              <input type="text" class="form-control" placeholder="$0.00">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">Pay</button>
+              </span>
+            </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="row">
+    <div class="card col-12">
+      <div class="card-block">
+        <h4 class="text-center">Won items</h4>
+
+        <div class="row">
+            <div class="card col-3" *ngFor="let item of user.wonItems">
+              <div class="card-block row">
+                <img [src]="item.image" alt="">
+                <h5>{{ item.marketHashName }}</h5>
+              </div>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

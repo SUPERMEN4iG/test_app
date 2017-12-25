@@ -8,12 +8,13 @@ using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using test_app.api.Data;
 
-namespace test_app.api.Data.Migrations
+namespace test_app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171220201715_v1")]
+    partial class v1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,6 +129,125 @@ namespace test_app.api.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("test_app.api.Data.Application", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long>("DailyBonusCaseId");
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<bool>("IsInitialized");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Applications");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.Case", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long?>("CategoryId");
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<string>("Image");
+
+                    b.Property<int>("Index");
+
+                    b.Property<bool>("IsAvalible");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<string>("StaticName");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Cases");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.CaseCategory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<string>("StaticName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CaseCategories");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.CasesDrop", b =>
+                {
+                    b.Property<long>("CaseId");
+
+                    b.Property<long>("SkinId");
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.HasKey("CaseId", "SkinId");
+
+                    b.HasAlternateKey("Id");
+
+                    b.HasIndex("SkinId");
+
+                    b.ToTable("CasesDrop");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.Skin", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<string>("Image");
+
+                    b.Property<string>("MarketHashName");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<long?>("StackCaseId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StackCaseId");
+
+                    b.ToTable("Skins");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.StackCase", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<string>("Image");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<string>("RarityString")
+                        .HasColumnName("Rarity");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StackCases");
+                });
+
             modelBuilder.Entity("test_app.api.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -230,6 +350,33 @@ namespace test_app.api.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("test_app.api.Data.Case", b =>
+                {
+                    b.HasOne("test_app.api.Data.CaseCategory", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.CasesDrop", b =>
+                {
+                    b.HasOne("test_app.api.Data.Case", "Case")
+                        .WithMany("CaseSkins")
+                        .HasForeignKey("CaseId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("test_app.api.Data.Skin", "Skin")
+                        .WithMany("CaseSkins")
+                        .HasForeignKey("SkinId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("test_app.api.Data.Skin", b =>
+                {
+                    b.HasOne("test_app.api.Data.StackCase")
+                        .WithMany("Skins")
+                        .HasForeignKey("StackCaseId");
                 });
 #pragma warning restore 612, 618
         }

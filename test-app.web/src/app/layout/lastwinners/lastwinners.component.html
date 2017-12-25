@@ -1,0 +1,13 @@
+<div class="lastwinners">
+    <ul class="lastwinners_list">
+      <li *ngFor="let winner of winners">
+        <a class="lastwinners__item" href="">
+          <div class="block"><img [src]="winner.skin_image" alt=""></div>
+          <div class="block_caption">
+            <div class="block_caption__skinname">{{ winner.skin_name }}</div>
+            <div class="block_caption__username">{{ winner.user_name }}</div>
+          </div>
+        </a>
+      </li>
+    </ul>
+</div>

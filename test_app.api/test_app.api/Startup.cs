@@ -19,6 +19,7 @@ using AspNet.Security.OpenId;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
 namespace test_app.api
@@ -37,6 +38,9 @@ namespace test_app.api
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
@@ -111,6 +115,13 @@ namespace test_app.api
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
+
+                using (var serviceScope =
+                    app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>().EnsureSeedData();
+                }
             }
             else
             {

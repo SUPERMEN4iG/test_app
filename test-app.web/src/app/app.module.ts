@@ -8,6 +8,9 @@ import { AppRoutingModule } from './app.routing';
 // Config
 import { APP_CONFIG, AppConfig } from './app.config';
 
+// core modules
+import { DataSharedModule } from './app.shared.module';
+
 // Auth modules
 import { AuthenticationService } from './_services/authentication.service';
 
@@ -19,20 +22,39 @@ import { JwtInterceptor } from './_services/JwtInterceptor';
 // Components
 import { AppComponent } from './app.component';
 import { FullLayoutComponent } from './layout/full-layout.component';
+import { MainComponent } from './pages/main/main.component';
+import { CasesComponent } from './_components/cases/cases.component';
+
+import { LastwinnersComponent } from './layout/lastwinners/lastwinners.component';
+
+// Data services
+import { CasesService } from './_services/data/cases.service';
+import { UsersService } from './_services/data/users.service';
+
+// Interface
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    FullLayoutComponent
+    FullLayoutComponent,
+    LastwinnersComponent,
+    CasesComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    DataSharedModule.forRoot(),
+    NgbModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     AuthenticationService,
+    CasesService,
+    UsersService,
     {
       provide: APP_CONFIG,
       useValue: AppConfig
