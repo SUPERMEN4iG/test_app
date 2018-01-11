@@ -1,0 +1,136 @@
+.b-cases-category {
+  padding: 20px 0;
+  position: relative;
+
+  .b-cases-category__name {
+    text-align: center;
+    color: #f4a93e;
+    font-size: 22pt;
+    padding-bottom: 30px;
+    text-transform: uppercase;
+  }
+
+  &.second-bg {
+    background: url('../../../assets/images/bg_second.png') no-repeat;
+    background-size: cover;
+  }
+}
+
+.b-case_m {
+
+}
+
+.b-case_m.rare {
+  background: url('../../../assets/images/case_rare_bg.png') no-repeat;
+  min-height: 298px;
+  max-height: 298px;
+  max-width: 234px;
+  display: block;
+  min-width: 234px;
+  padding: 0;
+  margin-right: 50px;
+  margin-bottom: 35px;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+
+  &:hover {
+    .b-case_m__content {
+      img.hover {
+        top: -25px;
+      }
+    }
+  }
+
+  .sprite-left-top {
+    background: url('../../../assets/images/case_rare_left_top.png') no-repeat;
+    position: absolute;
+    z-index: 3;
+    width: 112px;
+    height: 99px;
+    left: -35px;
+    top: -30px;
+  }
+
+  .sprite-rigt-top {
+    background: url('../../../assets/images/case_rare_right_top.png') no-repeat;
+    position: absolute;
+    z-index: 3;
+    width: 112px;
+    height: 99px;
+    right: -35px;
+    top: -30px;
+  }
+
+  .b-case_m__content {
+    .b-case_m__name {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      top: 28px;
+      z-index: 12;
+      text-align: center;
+      color: white;
+      font-family: "SegoeUI Symbol";
+    }
+
+    img {
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      width: 99%;
+      padding-top: 1%;
+      position: absolute;
+    }
+
+    img.hover {
+      z-index: 14;
+      width: 180px;
+      top: 0;
+      bottom: 0;
+      margin-top: auto;
+      margin-bottom: auto;
+      transition: all 0.4s;
+    }
+  }
+}
+
+.btn-rare-case {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 15px;
+  background: url('../../../assets/images/case_rare_button_bg.png') no-repeat;
+  color: white;
+  font-size: 14pt;
+
+  &:hover {
+    text-shadow: 0 0 1em #7ec8d5;
+  }
+
+  &:before {
+    content: "";
+    width: 58px;
+    height: 58px;
+    background: url('../../../assets/images/case_rare_button_left.png') no-repeat;
+    position: absolute;
+    left: -13px;
+    z-index: 3;
+    top: -5px;
+  }
+
+  &:after {
+    content: "";
+    width: 58px;
+    height: 58px;
+    background: url('../../../assets/images/case_rare_button_right.png') no-repeat;
+    position: absolute;
+    right: -13px;
+    z-index: 3;
+    top: -5px;
+  }
+}

@@ -1,0 +1,27 @@
+.b-cases {
+
+  .b-cases__inner {
+    z-index: 2;
+    position: relative;
+  }
+
+  &:before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 60%;
+    z-index: 1;
+    opacity: 0.3;
+    background-image: url('../../../assets/images/bg_first.png');
+    box-shadow: inset 0px 0px 186px 81px #1c1823;
+    background-repeat: no-repeat;
+    /* background-position: 50% 0; */
+    -ms-background-size: cover;
+    /* background-size: cover; */
+    background-position: center;
+    background-position-y: top;
+  }
+}

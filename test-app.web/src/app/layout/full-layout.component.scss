@@ -1,10 +1,10 @@
+.loading {
+  i {
+    color: white;
+  }
+}
 
 .menu {
-  .loading {
-    i {
-      color: white;
-    }
-  }
 
   .menu__right {
     display: table-row;
@@ -19,9 +19,14 @@
 }
 
 .statistic {
+  padding-top: 6px;
+  padding-bottom: 6px;
 
   .statistic__item {
     color: white;
+    font-family: "Tahoma";
+    text-transform: uppercase;
+    font-size: 14pt;
 
     .statistic__item_icon {
       float: left;
@@ -37,20 +42,131 @@
     .statistic__item_right {
       float: left;
       padding-left: 8px;
+      text-align: center;
 
       .statistic__item_value {
-        font-size: 1.5em;
-        line-height: 1em;
+        font-size: 1.4em;
+        line-height: 1.2em;
         color: #fff;
         letter-spacing: 2px;
+        color: #fdc339;
+        text-shadow: 0 0 1em #ff1c09;
       }
 
       .statistic__item_text {
-        font-size: 1.0em;
+        font-size: 0.8em;
         line-height: 0.8em;
       }
     }
   }
+}
+
+.b-profile {
+  .b-profile__inner {
+    float: right;
+  }
+}
+
+.b-profile-min {
+  line-height: 1.2em;
+
+  .b-profile-min__info {
+    float: right;
+    padding-top: 2px;
+    color: white;
+
+    .b-profile-min__name {
+
+    }
+
+    .b-profile-min__balance {
+      b {
+        color: #fead00;
+        font-weight: normal;
+      }
+    }
+  }
+
+  img {
+    border-radius: 44px;
+    float:left;
+    width:44px;
+    margin-right: 8px;
+  }
+}
+
+.btn {
+  &.btn-steam {
+    font-family: "SegoeUI";
+    text-transform: uppercase;
+    background: #697b15 url("../../assets/images/steam_icon.png");
+    background-position: center;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: white;
+    border: 1px solid #262d0e;
+    width: 209px;
+    text-align: left;
+    padding-left: 15px;
+
+    b {
+      font-weight: normal;
+      color: #ffa20f;
+    }
+
+    .btn-steam-icon {
+      background: url("../../assets/images/steam_icon.png");
+      display: inline-block;
+      float: right;
+      width: 39px;
+      height: 39px;
+    }
+  }
+}
+
+body {
+  background: #1c1823;
+  color: white;
+}
+
+a {
+  color: white;
+}
+
+header {
+  background: url('../../assets/images/logo.png') no-repeat;
+  height: 420px;
+  background-position-y: -38px;
+  background-position-x: center;
+}
+
+.logo_top {
+  position: absolute;
+  top: 320px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 405px;
+}
+
+.b-menu-top {
+  padding-top: 30px;
+  ul {
+    color: white;
+    list-style: none;
+    float: right;
+
+    li {
+      display: inline-block;
+      padding-right: 40px;
+      text-transform: uppercase;
+    }
+  }
+}
+
+.b-statistic {
+  background: #17141c;
 }
 
 @-webkit-keyframes pulse {

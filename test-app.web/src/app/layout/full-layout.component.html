@@ -1,32 +1,53 @@
-<nav class="navbar navbar-inverse bg-inverse navbar-toggleable-md">
-  <div class="container">
-    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleContainer" aria-controls="navbarsExampleContainer" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" [routerLink]="['/']">Each CASES</a>
+<header>
+  <div class="container b-header">
+    <img class="logo_top" src="../../assets/images/logo_text.png" alt="">
+    <div class="row">
+      <div class="col-12 b-menu-top">
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">TOP</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
 
-    <div class="collapse navbar-collapse menu" id="navbarsExampleContainer">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-      </ul>
-
-      <form *ngIf="currentUser == null" class="form-inline my-2 my-md-0">
-        <button *ngIf="!isLoadingLogin" (click)="loginSteam()" class="btn btn-outline-success my-2 my-sm-0" type="submit">Войти через STEAM</button>
-        <div *ngIf="isLoadingLogin" class="loading">
-            <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
-          <span class="sr-only">Loading...</span>
+<nav class="navbar navbar-toggleable-md b-statistic">
+    <div class="container statistic">
+      <div class="statistic__item col-4 col-md-2">
+        <!-- <div class="statistic__item_icon"><i class="fa fa-key fa-2x"></i></div> -->
+        <div class="statistic__item_right">
+            <div class="statistic__item_text">cases</div>
+            <div class="statistic__item_value">10000</div>
         </div>
-      </form>
-      <ul *ngIf="currentUser != null" class="navbar-nav pull-right menu__right">
-        <li class="nav-item active" style="color: white;">
-            <img style="float:left; width:36px; padding-right: 6px;" [src]="currentUser.steamAvatar" alt="">
-            <a class="btn-group" ngbDropdown style="cursor: pointer;">
-                <h5 style="float: right;" ngbDropdownToggle>{{ currentUser.userName }}</h5>
+      </div>
+
+      <div class="statistic__item col-4 col-md-2">
+        <!-- <div class="statistic__item_icon"><i class="fa fa-users fa-2x"></i></div> -->
+        <div class="statistic__item_right">
+            <div class="statistic__item_text">users</div>
+            <div class="statistic__item_value">12300</div>
+        </div>
+      </div>
+
+      <div class="statistic__item col-4 col-md-2">
+        <!-- <div class="statistic__item_icon"><i class="fa fa-meh fa-2x"></i></div> -->
+        <div class="statistic__item_right">
+            <div class="statistic__item_text">online</div>
+            <div class="statistic__item_value">10</div>
+        </div>
+      </div>
+
+      <div class="b-profile col-6">
+        <div class="b-profile__inner">
+
+          <div *ngIf="currentUser != null" class="b-profile-min">
+              <img [src]="currentUser.steamAvatar" alt="">
+              <div class="b-profile-min__info" ngbDropdown>
+                <div class="b-profile-min__name" ngbDropdownToggle>{{ currentUser.userName }}</div>
+                <div class="b-profile-min__balance">balance: <b>{{ currentUser.balance }}$</b></div>
+
                 <div class="dropdown-menu" ngbDropdownMenu>
                     <button class="dropdown-item">{{ currentUser.balance }}$</button>
                     <button [routerLink]="['/profile', currentUser.id]" class="dropdown-item">Profile</button>
@@ -34,44 +55,17 @@
                     <div class="dropdown-divider"></div>
                     <button (click)="logout();" class="dropdown-item">Logout</button>
                 </div>
-            </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+              </div>
+          </div>
 
-<nav class="navbar navbar-inverse bg-inverse navbar-toggleable-md">
-    <div class="container statistic">
-      <div class="statistic__item col-4 col-md-2">
-        <div class="statistic__item_icon"><i class="fa fa-key fa-2x"></i></div>
-        <div class="statistic__item_right">
-            <div class="statistic__item_value">10000</div>
-            <div class="statistic__item_text">cases</div>
-        </div>
-      </div>
+          <button *ngIf="currentUser == null && !isLoadingLogin" class="btn btn-steam" (click)="loginSteam()" type="button">
+            <span>Login with <b>STEAM</b></span>
+          </button>
+          <div *ngIf="currentUser == null && isLoadingLogin" class="loading">
+              <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
+            <span class="sr-only">Loading...</span>
+          </div>
 
-      <div class="statistic__item col-4 col-md-2">
-        <div class="statistic__item_icon"><i class="fa fa-users fa-2x"></i></div>
-        <div class="statistic__item_right">
-            <div class="statistic__item_value">12300</div>
-            <div class="statistic__item_text">users</div>
-        </div>
-      </div>
-
-      <div class="statistic__item col-4 col-md-2">
-        <div class="statistic__item_icon"><i class="fa fa-meh fa-2x"></i></div>
-        <div class="statistic__item_right">
-            <div class="statistic__item_value">10</div>
-            <div class="statistic__item_text">bots online</div>
-        </div>
-      </div>
-
-      <div class="statistic__item col-4 col-md-2">
-        <div class="statistic__item_icon"><i class="fa fa-circle center"></i></div>
-        <div class="statistic__item_right">
-            <div class="statistic__item_value">10</div>
-            <div class="statistic__item_text">users online</div>
         </div>
       </div>
 
@@ -79,6 +73,6 @@
 </nav>
 
 <div class="container">
-  <app-lastwinners></app-lastwinners>
+  <!-- <app-lastwinners></app-lastwinners> -->
   <router-outlet></router-outlet>
 </div>

@@ -1,6 +1,18 @@
-<div *ngFor="let caseCategory of cases">
-  <h2>{{ caseCategory.category }}</h2>
-  <hr>
+<!-- <div *ngFor="let caseCategory of cases" class="b-cases-category">
+  <h2 class="b-cases-category__name">{{ caseCategory.category }}</h2>
+
+  <div class="row justify-content-md-center">
+    <div class="col-3 b-case_m rare" *ngFor="let i of [1,2,3,4]">
+      <div class="sprite-left-top"></div>
+      <div class="sprite-rigt-top"></div>
+      <div class="b-case_m__content">
+        <div class="b-case_m__name">Case name #{{ i }}</div>
+        <img class="hover" src="../../../assets/images/simple_ammunition.png" alt="">
+        <img src="../../../assets/images/case_rare.png" alt="">
+      </div>
+      <button class="btn btn-rare-case" type="button">9.99$</button>
+    </div>
+  </div>
 
   <div *ngFor="let case of caseCategory.cases" class="card" style="width: 20rem;">
     <img class="card-img-top" [src]="case.image" alt="Card image cap">
@@ -9,4 +21,39 @@
       <button [routerLink]="['../case', case.staticName]" class="btn btn-primary">${{ case.price }} USD</button>
     </div>
   </div>
+</div> -->
+
+<div class="b-cases-category">
+  <h2 class="b-cases-category__name">Rare cases</h2>
+
+  <div class="row justify-content-md-center">
+    <div class="col-3 b-case_m rare" *ngFor="let i of [1,2,3,4]">
+      <div class="sprite-left-top"></div>
+      <div class="sprite-rigt-top"></div>
+      <div class="b-case_m__content">
+        <div class="b-case_m__name">Case name #{{ i }}</div>
+        <img class="hover" src="../../../assets/images/simple_ammunition.png" alt="">
+        <img src="../../../assets/images/case_rare.png" alt="">
+      </div>
+      <button class="btn btn-rare-case" type="button">9.99$</button>
+    </div>
+  </div>
 </div>
+
+<div class="b-cases-category second-bg">
+  <h2 class="b-cases-category__name">Standarts Cases</h2>
+
+  <div class="row justify-content-md-center">
+    <div class="col-3 b-case_m rare" *ngFor="let i of [1,2,3,4]">
+      <div class="sprite-left-top"></div>
+      <div class="sprite-rigt-top"></div>
+      <div class="b-case_m__content">
+        <div class="b-case_m__name">Case name #{{ i }}</div>
+        <img class="hover" src="../../../assets/images/simple_ammunition.png" alt="">
+        <img src="../../../assets/images/case_rare.png" alt="">
+      </div>
+      <button class="btn btn-rare-case" type="button">9.99$</button>
+    </div>
+  </div>
+</div>
+
