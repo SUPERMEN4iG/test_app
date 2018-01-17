@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CaseRoutingModule } from './case.routing';
 
 import { CaseComponent } from './case.component';
+import { RouletteComponent } from './roulette/roulette.component';
 
 import { DataSharedModule } from '../app.shared.module';
 
@@ -17,6 +18,7 @@ import { DataSharedModule } from '../app.shared.module';
   ],
   declarations: [
     CaseComponent,
+    RouletteComponent
   ],
   providers: [
   ],

@@ -150,12 +150,12 @@ header {
   width: 405px;
 }
 
-.b-menu-top {
+.b-menu {
   padding-top: 30px;
+
   ul {
     color: white;
     list-style: none;
-    float: right;
 
     li {
       display: inline-block;
@@ -163,10 +163,109 @@ header {
       text-transform: uppercase;
     }
   }
+
+  &.top {
+    ul {
+      float: right;
+    }
+  }
+
+  &.bottom {
+    ul {
+      padding: 0;
+      float: left;
+    }
+  }
 }
 
 .b-statistic {
-  background: #17141c;
+  background: #100B15;
+}
+
+.container {
+  padding: 0;
+}
+
+footer {
+  .footer__inner {
+    height: 200px;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+
+    margin-bottom: 20px;
+
+    .b-left {
+      padding-left: 90px;
+
+      .copyrights {
+        display: inline-block;
+        text-align: start;
+        font-size: 10pt;
+        color: #564e62;
+        font-weight: bold;
+      }
+    }
+
+    .b-right {
+      padding-top: 60px;
+
+      .logo_min {
+        float: right;
+        // padding-right: 20px;
+        width: 240px;
+      }
+
+      .b-help {
+        text-align: left;
+        padding: 0;
+
+        .email {
+          font-size: 10pt;
+          color: #cedde0;
+        }
+
+        a {
+          font-size: 10pt;
+          color: #cedde0;
+          display: block;
+        }
+
+        h5 {
+          text-transform: uppercase;
+          color: #f8feff;
+        }
+      }
+    }
+
+    .payment_methods {
+      width: 45%;
+
+      &.first {
+        margin-top: 20px;
+        margin-right: 10px
+      }
+
+    }
+  }
+
+  &:before {
+    background: url('../../assets/images/bg_second.png') no-repeat;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 80%;
+    z-index: 1;
+    opacity: 1;
+    content: " ";
+    -ms-background-size: cover;
+    background-position: center;
+    background-position-y: top;
+    background-size: 132%;
+  }
 }
 
 @-webkit-keyframes pulse {

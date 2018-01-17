@@ -1,24 +1,41 @@
-<div *ngIf="currentCase != null">
-  <h2>Case {{ currentCase.staticName }}</h2>
-  <img [src]="currentCase.image" alt="">
+<div class="b-case" *ngIf="currentCase != null">
+  <!-- <h2>Case {{ currentCase.staticName }}</h2> -->
 
-  <div>
-    <h3>Roulette</h3>
+  <div class="b-case-roulette" [ngClass]="!isOpenCaseClick ? 'display-none on' : ''">
+
+    <roulette #roulette [skins]="currentCase.skins" [(isSpinning)]="isSpinning" [currentCase]="currentCase"></roulette>
+
   </div>
 
-  <button (click)="openCase()" class="btn btn-outline-success">Open case</button>
+  <div [ngClass]="isOpenCaseClick ? 'display-none off' : ''" class="b-case-header">
+    <div class="b-case-header__inner">
+      <h2>{{ currentCase.staticName }}</h2>
+      <img [src]="currentCase.image" alt="">
+      <div class="hover gold"></div>
+      <div class="price">${{ currentCase.price }}</div>
+      <button (click)="openCase()" type="button" class="btn btn-outline-success btn-open-case">Open case</button>
+    </div>
 
-  <hr>
+  </div>
 
-  <div>
-    <h3>Items in {{ currentCase.staticName }}</h3>
+  <div class="b-case-drop">
+    <div class="b-case-drop__inner ">
+      <h3>Items in {{ currentCase.staticName }}</h3>
 
-    <div class="row">
-      <div *ngFor="let skin of currentCase.skins" class="card col-3">
-          <img class="card-img-top" [src]="skin.image" alt="Card image cap">
-          <div class="card-block">
-            <h4 class="card-title">{{ skin.marketHashName }}</h4>
-          </div>
+      <div class="row">
+        <div *ngFor="let skin of currentCase.skins" class="b-item-drop col-6 col-md-2">
+            <div class="border">
+              <div class="b-item-drop__inner">
+                  <h6>{{ skin.marketHashName }}</h6>
+                  <div class="hover"></div>
+                  <img [src]="skin.image" alt="Card image cap">
+                </div>
+            </div>
+            <!-- <img class="card-img-top" [src]="skin.image" alt="Card image cap">
+            <div class="card-block">
+              <h4 class="card-title">{{ skin.marketHashName }}</h4>
+            </div> -->
+        </div>
       </div>
     </div>
   </div>

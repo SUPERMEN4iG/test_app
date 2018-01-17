@@ -34,6 +34,8 @@ import { UsersService } from './_services/data/users.service';
 // Interface
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -48,10 +50,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppRoutingModule,
     HttpClientModule,
     DataSharedModule.forRoot(),
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     AuthenticationService,
     CasesService,
     UsersService,

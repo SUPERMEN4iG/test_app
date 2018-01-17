@@ -1,0 +1,211 @@
+.b-case {
+  margin-top: 30px;
+
+  .b-case-header {
+
+    transition: 0.5s opacity;
+
+    min-height: 310px;
+    z-index: 2;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 30px;
+
+    &:before {
+      background: url('../../assets/images/case_info_background.png') no-repeat;
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 1;
+      content: " ";
+      // box-shadow: inset 0px 0px 186px 90px #1c1823;
+      /* background-position: 50% 0; */
+      /* background-size: cover; */
+      background-position: center;
+      background-position-y: top;
+      background-size: 480px;
+    }
+
+    .b-case-header__inner {
+      z-index: 2;
+      position: relative;
+      margin: auto;
+      display: block;
+      height: 285px;
+
+      .price {
+        text-align: center;
+        color: #eec600;
+        font-weight: bold;
+        font-size: 14pt;
+      }
+
+      .hover {
+        content: '';
+        width: 0px;
+        height: 0px;
+        left: -30px;
+        right: 0;
+        margin: auto;
+        top: 0;
+        bottom: 90px;
+        position: absolute;
+        z-index: 10;
+
+        &.gold {
+          box-shadow: 0px 0px 106px 28px #eec600;
+        }
+      }
+
+      h2 {
+        text-align: center;
+        color: white;
+        font-size: 20pt;
+      }
+
+      img {
+        width: 240px;
+        display: block;
+        margin: auto;
+        padding-top: 10px;
+      }
+
+      .btn-open-case {
+        background: #ff8917 url("../../assets/images/btn_open-case_bg.png");
+        display: block;
+        width: 280px;
+        height: 46px;
+        margin: auto;
+        margin-top: 10px;
+        border: 1px solid #ff8917;
+        color: white;
+        font-weight: bold;
+        background-size: 100%;
+        font-size: 14pt;
+        text-shadow: 0px 0px 10px #d8d8d8;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+    }
+
+  }
+
+  .b-case-roulette {
+    min-height: 310px;
+    transition: 0.5s opacity;
+
+    h3 {
+      text-transform: uppercase;
+      color: #e9c972;
+      text-align: center;
+    }
+  }
+
+  .b-case-drop {
+    position: relative;
+    min-height: 500px;
+
+    &:before {
+      background: url('../../assets/images/bg_second.png') no-repeat;
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 80%;
+      z-index: 1;
+      opacity: 1;
+      content: " ";
+      -ms-background-size: cover;
+      background-position: center;
+      background-position-y: top;
+      background-size: 132%;
+    }
+
+    .b-case-drop__inner {
+      position: relative;
+      z-index: 2;
+
+      h3 {
+        text-align: center;
+        color: #f4a93e;
+        font-size: 20pt;
+        padding-bottom: 30px;
+        padding-top: 18px;
+        text-transform: uppercase;
+        text-shadow: #1e1623 1px 1px 0, #1e1623 -1px -1px 0, #1e1623 -1px 1px 0, #1e1623 1px -1px 0;
+      }
+
+      .b-item-drop {
+        margin-bottom: 14px;
+
+        .border {
+          border: 1px solid #4b3e56;
+          padding: 0;
+          border-radius: 4px;
+        }
+
+
+        .b-item-drop__inner {
+          border: 1px solid #d8d8d8;
+          border-image: url("../../assets/images/winner_item_left-right.png") 1 round;
+          padding: 10px;
+
+          h6 {
+            color: white;
+            text-align: center;
+            /* white-space: nowrap; */
+            overflow: hidden;
+            position: absolute;
+            left: 0;
+            right: 0;
+            margin: auto;
+            max-width: 150px;
+          }
+
+          .hover {
+            content: '';
+            width: 0px;
+            height: 0px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            top: 26px;
+            /* bottom: 90px; */
+            bottom: 0;
+            position: absolute;
+            z-index: 1;
+            box-shadow: 0px 0px 106px 30px #60506b;
+          }
+
+          img {
+            width: 110px;
+            margin: auto;
+            display: block;
+            padding-top: 22px;
+            z-index: 2;
+            position: relative;
+          }
+        }
+      }
+    }
+  }
+}
+
+.display-none {
+  &.on {
+    opacity: 1;
+    display: none !important;
+  }
+
+  &.off {
+    opacity: 0;
+    display: none !important;
+  }
+}

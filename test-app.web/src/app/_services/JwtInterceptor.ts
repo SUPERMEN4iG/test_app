@@ -8,14 +8,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
 
-  private router: Router;
+  private authService: AuthenticationService;
 
     constructor(
       private injector: Injector
     ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.router = this.injector.get(Router); // get it here within intercept
+    this.authService = this.injector.get(AuthenticationService);
 
     return next.handle(request).do((event: HttpEvent<any>) => {
       if (event instanceof HttpResponse) {
@@ -24,8 +24,8 @@ export class JwtInterceptor implements HttpInterceptor {
     }, (err: any) => {
       if (err instanceof HttpErrorResponse) {
         if (err.status === 401) {
+          this.authService.logout();
           console.info('TOKEN HAS BEEN DIED RELOGIN');
-          this.router.navigate(['./logout']);
         }
       }
     });

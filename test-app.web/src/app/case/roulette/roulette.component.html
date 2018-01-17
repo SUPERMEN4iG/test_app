@@ -1,0 +1,29 @@
+<div *ngIf="isWinned && prize" class="b-win">
+  <h2>{{prize.marketHashName}}</h2>
+  <div class="hover"></div>
+  <img [src]="prize.image" />
+  <div class="b-win__buttons">
+    <button (click)="spin();" type="button" class="btn btn-outline-success">Sell</button>
+    <button (click)="spin();" type="button" class="btn btn-outline-warning">Take</button>
+  </div>
+</div>
+
+<div class="b-case-roulette" [ngClass]="isWinned ? 'blur' : ''">
+  <h3>Openning case...</h3>
+
+  <div id="scrollerContainer">
+      <div id="caruselLine"></div>
+      <div id="caruselOver"></div>
+      <div id="aCanvas">
+          <div #casesCarusel id="casesCarusel" style="margin-left: 0px; transition: 1s all ease-in;">
+              <div *ngFor="let skin of skinsRoulette">
+                  <div class="weaponblock weaponblock1">
+                      <img [src]="skin.image" />
+                      <div class="weaponblockinfo"><span>{{ skin.marketHashName }}<br/></span></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
+</div>

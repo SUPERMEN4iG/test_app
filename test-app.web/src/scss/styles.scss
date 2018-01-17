@@ -5,7 +5,12 @@
 
 
 body {
-  background: #1c1823;
+  background: #17111E;
   font-family: "SegoeUI";
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility:    hidden;
+  -ms-backface-visibility:     hidden;
+  letter-spacing: -0.03em;
 }
 
