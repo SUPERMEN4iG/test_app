@@ -13,15 +13,6 @@ namespace test_app.api.Data
 
         public String Name { get; set; }
 
-        [Column("Rarity")]
-        public string RarityString
-        {
-            get { return Rarity.ToString(); }
-            private set { Rarity = value.ParseEnum<Skin.SkinRarity>(); }
-        }
-        [NotMapped]
-        public Skin.SkinRarity Rarity { get; set; }
-
         public ICollection<Skin> Skins { get; set; }
 
         public Decimal Price { get; set; }

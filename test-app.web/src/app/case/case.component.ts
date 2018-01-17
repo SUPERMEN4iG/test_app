@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, TemplateRef, EventEmitter, Output } from '@angular/core';
+import { Component, Input, ViewChild, TemplateRef, EventEmitter, Output, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
@@ -8,6 +8,8 @@ import { UsersService } from '../_services/data/users.service';
 import { CasesService } from '../_services/data/cases.service';
 
 import { RouletteComponent } from './roulette/roulette.component';
+
+import { animate, AnimationBuilder, style } from '@angular/animations';
 
 @Component({
   selector: 'case',
@@ -27,12 +29,16 @@ export class CaseComponent {
 
   @ViewChild('roulette') roulette: RouletteComponent;
 
+  @ViewChild('caseContainer') caseContainer: ElementRef;
+  @ViewChild('rouletteContainer') rouletteContainer: ElementRef;
+
   constructor(private router: Router,
               private route: ActivatedRoute,
               private caseService: CasesService,
               private modalService: NgbModal,
               private _authService: AuthenticationService,
-              private _userService: UsersService) {
+              private _userService: UsersService,
+              private animBuilder: AnimationBuilder) {
   }
 
   ngOnInit() {
@@ -55,9 +61,29 @@ export class CaseComponent {
     });
   }
 
+  animationPlayer;
+  setOpacity(container, value, secs, onDone = null): void {
+    const moveBallAnimation = this.animBuilder.build([
+      animate(`${secs}s ease`, style({
+          'opacity': `${value}`,
+          'display': `${ value == 0 ? 'none' : 'block' }`
+      }))
+    ]);
+    this.animationPlayer = moveBallAnimation.create(container);
+    this.animationPlayer.onDone((evt) => { if (onDone) { onDone(); } });
+    this.animationPlayer.play();
+  }
+
   openCase() {
-    this.isOpenCaseClick = true;
-    this.roulette.spin();
+
+    this.setOpacity(this.caseContainer.nativeElement, 0, 0.5, () => {
+      this.isOpenCaseClick = true;
+
+      this.setOpacity(this.rouletteContainer.nativeElement, 1, 0.5, () => {
+        this.roulette.spin();
+      });
+    });
+
     // this.caseService.openCase(this.currentCase.id).subscribe(
     //   (data) => {
     //     this.winSkin = data.winner;

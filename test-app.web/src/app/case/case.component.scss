@@ -199,13 +199,5 @@
 }
 
 .display-none {
-  &.on {
-    opacity: 1;
-    display: none !important;
-  }
-
-  &.off {
-    opacity: 0;
-    display: none !important;
-  }
+  display: none !important;
 }

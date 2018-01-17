@@ -1,13 +1,13 @@
 <div class="b-case" *ngIf="currentCase != null">
   <!-- <h2>Case {{ currentCase.staticName }}</h2> -->
 
-  <div class="b-case-roulette" [ngClass]="!isOpenCaseClick ? 'display-none on' : ''">
+  <div #rouletteContainer class="b-case-roulette" style="opacity: 0;" [ngClass]="!isOpenCaseClick ? 'display-none on' : ''">
 
     <roulette #roulette [skins]="currentCase.skins" [(isSpinning)]="isSpinning" [currentCase]="currentCase"></roulette>
 
   </div>
 
-  <div [ngClass]="isOpenCaseClick ? 'display-none off' : ''" class="b-case-header">
+  <div #caseContainer [ngClass]="isOpenCaseClick ? 'display-none off' : ''" class="b-case-header">
     <div class="b-case-header__inner">
       <h2>{{ currentCase.staticName }}</h2>
       <img [src]="currentCase.image" alt="">
