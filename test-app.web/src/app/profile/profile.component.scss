@@ -1,0 +1,45 @@
+.b-profile {
+  padding: 30px 0;
+  .b-profile-head {
+    .b-profile-head__left {
+      .avatar {
+        border-radius: 50px;
+        margin-right: 12px;
+        border: 2px solid #ffffff;
+        display: block;
+        margin: auto;
+        width: 90px;
+      }
+
+      h4 {
+        color: #ffc600;
+      }
+
+      .input-group {
+        input {
+          background: #16131b;
+          border: 1px solid #695a7c;
+          padding: 14px;
+          color: #b0a2b8;
+          &::-webkit-input-placeholder {color:#b0a2b8;}
+          &::-moz-placeholder          {color:#b0a2b8;}/* Firefox 19+ */
+          &:-moz-placeholder           {color:#b0a2b8;}/* Firefox 18- */
+          &:-ms-input-placeholder      {color:#b0a2b8;}
+        }
+
+        .input-group-btn {
+          button {
+            background: #117090;
+            border-color: #117090;
+          }
+        }
+      }
+
+      .trade-helper {
+        color: #b0a2b8;
+        padding-top: 8px;
+        font-size: 12pt;
+      }
+    }
+  }
+}
