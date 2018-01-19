@@ -34,7 +34,7 @@ namespace test_app.api.Logic
                     // проверка баланса
                     if (_user.Balance < _case.Price)
                     {
-                        return CaseOpenResult.GenerateError(String.Format("Not enough money"));
+                        return CaseOpenResult.GenerateError(String.Format("Not enough money"), ResponseType.NotEnoughMoney);
                     }
 
                     CasesDrop selected = skinsChances.RandomElementByWeight(x => (float)x.Chance);
@@ -75,7 +75,7 @@ namespace test_app.api.Logic
                     _context.CaseFaultLogs.Add(new CaseFaultLog() { Case = _case, Text = e.Message.ToString(), User = _user });
                     _context.SaveChanges();
 
-                    return CaseOpenResult.GenerateError(String.Format("Transaction error: {0}", e.Message));
+                    return CaseOpenResult.GenerateError(String.Format("Transaction error: {0}", e.Message), ResponseType.ServerError);
                 }
             }
         }

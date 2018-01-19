@@ -33,7 +33,7 @@ export class CasesService {
 
   private handleError(error: HttpResponse<ErrorResponse>) {
     console.error(error);
-    return Observable.throw(error || 'Server error');
+    return Observable.throw((<any>error).error || 'Server error');
   }
 
   public refresh(isFromCache: boolean) {

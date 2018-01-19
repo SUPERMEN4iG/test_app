@@ -66,7 +66,16 @@ namespace test_app.api.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var casea = context.Cases.FirstOrDefault(x => x.Id == id);
 
-            return Json(new CaseLogic(context, casea, user).Open());
+            var openResult = new CaseLogic(context, casea, user).Open();
+
+            if (openResult.IsSuccess)
+            {
+                return Json(openResult);
+            }
+            else
+            {
+                return BadRequest(openResult);
+            }
         }
     }
 }

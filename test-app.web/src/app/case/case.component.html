@@ -13,7 +13,8 @@
       <img [src]="currentCase.image" alt="">
       <div class="hover gold"></div>
       <div class="price">${{ currentCase.price }}</div>
-      <button (click)="openCase()" type="button" class="btn btn-outline-success btn-open-case">Open case</button>
+      <button *ngIf="currentUser != null" (click)="openCase()" type="button" class="btn btn-outline-success btn-open-case">Open case</button>
+      <button *ngIf="currentUser == null" type="button" class="btn btn-outline-success btn-open-case">Sign in</button>
     </div>
 
   </div>

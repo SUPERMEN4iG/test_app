@@ -52,8 +52,9 @@ namespace test_app.api.Data
                 {
                     new Case()
                     {
-                        StaticName = "Test case 1",
-                        Image = "https://s3.amazonaws.com/pubgboxes/public/assets/images/twitch_crate_basel.png",
+                        FullName = "Test case 1",
+                        StaticName = "test-case-1",
+                        Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(0.01),
                         Index = 1,
                         IsAvalible = true,

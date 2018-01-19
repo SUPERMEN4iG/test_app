@@ -11,6 +11,8 @@ import { RouletteComponent } from './roulette/roulette.component';
 
 import { animate, AnimationBuilder, style } from '@angular/animations';
 
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'case',
   templateUrl: './case.component.html',
@@ -20,6 +22,7 @@ export class CaseComponent {
   private sub: any;
   caseName: string;
   currentCase: any;
+  currentUser: any;
   winSkin: any;
 
   isSpinning = false;
@@ -38,12 +41,15 @@ export class CaseComponent {
               private modalService: NgbModal,
               private _authService: AuthenticationService,
               private _userService: UsersService,
-              private animBuilder: AnimationBuilder) {
+              private animBuilder: AnimationBuilder,
+              private _notification: ToastrService) {
   }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.caseName = params['name'];
+
+      this._authService.currentUser$.subscribe((u) => { this.currentUser = u; });
 
       this.caseService.data$.subscribe(
         (data) => {

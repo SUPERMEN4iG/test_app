@@ -3,9 +3,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthenticationService } from '../../_services/authentication.service';
-import { UsersService } from '../../_services/data/users.service';
 
+import { UsersService } from '../../_services/data/users.service';
 import { CasesService } from '../../_services/data/cases.service';
+
+import { ToastrService } from 'ngx-toastr';
 
 import { animate, AnimationBuilder, style } from '@angular/animations';
 
@@ -35,6 +37,7 @@ export class RouletteComponent {
   @Input() currentCase: any;
 
   isWinned: boolean = false;
+  caseMessage: string = '';
 
   prize = null;
   microposX = 0;
@@ -47,7 +50,8 @@ export class RouletteComponent {
               private caseService: CasesService,
               private modalService: NgbModal,
               private _authService: AuthenticationService,
-              private _userService: UsersService) {
+              private _userService: UsersService,
+              private _notification: ToastrService) {
   }
 
   ngOnInit() {
@@ -121,6 +125,19 @@ export class RouletteComponent {
 
 
   spin() {
+    const templateCaseMessage = 'OPENNING CASE';
+    this.caseMessage = templateCaseMessage;
+
+    let caseMessageInterval = setInterval(() => {
+      console.info(this.caseMessage.charAt(this.caseMessage.length - 3));
+      if (this.caseMessage.charAt(this.caseMessage.length - 3) == '.') {
+        this.caseMessage = templateCaseMessage;
+      } else {
+        this.caseMessage += '.';
+      }
+
+    }, 300);
+
     this.caseService.openCase(this.currentCase.id).subscribe(
       (data) => {
         let winSkin = data.winner;
@@ -156,10 +173,13 @@ export class RouletteComponent {
           this.isSpinning = false;
           this.isSpinningChange.emit(false);
           this.isWinned = true;
+          clearInterval(caseMessageInterval);
         });
       },
       (err) => {
-        console.error(err);
+        this._notification.error(err.message, 'Open case');
+        this.caseMessage = err.message;
+        clearInterval(caseMessageInterval);
       }
     );
   }

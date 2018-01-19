@@ -12,6 +12,8 @@ namespace test_app.api.Data
 
         public String StaticName { get; set; }
 
+        public String FullName { get; set; }
+
         public CaseCategory Category { get; set; }
 
         public Decimal Price { get; set; }
