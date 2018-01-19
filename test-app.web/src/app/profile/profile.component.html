@@ -1,14 +1,14 @@
 <div *ngIf="user != null" class="b-profile">
   <div class="row b-profile-head" style="margin-bottom: 20px;">
       <div class="col-8 b-profile-head__left">
+        <div class="header">Settings</div>
         <div class="row">
           <div class="col-2"><img class="avatar" [src]="user.steamAvatar" alt=""></div>
           <div class="col-10">
-            <h4>{{ user.email }}</h4>
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Enter you Trade url">
+              <input [disabled]="isDisableForEdit" [(ngModel)]="user.tradeofferUrl" type="text" class="form-control" placeholder="Enter you Trade url">
               <span class="input-group-btn">
-                <button class="btn btn-primary" type="button">Save</button>
+                <button (click)="onClickSaveTradeUrl()" class="btn btn-primary" type="button">Save</button>
               </span>
             </div>
             <div class="trade-helper">
@@ -22,33 +22,42 @@
         </div>
       </div>
 
-      <div class="col-4">
-        <div class="row">
+      <div class="col-4 b-profile-head__right">
+        <div class="header">Top up balance</div>
+        <div class="row" style="padding-left: 15px;padding-right: 15px;">
           <div class="input-group">
               <input type="text" class="form-control" placeholder="$0.00">
               <span class="input-group-btn">
                 <button class="btn btn-primary" type="button">Pay</button>
               </span>
-            </div>
+          </div>
+          <img class="pay g2a" src="../../assets/images/g2a.png" alt="">
         </div>
       </div>
   </div>
 
-  <div class="row">
-    <div class="card col-12">
-      <div class="card-block">
-        <h4 class="text-center">Won items</h4>
+  <div class="b-profile-case-drop">
+    <div class="b-case-drop">
+      <div class="b-case-drop__inner ">
+        <h3>Won items</h3>
 
         <div class="row">
-            <div class="card col-3" *ngFor="let item of user.wonItems">
-              <div class="card-block row">
-                <img [src]="item.image" alt="">
-                <h5>{{ item.marketHashName }}</h5>
+          <div *ngFor="let item of user.wonItems" class="b-item-drop col-6 col-md-2">
+              <div class="border">
+                <div class="b-item-drop__inner">
+                    <h6>{{ item.marketHashName }}</h6>
+                    <div class="hover"></div>
+                    <img [src]="item.image" alt="">
+                  </div>
               </div>
-            </div>
+              <!-- <img class="card-img-top" [src]="skin.image" alt="Card image cap">
+              <div class="card-block">
+                <h4 class="card-title">{{ skin.marketHashName }}</h4>
+              </div> -->
+          </div>
         </div>
-
       </div>
     </div>
   </div>
+
 </div>

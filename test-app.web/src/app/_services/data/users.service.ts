@@ -26,9 +26,9 @@ export class UsersService {
     this.data$ = <BehaviorSubject<Object[]>> new BehaviorSubject(new Array<Object>());
   }
 
-  private handleError(error: HttpErrorResponse) {
+  private handleError(error: HttpResponse<ErrorResponse>) {
     console.error(error);
-    return Observable.throw((<ErrorResponse>error.error).message || 'Server error');
+    return Observable.throw((<any>error).error || 'Server error');
   }
 
   public getUser(id: string): Observable<any> {
@@ -66,6 +66,13 @@ export class UsersService {
       this.data.push(founded);
       this.data$.next(founded);
     }
+  }
+
+  public updateTradeOffer(tradeofferurl) {
+    return this._http.post(`${this.apiEndPoint}updatetradeoffer`, {'tradeofferurl': tradeofferurl})
+        .map(x => {
+          return x;
+        }).catch(this.handleError);
   }
 
 }

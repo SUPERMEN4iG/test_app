@@ -14,5 +14,6 @@ namespace test_app.api.Models
         public string SteamAvatar { get; set; }
         public string SteamUsername { get; set; }
         public Decimal Balance { get; set; }
+        public String TradeofferUrl { get; set; }
     }
 }
