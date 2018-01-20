@@ -8,5 +8,7 @@ namespace test_app.api.Data
     public class CaseCategory : BaseDataObject<Int64>
     {
         public String StaticName { get; set; }
+        public String FullName { get; set; }
+        public Int32 Index { get; set; }
     }
 }

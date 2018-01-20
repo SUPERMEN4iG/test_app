@@ -23,31 +23,27 @@
   </div>
 </div> -->
 
-<div class="b-cases-category">
-  <h2 class="b-cases-category__name">Rare cases</h2>
-
-  <div class="row justify-content-md-center">
-    <div class="col-3 b-case_m rare" *ngFor="let i of [1,2,3,4]">
-      <div class="sprite-left-top"></div>
-      <div class="sprite-rigt-top"></div>
-      <div class="b-case_m__content">
-        <div class="b-case_m__name">Case name #{{ i }}</div>
-        <img class="hover" src="../../../assets/images/simple_ammunition.png" alt="">
-        <img src="../../../assets/images/case_rare.png" alt="">
-      </div>
-      <button class="btn btn-rare-case" type="button">$9.99</button>
-    </div>
-  </div>
-</div>
-
-<div class="b-cases-category second-bg">
+<div *ngFor="let caseCategory of cases" [ngClass]="caseCategory.category.index > 1 ? 'second-bg' : ''" class="b-cases-category">
   <div class="b-cases-category__inner">
-    <h2 class="b-cases-category__name">Standarts Cases</h2>
+    <h2 class="b-cases-category__name">{{ caseCategory.category.fullName }}</h2>
 
-    <div class="row justify-content-md-center">
-      <div class="col-3 b-case_m standart" *ngFor="let i of [1,2,3,4,5,6,7,8]">
+    <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 1">
+      <div class="col-3 b-case_m rare" *ngFor="let case of caseCategory.cases">
+        <div class="sprite-left-top"></div>
+        <div class="sprite-rigt-top"></div>
         <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
+          <div class="b-case_m__name">{{ case.fullName }}</div>
+          <img class="hover" src="../../../assets/images/simple_ammunition.png" alt="">
+          <img src="../../../assets/images/case_rare.png" alt="">
+        </div>
+        <button class="btn btn-rare-case" type="button">${{ case.price }}</button>
+      </div>
+    </div>
+
+    <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 2">
+      <div class="col-3 b-case_m standart" *ngFor="let case of caseCategory.cases">
+        <div class="b-case_m__content">
+            <div class="b-case_m__name">{{ case.fullName }}</div>
             <img class="b-case_m__img" src="../../../assets/images/cases/stand_case_01.png" alt="">
             <div class="b-case_m__prices">
               <span class="price">$9.99</span>
@@ -56,58 +52,13 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="b-cases-category second-bg">
-  <div class="b-cases-category__inner">
-    <h2 class="b-cases-category__name">Regular Cases</h2>
-
-    <div class="row justify-content-md-center">
-      <div class="col-3 b-case_m regular">
+    <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 3">
+      <div class="col-3 b-case_m regular" *ngFor="let case of caseCategory.cases">
         <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
+            <div class="b-case_m__name">{{ case.fullName }}</div>
             <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover blue"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_blue.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover purpule"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_purple.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover red"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_red.png" alt="">
+            <img class="b-case_m__img" [src]="case.image" alt="">
             <div class="b-case_m__new">NEW</div>
             <div class="b-case_m__prices">
               <span class="price">$9.99</span>
@@ -116,111 +67,14 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="b-cases-category second-bg">
-  <div class="b-cases-category__inner">
-    <h2 class="b-cases-category__name">Exclusive Cases</h2>
+    <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 4">
 
-    <div class="row justify-content-md-center">
-
-      <div class="col-3 b-case_m regular">
+      <div class="col-3 b-case_m regular" *ngFor="let case of caseCategory.cases">
         <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
+            <div class="b-case_m__name">{{ case.fullName }}</div>
             <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
-            <div class="b-case_m__new">NEW</div>
-            <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
-            </div>
-        </div>
-      </div>
-
-      <div class="col-3 b-case_m regular">
-        <div class="b-case_m__content">
-            <div class="b-case_m__name">Case name</div>
-            <div class="b-case_m__img_hover gold"></div>
-            <img class="b-case_m__img" src="../../../assets/images/cases/regular_case_gold.png" alt="">
+            <img class="b-case_m__img" [src]="case.image" alt="">
             <div class="b-case_m__new">NEW</div>
             <div class="b-case_m__prices">
               <span class="price">$9.99</span>
@@ -230,5 +84,6 @@
       </div>
 
     </div>
+
   </div>
 </div>

@@ -39,19 +39,21 @@ namespace test_app.api.Controllers
             cases = context.Cases
                 .Include(x => x.Category)
                 .Where(x => x.IsAvalible == true)
-                .GroupBy(x => x.Category.StaticName, 
+                .GroupBy(x => x.Category, 
                     (key, group) => new
                     {
-                        Category = key,
+                        Category = new { key.Index, key.Id, key.StaticName, key.FullName },
                         Cases = group.Select(c => new
                         {
                             Id = c.Id,
                             StaticName = c.StaticName,
+                            FullName = c.FullName,
                             Image = c.Image,
                             Price = c.Price,
+                            Index = c.Index,
                             Skins = c.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price })
-                        }).ToList()
-                    });
+                        }).OrderBy(x => x.Index).ToList()
+                    }).OrderBy(x => x.Category.Index);
 
             return Json(cases);
         }
