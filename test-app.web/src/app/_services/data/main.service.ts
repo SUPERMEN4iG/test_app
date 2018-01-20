@@ -14,11 +14,11 @@ import { AuthenticationService } from '../../_services/authentication.service';
 import * as _ from 'underscore';
 
 @Injectable()
-export class CasesService {
-  serviceEndPoint: String = 'cases/';
+export class MainService {
+  serviceEndPoint: String = 'main/';
   apiEndPoint: String;
-  data: Array<any> = new Array<object>();
-  data$: BehaviorSubject<any[]>;
+  data: any = {};
+  data$: BehaviorSubject<any>;
 
   constructor(private _http: HttpClient,
               @Inject(APP_CONFIG)private _appConfig: IAppConfig) {
@@ -37,10 +37,10 @@ export class CasesService {
   }
 
   public refresh(isFromCache: boolean) {
-    this.data$.next([]);
+    this.data$.next({});
 
     if (isFromCache === undefined || isFromCache === null || isFromCache === false) {
-      this.getCases().subscribe(x => {
+      this.getData().subscribe(x => {
         this.data = x;
         this.data$.next(x);
       });
@@ -49,8 +49,8 @@ export class CasesService {
     }
   }
 
-  getCases() {
-    return this._http.get(`${this.apiEndPoint}getcases`)
+  getData() {
+    return this._http.get(`${this.apiEndPoint}getdata`)
       .map((x: any) => {
         try {
           const response = x;
@@ -58,18 +58,6 @@ export class CasesService {
           if (!_.isObject(response)) {
             throw new Error(response);
           }
-
-          _.map(response, (row) => {
-
-            _.map(row.cases, (c) => {
-              // Получение класса кейса
-              let s = c.image.split('_');
-              c.caseClass = s[s.length - 1].split('.')[0];
-              return c;
-            });
-
-            return row;
-          });
 
           return response;
         } catch (error) {
@@ -79,37 +67,14 @@ export class CasesService {
       .catch(this.handleError);
   }
 
-  openCase(id: number) {
-    return this._http.get(`${this.apiEndPoint}opencase?id=${id}`)
-    .map((x: any) => {
-      try {
-        const response = x;
-
-        if (!_.isObject(response)) {
-          throw new Error(response);
-        }
-
-        return response;
-      } catch (error) {
-        throw new Error(error);
-      }
-    })
-    .catch(this.handleError);
+  public increseOpennedCases(): any {
+    this.data.opennedCases++;
+    this.data$.next(this.data);
   }
 
-  getByCaseName(name) {
-
-    var results = _.map(this.data, function(row) {
-      var founded = _.filter(row.cases, function(c) {
-        return c.staticName == name;
-      });
-
-      if (founded.length > 0) {
-        return founded;
-      }
-    });
-
-    return _.find(results, (s) => { return s != undefined })[0];
+  public increseUsersRegistered(): any {
+    this.data.usersRegistered++;
+    this.data$.next(this.data);
   }
 
 }

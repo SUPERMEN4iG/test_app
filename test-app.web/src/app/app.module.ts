@@ -30,6 +30,7 @@ import { LastwinnersComponent } from './layout/lastwinners/lastwinners.component
 // Data services
 import { CasesService } from './_services/data/cases.service';
 import { UsersService } from './_services/data/users.service';
+import { MainService } from './_services/data/main.service';
 
 // Interface
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -65,6 +66,7 @@ import { ToastrModule } from 'ngx-toastr';
     AuthenticationService,
     CasesService,
     UsersService,
+    MainService,
     {
       provide: APP_CONFIG,
       useValue: AppConfig

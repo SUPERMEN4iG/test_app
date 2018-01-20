@@ -59,7 +59,19 @@
         z-index: 10;
 
         &.gold {
-          box-shadow: 0px 0px 106px 28px #eec600;
+          box-shadow: 0px 0px 106px 20px #eec600;
+        }
+  
+        &.blue {
+          box-shadow: 0px 0px 106px 20px #09c9f5;
+        }
+  
+        &.purpule {
+          box-shadow: 0px 0px 106px 20px #b45af9;
+        }
+  
+        &.red {
+          box-shadow: 0px 0px 106px 20px #fe4141;
         }
       }
 
@@ -74,6 +86,10 @@
         display: block;
         margin: auto;
         padding-top: 10px;
+
+        &.standarts-cases {
+          width: 180px;
+        }
       }
 
       .btn-open-case {

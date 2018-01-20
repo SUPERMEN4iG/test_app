@@ -40,14 +40,16 @@ namespace test_app.api.Data
                     {
                         MarketHashName = "T-shirt (Red)",
                         Image = "https://steamcommunity-a.akamaihd.net/economy/image/8HAGSsiO9OXk0bu4o76O6xabNUY8RRLf00e56zWT3IZUH8Flab9goIFna_837oFuZVQtrmh23qr2o44kS6-MLaIGhQ",
-                        Price = new decimal(0.04)
+                        Price = new decimal(0.04),
+                        Rarity = Skin.SkinRarity.Classified
                     },
 
                     new Skin()
                     {
                         MarketHashName = "Combat Pants (White)",
                         Image = "https://steamcommunity-a.akamaihd.net/economy/image/8HAGSsiO9OXk0bu4o76O6xabNUY8RRLf00e56zWT3IZUH8Flab9goIFna_837oFuZVQtrmh13qr2rY4kS6_jKn_piQ",
-                        Price = new decimal(0.05)
+                        Price = new decimal(0.05),
+                        Rarity = Skin.SkinRarity.Classified
                     },
                 };
 
@@ -100,6 +102,7 @@ namespace test_app.api.Data
                         StaticName = "standarts-case-1",
                         Image = "/assets/images/cases/stand_case_01.png",
                         Price = new decimal(1.00),
+                        PreviousPrice = new decimal(2.00),
                         Index = 1,
                         IsAvalible = true,
                         Category = categories[1]
@@ -110,6 +113,7 @@ namespace test_app.api.Data
                         StaticName = "standarts-case-2",
                         Image = "/assets/images/cases/stand_case_01.png",
                         Price = new decimal(2.00),
+                        PreviousPrice = new decimal(3.00),
                         Index = 2,
                         IsAvalible = true,
                         Category = categories[1]
@@ -120,6 +124,7 @@ namespace test_app.api.Data
                         StaticName = "standarts-case-3",
                         Image = "/assets/images/cases/stand_case_01.png",
                         Price = new decimal(3.00),
+                        PreviousPrice = new decimal(4.00),
                         Index = 3,
                         IsAvalible = true,
                         Category = categories[1]
@@ -130,6 +135,7 @@ namespace test_app.api.Data
                         StaticName = "standarts-case-4",
                         Image = "/assets/images/cases/stand_case_01.png",
                         Price = new decimal(4.00),
+                        PreviousPrice = new decimal(5.00),
                         Index = 4,
                         IsAvalible = true,
                         Category = categories[1]
@@ -140,6 +146,7 @@ namespace test_app.api.Data
                         StaticName = "standarts-case-5",
                         Image = "/assets/images/cases/stand_case_01.png",
                         Price = new decimal(5.00),
+                        PreviousPrice = new decimal(6.00),
                         Index = 5,
                         IsAvalible = true,
                         Category = categories[1]
@@ -150,6 +157,7 @@ namespace test_app.api.Data
                         StaticName = "standarts-case-6",
                         Image = "/assets/images/cases/stand_case_01.png",
                         Price = new decimal(6.00),
+                        PreviousPrice = new decimal(7.00),
                         Index = 6,
                         IsAvalible = true,
                         Category = categories[1]
@@ -160,6 +168,7 @@ namespace test_app.api.Data
                         StaticName = "standarts-case-7",
                         Image = "/assets/images/cases/stand_case_01.png",
                         Price = new decimal(7.00),
+                        PreviousPrice = new decimal(8.00),
                         Index = 7,
                         IsAvalible = true,
                         Category = categories[1]
@@ -170,6 +179,7 @@ namespace test_app.api.Data
                         StaticName = "standarts-case-8",
                         Image = "/assets/images/cases/stand_case_01.png",
                         Price = new decimal(8.00),
+                        PreviousPrice = new decimal(9.00),
                         Index = 8,
                         IsAvalible = true,
                         Category = categories[1]
@@ -181,6 +191,7 @@ namespace test_app.api.Data
                         StaticName = "regular-case-1",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(1.00),
+                        PreviousPrice = new decimal(2.00),
                         Index = 1,
                         IsAvalible = true,
                         Category = categories[2]
@@ -191,6 +202,7 @@ namespace test_app.api.Data
                         StaticName = "regular-case-2",
                         Image = "/assets/images/cases/regular_case_blue.png",
                         Price = new decimal(2.00),
+                        PreviousPrice = new decimal(3.00),
                         Index = 2,
                         IsAvalible = true,
                         Category = categories[2]
@@ -201,6 +213,7 @@ namespace test_app.api.Data
                         StaticName = "regular-case-3",
                         Image = "/assets/images/cases/regular_case_purple.png",
                         Price = new decimal(3.00),
+                        PreviousPrice = new decimal(4.00),
                         Index = 3,
                         IsAvalible = true,
                         Category = categories[2]
@@ -211,6 +224,7 @@ namespace test_app.api.Data
                         StaticName = "regular-case-4",
                         Image = "/assets/images/cases/regular_case_red.png",
                         Price = new decimal(4.00),
+                        PreviousPrice = new decimal(5.00),
                         Index = 4,
                         IsAvalible = true,
                         Category = categories[2]
@@ -222,6 +236,7 @@ namespace test_app.api.Data
                         StaticName = "exclusive-case-1",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(1.00),
+                        PreviousPrice = new decimal(6.00),
                         Index = 1,
                         IsAvalible = true,
                         Category = categories[3]
@@ -232,6 +247,7 @@ namespace test_app.api.Data
                         StaticName = "exclusive-case-2",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(2.00),
+                        PreviousPrice = new decimal(7.00),
                         Index = 2,
                         IsAvalible = true,
                         Category = categories[3]
@@ -242,6 +258,7 @@ namespace test_app.api.Data
                         StaticName = "exclusive-case-3",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(3.00),
+                        PreviousPrice = new decimal(8.00),
                         Index = 3,
                         IsAvalible = true,
                         Category = categories[3]
@@ -252,6 +269,7 @@ namespace test_app.api.Data
                         StaticName = "exclusive-case-4",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(4.00),
+                        PreviousPrice = new decimal(9.00),
                         Index = 4,
                         IsAvalible = true,
                         Category = categories[3]
@@ -262,6 +280,7 @@ namespace test_app.api.Data
                         StaticName = "exclusive-case-5",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(5.00),
+                        PreviousPrice = new decimal(10.00),
                         Index = 5,
                         IsAvalible = true,
                         Category = categories[3]
@@ -272,6 +291,7 @@ namespace test_app.api.Data
                         StaticName = "exclusive-case-6",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(6.00),
+                        PreviousPrice = new decimal(11.00),
                         Index = 6,
                         IsAvalible = true,
                         Category = categories[3]
@@ -282,6 +302,7 @@ namespace test_app.api.Data
                         StaticName = "exclusive-case-7",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(7.00),
+                        PreviousPrice = new decimal(12.00),
                         Index = 7,
                         IsAvalible = true,
                         Category = categories[3]
@@ -292,6 +313,7 @@ namespace test_app.api.Data
                         StaticName = "exclusive-case-8",
                         Image = "/assets/images/cases/regular_case_gold.png",
                         Price = new decimal(8.00),
+                        PreviousPrice = new decimal(13.00),
                         Index = 8,
                         IsAvalible = true,
                         Category = categories[3]

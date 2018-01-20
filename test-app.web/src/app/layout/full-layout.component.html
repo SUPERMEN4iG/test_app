@@ -15,57 +15,59 @@
 
 <nav class="navbar navbar-toggleable-md b-statistic">
     <div class="container statistic">
-      <div class="statistic__item col-4 col-md-2">
-        <!-- <div class="statistic__item_icon"><i class="fa fa-key fa-2x"></i></div> -->
-        <div class="statistic__item_right">
-            <div class="statistic__item_text">cases</div>
-            <div class="statistic__item_value">10000</div>
+      <div class="row">
+        <div class="statistic__item col-2 col-md-2">
+          <!-- <div class="statistic__item_icon"><i class="fa fa-key fa-2x"></i></div> -->
+          <div class="statistic__item_right">
+              <div class="statistic__item_text">cases</div>
+              <div class="statistic__item_value">{{ mainData.opennedCases }}</div>
+          </div>
         </div>
-      </div>
-
-      <div class="statistic__item col-4 col-md-2">
-        <!-- <div class="statistic__item_icon"><i class="fa fa-users fa-2x"></i></div> -->
-        <div class="statistic__item_right">
-            <div class="statistic__item_text">users</div>
-            <div class="statistic__item_value">12300</div>
+  
+        <div class="statistic__item col-2 col-md-2">
+          <!-- <div class="statistic__item_icon"><i class="fa fa-users fa-2x"></i></div> -->
+          <div class="statistic__item_right">
+              <div class="statistic__item_text">users</div>
+              <div class="statistic__item_value">{{ mainData.usersRegistered }}</div>
+          </div>
         </div>
-      </div>
-
-      <div class="statistic__item col-4 col-md-2">
-        <!-- <div class="statistic__item_icon"><i class="fa fa-meh fa-2x"></i></div> -->
-        <div class="statistic__item_right">
-            <div class="statistic__item_text">online</div>
-            <div class="statistic__item_value">10</div>
+  
+        <div class="statistic__item col-2 col-md-2">
+          <!-- <div class="statistic__item_icon"><i class="fa fa-meh fa-2x"></i></div> -->
+          <div class="statistic__item_right">
+              <div class="statistic__item_text">online</div>
+              <div class="statistic__item_value">{{ mainData.online }}</div>
+          </div>
         </div>
-      </div>
-
-      <div class="b-profile col-6">
-        <div class="b-profile__inner">
-
-          <div *ngIf="currentUser != null" class="b-profile-min">
-              <img [src]="currentUser.steamAvatar" alt="">
-              <div class="b-profile-min__info" ngbDropdown>
-                <div class="b-profile-min__name" ngbDropdownToggle>{{ currentUser.userName }}</div>
-                <div class="b-profile-min__balance">balance: <b>{{ currentUser.balance }}$</b></div>
-
-                <div class="dropdown-menu" ngbDropdownMenu>
-                    <button class="dropdown-item">{{ currentUser.balance }}$</button>
-                    <button [routerLink]="['/profile', currentUser.id]" class="dropdown-item">Profile</button>
-                    <button class="dropdown-item">Add funds</button>
-                    <div class="dropdown-divider"></div>
-                    <button (click)="logout();" class="dropdown-item">Logout</button>
+  
+        <div class="b-profile col-md-6 col-6">
+          <div class="b-profile__inner">
+  
+            <div *ngIf="currentUser != null" class="b-profile-min">
+                <img [src]="currentUser.steamAvatar" alt="">
+                <div class="b-profile-min__info" ngbDropdown>
+                  <div class="b-profile-min__name" ngbDropdownToggle>{{ currentUser.userName }}</div>
+                  <div class="b-profile-min__balance">balance: <b>{{ currentUser.balance }}$</b></div>
+  
+                  <div class="dropdown-menu" ngbDropdownMenu>
+                      <button class="dropdown-item">{{ currentUser.balance }}$</button>
+                      <button [routerLink]="['/profile', currentUser.id]" class="dropdown-item">Profile</button>
+                      <button class="dropdown-item">Add funds</button>
+                      <div class="dropdown-divider"></div>
+                      <button (click)="logout();" class="dropdown-item">Logout</button>
+                  </div>
                 </div>
-              </div>
+            </div>
+  
+            <button *ngIf="currentUser == null && !isLoadingLogin" class="btn btn-steam" (click)="loginSteam()" type="button">
+              <span>Login with <b>STEAM</b></span>
+            </button>
+            <div *ngIf="currentUser == null && isLoadingLogin" class="loading">
+                <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
+              <span class="sr-only">Loading...</span>
+            </div>
+  
           </div>
-
-          <button *ngIf="currentUser == null && !isLoadingLogin" class="btn btn-steam" (click)="loginSteam()" type="button">
-            <span>Login with <b>STEAM</b></span>
-          </button>
-          <div *ngIf="currentUser == null && isLoadingLogin" class="loading">
-              <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
-            <span class="sr-only">Loading...</span>
-          </div>
-
         </div>
       </div>
 
@@ -80,7 +82,7 @@
 <footer class="container">
   <div class="footer__inner">
     <div class="row">
-      <div class="col-6 b-left">
+      <div class="col-12 col-md-6 b-left">
         <div class="b-menu bottom">
             <ul>
               <li><a [routerLink]='[""]'>Home</a></li>
@@ -92,7 +94,7 @@
             © 2017 EachCases On our site you can open PUBG cases with games at the best prices. All exchanges take place automatically with the help of <b>STEAM</b> bots.
         </div>
       </div>
-      <div class="col-6 b-right row">
+      <div class="col-12 col-md-6 b-right row">
           <div class="col-6 b-help row">
             <div class="col-6">
               <h5>Support</h5>

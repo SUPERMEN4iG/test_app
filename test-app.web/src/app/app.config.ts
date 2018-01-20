@@ -9,7 +9,7 @@ export const AppConfig: IAppConfig = {
   apiEndPoint: `https://localhost:44362/api/`,
 
   // Production
-  // endPoint: 'https://localhost:5000',
-  // apiEndPoint: 'http://localhost:5000/api/',
+  // endPoint: 'http://46.101.178.188:5001',
+  // apiEndPoint: 'http://46.101.178.188:5001/api/',
   baseTitle: 'Test app',
 };

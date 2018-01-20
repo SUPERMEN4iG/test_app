@@ -56,6 +56,7 @@ export class CaseComponent {
           if (data.length == 0) return;
 
           this.currentCase = this.caseService.getByCaseName(this.caseName);
+          console.info(this.currentCase);
       });
 
     });

@@ -11,9 +11,10 @@ using test_app.api.Data;
 namespace test_app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180120174045_v20")]
+    partial class v20
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,7 +222,7 @@ namespace test_app.api.Migrations
 
                     b.Property<bool>("IsAvalible");
 
-                    b.Property<decimal?>("PreviousPrice");
+                    b.Property<decimal>("PreviousPrice");
 
                     b.Property<decimal>("Price");
 

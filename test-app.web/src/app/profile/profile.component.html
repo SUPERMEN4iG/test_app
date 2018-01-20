@@ -1,9 +1,12 @@
 <div *ngIf="user != null" class="b-profile">
   <div class="row b-profile-head" style="margin-bottom: 20px;">
-      <div class="col-8 b-profile-head__left">
+      <div class="col-md-8 col-12 b-profile-head__left">
         <div class="header">Settings</div>
         <div class="row">
-          <div class="col-2"><img class="avatar" [src]="user.steamAvatar" alt=""></div>
+          <div class="col-2">
+            <img class="avatar" [src]="user.steamAvatar" alt="">
+            <h5 class="username">{{ user.email }}</h5>
+          </div>
           <div class="col-10">
             <div class="input-group">
               <input [disabled]="isDisableForEdit" [(ngModel)]="user.tradeofferUrl" type="text" class="form-control" placeholder="Enter you Trade url">
@@ -22,7 +25,7 @@
         </div>
       </div>
 
-      <div class="col-4 b-profile-head__right">
+      <div class="col-md-4 col-12 b-profile-head__right">
         <div class="header">Top up balance</div>
         <div class="row" style="padding-left: 15px;padding-right: 15px;">
           <div class="input-group">

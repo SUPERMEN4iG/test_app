@@ -16,6 +16,8 @@ namespace test_app.api.Data
 
         public CaseCategory Category { get; set; }
 
+        public Decimal? PreviousPrice { get; set; }
+
         public Decimal Price { get; set; }
 
         public String Image { get; set; }

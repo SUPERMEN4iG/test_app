@@ -12,6 +12,7 @@ import { AccessData } from '../_models/access-data';
 import { HttpClient } from '@angular/common/http';
 
 import { AuthenticationService } from '../_services/authentication.service';
+import { MainService } from '../_services/data/main.service';
 
 @Component({
   templateUrl: './full-layout.component.html',
@@ -22,9 +23,17 @@ export class FullLayoutComponent implements OnInit, AfterViewInit {
   public currentUser: any = {};
   public isLoadingLogin = false;
 
+  mainData = {
+    opennedCases: 0,
+    usersRegistered: 0,
+    online: 0,
+    serverTime: null
+  };
+
   constructor(@Inject(APP_CONFIG)private _appConfig: IAppConfig,
               private router: Router,
               private _authService: AuthenticationService,
+              private _mainService: MainService,
               private http: HttpClient) {
 
     // listen steam auth window for auth data
@@ -38,11 +47,20 @@ export class FullLayoutComponent implements OnInit, AfterViewInit {
     this._authService.currentUser$.subscribe(x => {
       this.currentUser = x;
     });
+
+    this._mainService.data$.subscribe(
+      (data) => {
+        this.mainData = data;
+      },
+      (err) => { console.error(err); }
+    );
+
+    this._mainService.refresh(false);
   }
 
   loginSteam() {
     this.isLoadingLogin = true;
-    var externalProviderUrl = "https://localhost:44362/Account/SignInWithSteam";
+    var externalProviderUrl = `${this._appConfig.endPoint}/Account/SignInWithSteam`;
     this.popupCenter(externalProviderUrl, "Authenticate Account", 600, 750);
   }
 
@@ -61,7 +79,7 @@ export class FullLayoutComponent implements OnInit, AfterViewInit {
   }
 
   receiveWindowMessage: any = (event: any) =>  {
-    if (event.origin == this._appConfig.endPoint) {
+    if (event.origin == `${this._appConfig.endPoint}`) {
       this.onLogin(event.data);
     }
   }

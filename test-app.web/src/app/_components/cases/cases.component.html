@@ -28,7 +28,7 @@
     <h2 class="b-cases-category__name">{{ caseCategory.category.fullName }}</h2>
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 1">
-      <div class="col-3 b-case_m rare" *ngFor="let case of caseCategory.cases">
+      <div class="col-3 b-case_m rare" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
         <div class="sprite-left-top"></div>
         <div class="sprite-rigt-top"></div>
         <div class="b-case_m__content">
@@ -36,33 +36,33 @@
           <img class="hover" src="../../../assets/images/simple_ammunition.png" alt="">
           <img src="../../../assets/images/case_rare.png" alt="">
         </div>
-        <button class="btn btn-rare-case" type="button">${{ case.price }}</button>
+        <button class="btn btn-rare-case" type="button">{{ case.price | currency }}</button>
       </div>
     </div>
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 2">
-      <div class="col-3 b-case_m standart" *ngFor="let case of caseCategory.cases">
+      <div class="col-md-3 col-6 b-case_m standart" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
         <div class="b-case_m__content">
             <div class="b-case_m__name">{{ case.fullName }}</div>
             <img class="b-case_m__img" src="../../../assets/images/cases/stand_case_01.png" alt="">
             <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
+              <span class="price">{{ case.price | currency }}</span>
+              <span class="price action">{{ case.previousPrice | currency }}</span>
             </div>
         </div>
       </div>
     </div>
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 3">
-      <div class="col-3 b-case_m regular" *ngFor="let case of caseCategory.cases">
+      <div class="col-md-3 col-6 b-case_m regular" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
         <div class="b-case_m__content">
             <div class="b-case_m__name">{{ case.fullName }}</div>
-            <div class="b-case_m__img_hover gold"></div>
+            <div class="b-case_m__img_hover" [ngClass]="case.caseClass"></div>
             <img class="b-case_m__img" [src]="case.image" alt="">
             <div class="b-case_m__new">NEW</div>
             <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
+              <span class="price">{{ case.price | currency }}</span>
+              <span class="price action">{{ case.previousPrice | currency }}</span>
             </div>
         </div>
       </div>
@@ -70,15 +70,15 @@
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 4">
 
-      <div class="col-3 b-case_m regular" *ngFor="let case of caseCategory.cases">
+      <div class="col-md-3 col-6 b-case_m regular" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
         <div class="b-case_m__content">
             <div class="b-case_m__name">{{ case.fullName }}</div>
             <div class="b-case_m__img_hover gold"></div>
             <img class="b-case_m__img" [src]="case.image" alt="">
             <div class="b-case_m__new">NEW</div>
             <div class="b-case_m__prices">
-              <span class="price">$9.99</span>
-              <span class="price action">$9.99</span>
+              <span class="price">{{ case.price | currency }}</span>
+              <span class="price action">{{ case.previousPrice | currency }}</span>
             </div>
         </div>
       </div>

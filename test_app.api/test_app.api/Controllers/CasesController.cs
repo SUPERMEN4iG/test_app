@@ -50,7 +50,9 @@ namespace test_app.api.Controllers
                             FullName = c.FullName,
                             Image = c.Image,
                             Price = c.Price,
+                            PreviousPrice = c.PreviousPrice,
                             Index = c.Index,
+                            CategoryName = c.Category.StaticName,
                             Skins = c.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price })
                         }).OrderBy(x => x.Index).ToList()
                     }).OrderBy(x => x.Category.Index);

@@ -22,7 +22,16 @@
   padding-top: 6px;
   padding-bottom: 6px;
 
+  .row {
+    width: 100%;
+  }
+
   .statistic__item {
+    &:first-child {
+      padding-left: 15px;
+    }
+
+    padding: 0;
     color: white;
     font-family: "Tahoma";
     text-transform: uppercase;
@@ -62,6 +71,7 @@
 }
 
 .b-profile {
+  padding: 0;
   .b-profile__inner {
     float: right;
   }

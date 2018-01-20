@@ -6,6 +6,7 @@ import { AuthenticationService } from '../../_services/authentication.service';
 
 import { UsersService } from '../../_services/data/users.service';
 import { CasesService } from '../../_services/data/cases.service';
+import { MainService } from '../../_services/data/main.service';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -51,6 +52,7 @@ export class RouletteComponent {
               private modalService: NgbModal,
               private _authService: AuthenticationService,
               private _userService: UsersService,
+              private _mainService: MainService,
               private _notification: ToastrService) {
   }
 
@@ -174,6 +176,7 @@ export class RouletteComponent {
           this.isSpinningChange.emit(false);
           this.isWinned = true;
           clearInterval(caseMessageInterval);
+          this._mainService.increseOpennedCases();
         });
       },
       (err) => {
