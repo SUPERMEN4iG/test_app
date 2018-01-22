@@ -1,9 +1,14 @@
 ﻿@model AuthResponseModel
 
+@using test_app.api.Models.Configuration;
+@using Microsoft.Extensions.Options;
+
+@inject IOptions<ClientConfigurations> OptionsClientConfigurations
+
 <body>
-<h2 style="text-align: center;" id="countDown"></h2>
-<script type="text/javascript">
-    window.opener.postMessage(JSON.stringify({ token: "@Model.Token", username: "@Model.Username" }), "http://localhost:4200/");
+    <h2 style="text-align: center;" id="countDown"></h2>
+    <script type="text/javascript">
+    window.opener.postMessage(JSON.stringify({ token: "@Model.Token", username: "@Model.Username" }), "@OptionsClientConfigurations.Value.Url");
     var counter = 5;
     var newElement = document.getElementById("countDown");
     newElement.innerHTML = `The authorization was successful, the window will close automatically ${counter.toString()} seconds`;
@@ -20,5 +25,5 @@
     //        window.close();
     //    },
     //    3000);
-</script>
+    </script>
 </body>

@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
+using test_app.api.Models.Configuration;
 
 namespace test_app.api
 {
@@ -57,6 +58,9 @@ namespace test_app.api
 
             services.AddOptions();
             services.Configure<SteamOptions>(options => { options.ApiKey = Configuration["ApiKey"]; });
+
+            services.Configure<ClientConfigurations>(
+                Configuration.GetSection("Client"));
 
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             //JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
