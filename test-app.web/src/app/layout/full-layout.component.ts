@@ -7,12 +7,11 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/finally';
 
-import { AccessData } from '../_models/access-data';
-
 import { HttpClient } from '@angular/common/http';
 
 import { AuthenticationService } from '../_services/authentication.service';
 import { MainService } from '../_services/data/main.service';
+import { AuthenticationManagerService } from '../_services/authentication.manager.service';
 
 @Component({
   templateUrl: './full-layout.component.html',
@@ -21,7 +20,7 @@ import { MainService } from '../_services/data/main.service';
 export class FullLayoutComponent implements OnInit, AfterViewInit {
 
   public currentUser: any = {};
-  public isLoadingLogin = false;
+  public isLoadingLogin: Boolean = false;
 
   mainData = {
     opennedCases: 0,
@@ -33,15 +32,9 @@ export class FullLayoutComponent implements OnInit, AfterViewInit {
   constructor(@Inject(APP_CONFIG)private _appConfig: IAppConfig,
               private router: Router,
               private _authService: AuthenticationService,
+              private _authenticationManagerService: AuthenticationManagerService,
               private _mainService: MainService,
               private http: HttpClient) {
-
-    // listen steam auth window for auth data
-    if (window.addEventListener) {
-      window.addEventListener("message", this.receiveWindowMessage.bind(this), false);
-    } else {
-        (<any>window).attachEvent("onmessage", this.receiveWindowMessage.bind(this));
-    }
 
     // listen currentUser
     this._authService.currentUser$.subscribe(x => {
@@ -56,47 +49,18 @@ export class FullLayoutComponent implements OnInit, AfterViewInit {
     );
 
     this._mainService.refresh(false);
+
+    this._authenticationManagerService.isLoadingLogin$.subscribe((b) => {
+      this.isLoadingLogin = b;
+    });
   }
 
   loginSteam() {
-    this.isLoadingLogin = true;
-    var externalProviderUrl = `${this._appConfig.endPoint}/Account/SignInWithSteam`;
-    this.popupCenter(externalProviderUrl, "Authenticate Account", 600, 750);
-  }
-
-  popupCenter(url, title, w, h) {
-    var left = (screen.width/2)-(w/2);
-    var top = (screen.height/2)-(h/2);
-    var newWindow = window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-
-    if (window.focus) {
-      newWindow.focus();
-    }
+    this._authenticationManagerService.loginSteam();
   }
 
   logout() {
     this._authService.logout();
-  }
-
-  receiveWindowMessage: any = (event: any) =>  {
-    if (event.origin == `${this._appConfig.endPoint}`) {
-      this.onLogin(event.data);
-    }
-  }
-
-  onLogin(data) {
-    const access_data: AccessData = JSON.parse(data);
-    console.info(access_data);
-    this._authService.login(access_data.token)
-      .finally(() => { this.isLoadingLogin = false; })
-      .subscribe(
-        (data) => {
-          console.info(data);
-        },
-        (err) => {
-          console.error(err);
-        }
-      );
   }
 
   ngOnInit() {

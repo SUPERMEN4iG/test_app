@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CaseRoutingModule } from './case.routing';
@@ -21,6 +21,7 @@ import { DataSharedModule } from '../app.shared.module';
     RouletteComponent
   ],
   providers: [
+    CurrencyPipe
   ],
 })
 export class CaseModule { }

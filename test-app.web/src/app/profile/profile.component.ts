@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 
 import { UsersService } from '../_services/data/users.service';
 import { AuthenticationService } from '../_services/authentication.service';
+import { WinnerService } from '../_services/data/winner.service';
 
 @Component({
   selector: 'profile',
@@ -29,7 +30,8 @@ export class ProfileComponent {
               private route: ActivatedRoute,
               private _usersService: UsersService,
               private _authService: AuthenticationService,
-              private _notification: ToastrService) {
+              private _notification: ToastrService,
+              private _winnerService: WinnerService) {
   }
 
   ngOnInit() {
@@ -62,6 +64,20 @@ export class ProfileComponent {
       },
       (err) => {
         this._notification.error(err.message, 'Trade offer url');
+      }
+    );
+  }
+
+  onClickSell(item) {
+    item.state = 1337;
+    this._winnerService.sell(item.id).subscribe(
+      (data) => {
+        item.price = data.data;
+        item.state = 1;
+        this._authService.updateUser('balance', (this._authService.currentUser.balance + item.price));
+      },
+      (err) => {
+        this._notification.error(err.message, 'Sell item');
       }
     );
   }

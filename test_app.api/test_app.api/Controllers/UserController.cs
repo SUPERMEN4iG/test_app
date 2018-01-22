@@ -58,12 +58,13 @@ namespace test_app.api.Controllers
                 .Include(x => x.Skin)
                 .Select(x => new
                 {
-                    x.Skin.Id,
+                    x.Id,
                     x.DateCreate,
                     x.Skin.MarketHashName,
                     x.Skin.Image,
-                    x.IsSent,
-                    x.IsSold
+                    x.State,
+                    x.Price,
+                    PriceForSell = x.Skin.Price
                 }).ToList();
 
             user.wonItems.Clear();

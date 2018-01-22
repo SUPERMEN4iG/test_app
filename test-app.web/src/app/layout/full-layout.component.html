@@ -1,12 +1,45 @@
 <header>
   <div class="container b-header">
     <img class="logo_top" src="../../assets/images/logo_text.png" alt="">
-    <div class="row">
+    <div class="col-12 row">
       <div class="col-12 b-menu top">
         <ul>
           <li><a [routerLink]='[""]'>Home</a></li>
           <li><a href="#">FAQ</a></li>
           <li><a href="#">TOP</a></li>
+          <li>
+            <div class="b-profile">
+              <div class="b-profile__inner">
+      
+                <div *ngIf="currentUser != null" class="b-profile-min">
+                    <img [routerLink]="['/profile', currentUser.id]" [src]="currentUser.steamAvatar" alt="">
+                    <div class="b-profile-min__info">
+                      <div [routerLink]="['/profile', currentUser.id]" class="b-profile-min__name">{{ currentUser.userName }} <span style="color: #5cb85c">{{ currentUser.balance | currency }}</span></div>
+                      <button class="btn btn-outline-success" style="margin-top: 7px;text-transform: uppercase;">Add funds</button>
+                      <button class="btn btn-outline-warning" (click)="logout();" style="margin-top: 7px;text-transform: uppercase;"><i class="fa fa-times" aria-hidden="true"></i></button>
+                      <!-- <div class="b-profile-min__balance">balance: <b>{{ currentUser.balance }}$</b></div> -->
+      
+                      <!-- <div class="dropdown-menu" ngbDropdownMenu>
+                          <button class="dropdown-item">{{ currentUser.balance }}$</button>
+                          <button [routerLink]="['/profile', currentUser.id]" class="dropdown-item">Profile</button>
+                          <button class="dropdown-item">Add funds</button>
+                          <div class="dropdown-divider"></div>
+                          <button (click)="logout();" class="dropdown-item">Logout</button>
+                      </div> -->
+                    </div>
+                </div>
+      
+                <button *ngIf="currentUser == null && !isLoadingLogin" class="btn btn-steam" (click)="loginSteam()" type="button">
+                  <span>Login with <b>STEAM</b></span>
+                </button>
+                <div *ngIf="currentUser == null && isLoadingLogin" class="loading">
+                    <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
+                  <span class="sr-only">Loading...</span>
+                </div>
+      
+              </div>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
@@ -15,8 +48,8 @@
 
 <nav class="navbar navbar-toggleable-md b-statistic">
     <div class="container statistic">
-      <div class="row">
-        <div class="statistic__item col-2 col-md-2">
+      <div class="col-12 row">
+        <div class="statistic__item col-4 col-md-2">
           <!-- <div class="statistic__item_icon"><i class="fa fa-key fa-2x"></i></div> -->
           <div class="statistic__item_right">
               <div class="statistic__item_text">cases</div>
@@ -24,7 +57,7 @@
           </div>
         </div>
   
-        <div class="statistic__item col-2 col-md-2">
+        <div class="statistic__item col-4 col-md-2">
           <!-- <div class="statistic__item_icon"><i class="fa fa-users fa-2x"></i></div> -->
           <div class="statistic__item_right">
               <div class="statistic__item_text">users</div>
@@ -32,7 +65,7 @@
           </div>
         </div>
   
-        <div class="statistic__item col-2 col-md-2">
+        <div class="statistic__item col-4 col-md-2">
           <!-- <div class="statistic__item_icon"><i class="fa fa-meh fa-2x"></i></div> -->
           <div class="statistic__item_right">
               <div class="statistic__item_text">online</div>
@@ -40,35 +73,7 @@
           </div>
         </div>
   
-        <div class="b-profile col-md-6 col-6">
-          <div class="b-profile__inner">
-  
-            <div *ngIf="currentUser != null" class="b-profile-min">
-                <img [src]="currentUser.steamAvatar" alt="">
-                <div class="b-profile-min__info" ngbDropdown>
-                  <div class="b-profile-min__name" ngbDropdownToggle>{{ currentUser.userName }}</div>
-                  <div class="b-profile-min__balance">balance: <b>{{ currentUser.balance }}$</b></div>
-  
-                  <div class="dropdown-menu" ngbDropdownMenu>
-                      <button class="dropdown-item">{{ currentUser.balance }}$</button>
-                      <button [routerLink]="['/profile', currentUser.id]" class="dropdown-item">Profile</button>
-                      <button class="dropdown-item">Add funds</button>
-                      <div class="dropdown-divider"></div>
-                      <button (click)="logout();" class="dropdown-item">Logout</button>
-                  </div>
-                </div>
-            </div>
-  
-            <button *ngIf="currentUser == null && !isLoadingLogin" class="btn btn-steam" (click)="loginSteam()" type="button">
-              <span>Login with <b>STEAM</b></span>
-            </button>
-            <div *ngIf="currentUser == null && isLoadingLogin" class="loading">
-                <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
-              <span class="sr-only">Loading...</span>
-            </div>
-  
-          </div>
-        </div>
+        
       </div>
 
     </div>
@@ -81,7 +86,7 @@
 
 <footer class="container">
   <div class="footer__inner">
-    <div class="row">
+    <div class="col-12 row">
       <div class="col-12 col-md-6 b-left">
         <div class="b-menu bottom">
             <ul>
@@ -95,19 +100,19 @@
         </div>
       </div>
       <div class="col-12 col-md-6 b-right row">
-          <div class="col-6 b-help row">
-            <div class="col-6">
+          <div class="col-12 col-lg-6 b-help row">
+            <div class="col-12 col-lg-6">
               <h5>Support</h5>
               <a href="#">Help with payments</a>
               <a href="#">Help with accounts</a>
               <a href="#">Help on the game</a>
             </div>
-            <div class="col-6">
+            <div class="col-12 col-lg-6">
               <h5>Contacts</h5>
               <div class="email">info@eachcases.com</div>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-12 col-lg-6">
             <img class="logo_min" src="../../assets/images/logo_3.png" alt="">
           </div>
       </div>

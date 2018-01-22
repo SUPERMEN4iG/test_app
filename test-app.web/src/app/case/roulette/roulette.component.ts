@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild, TemplateRef, ElementRef, EventEmitter, Output } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
@@ -13,6 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 import { animate, AnimationBuilder, style } from '@angular/animations';
 
 import { Skin } from './skin';
+import { WinnerService } from '../../_services/data/winner.service';
 
 @Component({
   selector: 'roulette',
@@ -43,6 +45,8 @@ export class RouletteComponent {
   prize = null;
   microposX = 0;
 
+  currentWinner = null;
+
   @ViewChild('casesCarusel') casesCarusel: ElementRef;
 
   constructor(private router: Router,
@@ -53,7 +57,9 @@ export class RouletteComponent {
               private _authService: AuthenticationService,
               private _userService: UsersService,
               private _mainService: MainService,
-              private _notification: ToastrService) {
+              private _notification: ToastrService,
+              private _winnerService: WinnerService,
+              private currencyPipe: CurrencyPipe) {
   }
 
   ngOnInit() {
@@ -125,13 +131,31 @@ export class RouletteComponent {
     return Math.floor(x*mult)/mult;
   }
 
+  sellItem() {
+    let lastState = this.currentWinner.state;
+    this.currentWinner.state = 1337;
+    this._winnerService.sell(this.currentWinner.id).subscribe(
+      (data) => {
+        this.currentWinner.state = 1;
+        this.currentWinner.price = data.data;
+        this._userService.appnedWin(this._authService.currentUser.id, this.currentWinner);
+        this._authService.updateUser('balance', (this._authService.currentUser.balance + this.currentWinner.price));
+        this._notification.success(`Sold for ${this.currencyPipe.transform(this.currentWinner.price)}`, 'Sell item');
+      },
+      (err) => {
+        this._notification.error(err.message, 'Sell item');
+        this.currentWinner.state = lastState;
+      }
+    );
+  }
 
   spin() {
+    this.currentWinner = null;
     const templateCaseMessage = 'OPENNING CASE';
     this.caseMessage = templateCaseMessage;
 
     let caseMessageInterval = setInterval(() => {
-      console.info(this.caseMessage.charAt(this.caseMessage.length - 3));
+      // console.info(this.caseMessage.charAt(this.caseMessage.length - 3));
       if (this.caseMessage.charAt(this.caseMessage.length - 3) == '.') {
         this.caseMessage = templateCaseMessage;
       } else {
@@ -177,6 +201,7 @@ export class RouletteComponent {
           this.isWinned = true;
           clearInterval(caseMessageInterval);
           this._mainService.increseOpennedCases();
+          this.currentWinner = winSkin;
         });
       },
       (err) => {

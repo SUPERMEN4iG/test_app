@@ -2,9 +2,20 @@
   <h2>{{prize.marketHashName}}</h2>
   <div class="hover"></div>
   <img [src]="prize.image" />
-  <div class="b-win__buttons">
-    <button (click)="spin();" type="button" class="btn btn-outline-success">Sell</button>
-    <button (click)="spin();" type="button" class="btn btn-outline-warning">Take</button>
+  <div class="b-win__buttons" *ngIf="currentWinner">
+    <button (click)="sellItem();" type="button" class="btn btn-outline-success" [disabled]="currentWinner.state == 1">
+        <i *ngIf="currentWinner.state == 1337" class="fa fa-sync-alt fa-spin fa-fw"></i>
+        <i *ngIf="currentWinner.state != 1337" class="fa fa-recycle" aria-hidden="true"></i>
+        Sell for {{ currentWinner.price | currency }}
+    </button>
+    <button (click)="spin();" type="button" class="btn btn-outline-warning">
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        Take
+    </button>
+    <button (click)="spin();" type="button" class="btn btn-outline-warning">
+        <i class="fa fa-sync-alt" aria-hidden="true"></i>
+        Spin again
+    </button>
   </div>
 </div>
 

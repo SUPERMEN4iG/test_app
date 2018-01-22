@@ -59,9 +59,20 @@ export class UsersService {
   public appnedWin(id: string, win: any): any {
     const founded = this.data.find((o) => { return o.id == id; });
     const foundedIndex = this.data.indexOf(founded);
+    
+    console.info(win);
 
     if (foundedIndex > -1) {
-      founded.wonItems.push(win);
+
+      let indexWinner =  _.indexOf(_.pluck(founded.wonItems, 'id'), win.id);
+      console.info(founded.wonItems, indexWinner);
+
+      if (indexWinner == -1) {
+        founded.wonItems.push(win);
+      } else {
+        founded.wonItems[indexWinner] = win;
+      }
+
       delete this.data[foundedIndex]; this.data.length--;
       this.data.push(founded);
       this.data$.next(founded);

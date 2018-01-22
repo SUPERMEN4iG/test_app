@@ -38,6 +38,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ToastrModule } from 'ngx-toastr';
+import { AuthenticationManagerService } from './_services/authentication.manager.service';
+import { WinnerService } from './_services/data/winner.service';
 
 @NgModule({
   declarations: [
@@ -64,7 +66,9 @@ import { ToastrModule } from 'ngx-toastr';
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     AuthenticationService,
+    AuthenticationManagerService,
     CasesService,
+    WinnerService,
     UsersService,
     MainService,
     {

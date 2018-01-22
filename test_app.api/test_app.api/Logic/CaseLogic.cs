@@ -43,7 +43,8 @@ namespace test_app.api.Logic
                     {
                         Case = _case,
                         Skin = selected.Skin,
-                        User = _user
+                        User = _user,
+                        State = Winner.WinnerState.None
                     };
 
                     _context.Add(winner);
@@ -51,6 +52,12 @@ namespace test_app.api.Logic
                     _user.Balance -= _case.Price;
 
                     _context.SaveChanges();
+
+                    // Получаем текущую цену
+                    var stockItems = _context.Stock.Include(x => x.Skin).Where(x => x.Skin.Id == winner.Skin.Id);
+                    var cnt = stockItems.Count();
+                    var stockItem = stockItems.Count() > 0 ? stockItems.FirstOrDefault() : null;
+                    var price = (stockItem == null) ? winner.Skin.Price : stockItem.Price;
 
                     //var random = new Random().NextDouble();
                     //CasesDrop selected = null;
@@ -66,7 +73,7 @@ namespace test_app.api.Logic
 
                     transaction.Commit();
 
-                    return CaseOpenResult.GenerateSuccess(new { winner.Skin.MarketHashName, winner.Skin.Image, winner.Skin.Id, winner.Skin.DateCreate }, selected.Chance.ToString());
+                    return CaseOpenResult.GenerateSuccess(new { winner.Skin.MarketHashName, price, winner.Skin.Image, winner.Id, winner.Skin.DateCreate, winner.State }, selected.Chance.ToString());
                 }
                 catch (Exception e)
                 {

@@ -1,5 +1,5 @@
 <div *ngIf="user != null" class="b-profile">
-  <div class="row b-profile-head" style="margin-bottom: 20px;">
+  <div class="col-12 row b-profile-head" style="margin-bottom: 20px; padding: 0;">
       <div class="col-md-8 col-12 b-profile-head__left">
         <div class="header">Settings</div>
         <div class="row">
@@ -44,13 +44,26 @@
       <div class="b-case-drop__inner ">
         <h3>Won items</h3>
 
-        <div class="row">
-          <div *ngFor="let item of user.wonItems" class="b-item-drop col-6 col-md-2">
+        <div class="col-12 row">
+          <div *ngFor="let item of user.wonItems" class="b-item-drop col-6 col-md-3 col-lg-2">
               <div class="border">
                 <div class="b-item-drop__inner">
                     <h6>{{ item.marketHashName }}</h6>
                     <div class="hover"></div>
                     <img [src]="item.image" alt="">
+                    <div class="text-center controls">
+                      <div class="btn-group" *ngIf="item.state == 0">
+                        <button (click)="onClickSell(item)" class="btn btn-success">Sell</button>
+                        <button class="btn btn-warning">Take</button>
+                      </div>
+                      <div *ngIf="item.state == 1">
+                        <h5>sold for {{ item.price | currency }}</h5>
+                      </div>
+                      <div *ngIf="item.state == 1337" class="loading">
+                          <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
+                        <span class="sr-only">Loading...</span>
+                      </div>
+                    </div>
                   </div>
               </div>
               <!-- <img class="card-img-top" [src]="skin.image" alt="Card image cap">

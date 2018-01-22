@@ -12,6 +12,7 @@ import { RouletteComponent } from './roulette/roulette.component';
 import { animate, AnimationBuilder, style } from '@angular/animations';
 
 import { ToastrService } from 'ngx-toastr';
+import { AuthenticationManagerService } from '../_services/authentication.manager.service';
 
 @Component({
   selector: 'case',
@@ -42,6 +43,7 @@ export class CaseComponent {
               private _authService: AuthenticationService,
               private _userService: UsersService,
               private animBuilder: AnimationBuilder,
+              private _authenticationManagerService: AuthenticationManagerService,
               private _notification: ToastrService) {
   }
 
@@ -66,6 +68,10 @@ export class CaseComponent {
     this.modalService.open(this.modalWinContent).result.then((result) => {
     }, (reason) => {
     });
+  }
+
+  loginSteam() {
+    this._authenticationManagerService.loginSteam();
   }
 
   animationPlayer;

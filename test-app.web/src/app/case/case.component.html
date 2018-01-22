@@ -13,8 +13,9 @@
       <img [ngClass]="currentCase.categoryName" [src]="currentCase.image" alt="">
       <div class="hover" [ngClass]="currentCase.caseClass"></div>
       <div class="price">{{ currentCase.price | currency }}</div>
-      <button *ngIf="currentUser != null" (click)="openCase()" type="button" class="btn btn-outline-success btn-open-case">Open case</button>
-      <button *ngIf="currentUser == null" type="button" class="btn btn-outline-success btn-open-case">Sign in</button>
+      <button *ngIf="currentUser != null && currentUser.balance >= currentCase.price" (click)="openCase()" type="button" class="btn btn-outline-success btn-open-case">Open case</button>
+      <button *ngIf="currentUser == null" (click)="loginSteam()" type="button" class="btn btn-outline-success btn-open-case">Sign in</button>
+      <button *ngIf="currentUser != null && currentUser.balance < currentCase.price" type="button" class="btn btn-outline-success btn-open-case">Add funds</button>
     </div>
 
   </div>
@@ -23,8 +24,8 @@
     <div class="b-case-drop__inner ">
       <h3>Items in {{ currentCase.fullName }}</h3>
 
-      <div class="row">
-        <div *ngFor="let skin of currentCase.skins" class="b-item-drop col-6 col-md-2">
+      <div class="col-12 row">
+        <div *ngFor="let skin of currentCase.skins" class="b-item-drop col-6 col-md-3 col-lg-2">
             <div class="border">
               <div class="b-item-drop__inner">
                   <h6>{{ skin.marketHashName }}</h6>

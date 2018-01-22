@@ -43,6 +43,8 @@ namespace test_app.api.Data
 
         public DbSet<CasesDrop> CasesDrops { get; set; }
 
+        public DbSet<Stock> Stock { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
