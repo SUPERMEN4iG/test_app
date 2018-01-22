@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-test_app.api-40D7C42A-4E98-4C58-9439-112CF70E330E</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AngleSharp" Version="0.9.9" />
@@ -32,6 +36,7 @@
   <ItemGroup>
     <Folder Include="Helper\Http\" />
     <Folder Include="Models\Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 </Project>
