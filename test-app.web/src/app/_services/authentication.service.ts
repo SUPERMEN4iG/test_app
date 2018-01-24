@@ -7,6 +7,7 @@ import 'rxjs/add/operator/map';
 
 import { APP_CONFIG } from '../app.config';
 import { IAppConfig } from '../_interfaces/IAppConfig';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthenticationService {
@@ -23,7 +24,7 @@ export class AuthenticationService {
       this.currentUser = currentUser;
       this.currentUser$.next(this.currentUser);
       this.token = currentUser && currentUser.token;
-      this.apiEndPoint = `${_appConfig.apiEndPoint + this.serviceEndPoint}`;
+      this.apiEndPoint = `${environment.apiEndPoint + this.serviceEndPoint}`;
     }
 
     getToken() {

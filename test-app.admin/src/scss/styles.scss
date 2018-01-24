@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "./_fonts.scss";
+
+@import "~ngx-toastr/toastr";
+
+
+body {
+  font-family: "SegoeUI";
+  -webkit-font-smoothing: subpixel-antialiased !important;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility:    hidden;
+  -ms-backface-visibility:     hidden;
+  letter-spacing: -0.03em;
+  padding-top: 5rem;
+}
+
+button[type="button"] {
+  cursor: pointer;
+}
+

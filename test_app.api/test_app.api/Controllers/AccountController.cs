@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using test_app.api.Data;
 using test_app.api.Models;
 using test_app.api.Models.AccountViewModels;
 using test_app.api.Services;
@@ -28,6 +29,7 @@ namespace test_app.api.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly SteamOptions _steamOptions;
@@ -37,12 +39,14 @@ namespace test_app.api.Controllers
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger,
-            IOptions<SteamOptions> optionsAccessor)
+            IOptions<SteamOptions> optionsAccessor,
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _roleManager = roleManager;
             _steamOptions = optionsAccessor.Value;
         }
 
@@ -323,10 +327,18 @@ namespace test_app.api.Controllers
             var now = DateTime.UtcNow;
             var steamId = new Uri(info.ProviderKey).Segments.Last();
 
+            var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
+            var user = context.Users.FirstOrDefault(x => x.Id == steamId);
+            var task = _userManager.GetRolesAsync(user);
+            task.Wait();
+            var roles = task.Result;
+
             List<Claim> claims = new List<Claim>() {
                 new Claim(JwtRegisteredClaimNames.Sub, steamId),
                 new Claim(ClaimsIdentity.DefaultNameClaimType, steamId)
             };
+
+            claims.AddRange(roles.Select(x => new Claim(ClaimsIdentity.DefaultRoleClaimType, x)));
 
             ClaimsIdentity claimsIdentity =
                 new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
@@ -392,13 +404,18 @@ namespace test_app.api.Controllers
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    result = await _userManager.AddLoginAsync(user, info);
+                    result = await _userManager.AddToRoleAsync(user, "User");
+
                     if (result.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-                        //await GenerateToken(info);
-                        return PartialView("Close", GenerateToken(info));
+                        result = await _userManager.AddLoginAsync(user, info);
+                        if (result.Succeeded)
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+                            //await GenerateToken(info);
+                            return PartialView("Close", GenerateToken(info));
+                        }
                     }
                 }
                 AddErrors(result);

@@ -34,6 +34,7 @@ namespace test_app.api.Controllers
         public async Task<IActionResult> GetUserData()
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
+            user.Roles = await _userManager.GetRolesAsync(user);
             return Json(user);
         }
 

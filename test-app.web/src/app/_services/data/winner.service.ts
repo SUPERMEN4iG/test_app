@@ -12,6 +12,7 @@ import { IAppConfig } from '../../_interfaces/IAppConfig';
 import { AuthenticationService } from '../../_services/authentication.service';
 
 import * as _ from 'underscore';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class WinnerService {
@@ -20,7 +21,7 @@ export class WinnerService {
 
   constructor(private _http: HttpClient,
               @Inject(APP_CONFIG)private _appConfig: IAppConfig) {
-    this.apiEndPoint = `${_appConfig.apiEndPoint + this.serviceEndPoint}`;
+    this.apiEndPoint = `${environment.apiEndPoint + this.serviceEndPoint}`;
   }
 
   private handleError(error: HttpResponse<ErrorResponse>) {

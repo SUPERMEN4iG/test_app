@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace test_app.api.Data
             if (context.AllMigrationsApplied() && context.AllMigrations() >= 1)
             {
                 if (context.Applications.Any((x) => x.Name == "TEST_APP" && x.IsInitialized == true)) return;
+
+                context.Roles.Add(new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" });
+                context.Roles.Add(new IdentityRole { Name = "User", NormalizedName = "USER" });
 
                 var app = new Application()
                 {

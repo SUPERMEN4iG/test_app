@@ -1,0 +1,29 @@
+<nav *ngIf="currentUser" class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" [routerLink]="['/']">Adminka</a>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="['cases']">Cases</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="button" (click)="logout()">Logout</button>
+    </form>
+  </div>
+</nav>
+
+<div *ngIf="currentUser">
+  <!-- <app-lastwinners></app-lastwinners> -->
+  <router-outlet></router-outlet>
+</div>
+
+<div *ngIf="!currentUser && !isLoadingLogin">
+  <h1 class="text-center">Access denied</h1>
+</div>
+<div *ngIf="!currentUser && isLoadingLogin">
+  <h1 class="text-center"><i class="fa fa-sync-alt fa-spin fa-fw"></i> Login is proceed</h1>
+</div>

@@ -43,9 +43,12 @@ namespace test_app.api
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IConfiguration>(Configuration);
 
+            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
                     options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier; // Переопределяем UserIdClaimType на NameIdentifier важно для JWT!
+                    //options.Tokens.ProviderMap.Add("Default", new TokenProviderDescriptor(typeof(ITokenProviderDescriptor<ApplicationUser>)));
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -66,7 +69,11 @@ namespace test_app.api
             //JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
 
             // TODO: Сделать response, когда JWT-токен умер
-            services.AddAuthentication()
+            services.AddAuthentication(options => {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultForbidScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = false;
@@ -74,6 +81,7 @@ namespace test_app.api
                     {
                         ValidateIssuer = true,
                         ValidIssuer = AuthOptions.ISSUER,
+                        ValidateActor = true,
                         ValidateAudience = false,
                         ValidAudience = AuthOptions.AUDIENCE,
                         ValidateLifetime = true,

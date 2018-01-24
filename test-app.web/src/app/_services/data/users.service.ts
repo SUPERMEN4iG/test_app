@@ -10,6 +10,7 @@ import 'rxjs/add/observable/throw';
 
 import { APP_CONFIG } from '../../app.config';
 import { IAppConfig } from '../../_interfaces/IAppConfig';
+import { environment } from '../../../environments/environment';
 
 import * as _ from 'underscore';
 
@@ -22,7 +23,7 @@ export class UsersService {
 
   constructor(private _http: HttpClient,
               @Inject(APP_CONFIG)private _appConfig: IAppConfig) {
-    this.apiEndPoint = `${_appConfig.apiEndPoint + this.serviceEndPoint}`;
+    this.apiEndPoint = `${environment.apiEndPoint + this.serviceEndPoint}`;
     this.data$ = <BehaviorSubject<Object[]>> new BehaviorSubject(new Array<Object>());
   }
 
@@ -59,7 +60,7 @@ export class UsersService {
   public appnedWin(id: string, win: any): any {
     const founded = this.data.find((o) => { return o.id == id; });
     const foundedIndex = this.data.indexOf(founded);
-    
+
     console.info(win);
 
     if (foundedIndex > -1) {

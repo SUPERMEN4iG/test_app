@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -15,5 +16,8 @@ namespace test_app.api.Models
         public string SteamUsername { get; set; }
         public Decimal Balance { get; set; }
         public String TradeofferUrl { get; set; }
+
+        [NotMapped]
+        public IList<string> Roles { get; set; }
     }
 }

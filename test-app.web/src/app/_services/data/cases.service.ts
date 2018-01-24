@@ -12,6 +12,7 @@ import { IAppConfig } from '../../_interfaces/IAppConfig';
 import { AuthenticationService } from '../../_services/authentication.service';
 
 import * as _ from 'underscore';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class CasesService {
@@ -22,7 +23,7 @@ export class CasesService {
 
   constructor(private _http: HttpClient,
               @Inject(APP_CONFIG)private _appConfig: IAppConfig) {
-    this.apiEndPoint = `${_appConfig.apiEndPoint + this.serviceEndPoint}`;
+    this.apiEndPoint = `${environment.apiEndPoint + this.serviceEndPoint}`;
     this.data$ = <BehaviorSubject<Object[]>> new BehaviorSubject(new Array<Object>());
     console.info(this.data);
 
