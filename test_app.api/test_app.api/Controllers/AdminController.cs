@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using test_app.api.Data;
 using test_app.api.Models;
@@ -31,7 +32,9 @@ namespace test_app.api.Controllers
         public async Task<IActionResult> GetData()
         {
             var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
-            var data = context.Cases();
+            var data = context
+                    .Cases.Include(x => x.Category)
+                    .ToList();
 
             return Json(data);
         }
