@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { Http } from '@angular/http';
 import { CommonModule } from '@angular/common';
 
+import { CasesService } from './_services/data/cases.service';
+import { SkinsService } from './_services/data/skins.service';
+
 @NgModule({
   imports:      [ CommonModule ],
   declarations: [],
@@ -12,6 +15,8 @@ export class DataSharedModule {
     return {
       ngModule: DataSharedModule,
       providers: [
+        CasesService,
+        SkinsService
       ]
     }
   }

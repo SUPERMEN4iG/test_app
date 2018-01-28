@@ -19,7 +19,7 @@ import { AuthenticationManagerService } from '../_services/authentication.manage
 export class FullLayoutComponent implements OnInit, AfterViewInit {
 
   public currentUser: any = {};
-  public isLoadingLogin: Boolean = false;
+  public isLoadingLogin: boolean = false;
 
   mainData = {
     opennedCases: 0,

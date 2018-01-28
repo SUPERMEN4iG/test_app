@@ -29,13 +29,14 @@ namespace test_app.api.Helper {
             _skin_max_chance = 4;
         }
 
-        public List<SkinViewModel> Calc (int case_id, List<long> skinIds) {
+        public List<SkinViewModel> Calc (int case_id, double case_price, List<long> skinIds) {
 
+            _casePrice = case_price;
             _fakeInventory = _context.CasesDrops.Where (x => x.CaseId == case_id && !skinIds.Contains (x.SkinId)).Select (skin => new SkinViewModel () {
                 Id = skin.SkinId,
-                    Price = (double) skin.Skin.Price
+                    Price = skin.Skin.Price
             }).ToList ();
-            _skinsPool = _fakeInventory;
+            _skinsPool = new List<SkinViewModel>(_fakeInventory); // probably fixes
             push_skins ();
             _skinsPool.ForEach (skin => {
                 skin.Chance = System.Math.Round (skin_chances (skin.Id), 6) / 100;
@@ -50,7 +51,7 @@ namespace test_app.api.Helper {
 
         private double calc_buying () {
 
-            return _fakeInventory.Sum (x => x.Price);
+            return _fakeInventory.Sum(x => (double)x.Price);
 
         }
 
@@ -66,7 +67,7 @@ namespace test_app.api.Helper {
             /* Считаем частоту его выпадения. Для этого кол-во этого скина нужно поделить на общее кол-во предметов
              * Например: 1 m4a4 из 10 других скинов, частота выпадения - 10% (1 / 10 * 100);
              */
-            return skin_count (skin_id) / _fakeInventory.Count * 100;
+            return (double)skin_count (skin_id) / _fakeInventory.Count * 100;
         }
 
         private bool can_skin_be_pushed (long skin_id) {
@@ -94,15 +95,15 @@ namespace test_app.api.Helper {
                  * Если в диапозоне погрешности, то выходим из рекурсии
                  */
                 var marginality_diff = this._marginality - marginality_before;
-                if (marginality_diff <= _precision && .marginality_diff >= -_precision) {
+                if (marginality_diff <= _precision && marginality_diff >= -_precision) {
                     found = true;
                     return;
                 }
-                if (marginality_diff > 0 && skin.Price < _casePrice) {
+                if (marginality_diff > 0 && skin.Price < (decimal)_casePrice) {
                     _fakeInventory.Add (skin);
                     pushed_any = true;
                 }
-                if (marginality_diff < 0 && skin.Price > _casePrice) {
+                if (marginality_diff < 0 && skin.Price > (decimal)_casePrice) {
                     _fakeInventory.Add (skin);
                     pushed_any = true;
                 }

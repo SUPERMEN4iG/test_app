@@ -8,5 +8,7 @@ namespace test_app.api.Models.Configuration
     public class ClientConfigurations
     {
         public string Url { get; set; }
+
+        public string UrlAdmin { get; set; }
     }
 }

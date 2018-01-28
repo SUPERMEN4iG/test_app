@@ -1,0 +1,59 @@
+<div *ngIf="currentCase" class="row">
+  <div class="col-md-12">
+    <h1>Case {{ currentCase.fullName }}</h1>
+
+    <div class="row">
+      <div class="col-md-4 row">
+        <div class="form-group col-md-8">
+          <label for="caseName">Name</label>
+          <input type="text" class="form-control" [(ngModel)]="currentCase.fullName" id="caseName" placeholder="Enter case name">
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="casePrice">Price</label>
+          <input type="number" class="form-control" step="0.01" [(ngModel)]="currentCase.price" id="casePrice" placeholder="Enter price">
+        </div>
+
+      </div>
+      <div class="col-md-4 form-group">
+          <label for="availableSkins">Available skins</label>
+          <select class="form-control" id="availableSkins" [(ngModel)]="selectedSkin">
+              <option *ngFor="let skin of skins | skinsAvailable:currentCase.skins" [ngValue]="skin.id">
+                  {{skin.marketHashName}} ({{ skin.price | currency }})
+              </option>
+          </select>
+          <button type="button" class="btn btn-primary" [disabled]="selectedSkin == null" (click)="addSkin()">Add</button>
+      </div>
+
+      <div class="col-md-5">
+        <button (click)="onCaclulateChances()" type="button" class="btn btn-primary">Calculate chances</button>
+      </div>
+    </div>
+
+    <div>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Market hash name</th>
+            <th>Price</th>
+            <th>Chance</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let skin of currentCase.skins">
+            <th scope="row">{{ skin.id }}</th>
+            <td>{{ skin.marketHashName }}</td>
+            <td>{{ skin.price | currency }}</td>
+            <td><input style="max-width: 250px;" type="number" step="0.01" class="form-control" [(ngModel)]="skin.chance"></td>
+            <td><button (click)="onRemoveSkin(skin)" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <button (click)='onSave();' class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</div>

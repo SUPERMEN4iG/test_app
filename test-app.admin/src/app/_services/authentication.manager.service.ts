@@ -17,7 +17,7 @@ import { environment } from '../../environments/environment';
 @Injectable()
 export class AuthenticationManagerService {
 
-    isLoadingLogin$: BehaviorSubject<Boolean> = <BehaviorSubject<Boolean>> new BehaviorSubject(false);
+    isLoadingLogin$: BehaviorSubject<boolean> = <BehaviorSubject<boolean>> new BehaviorSubject(false);
 
     constructor(private _authService: AuthenticationService,
                 @Inject(APP_CONFIG)private _appConfig: IAppConfig) {

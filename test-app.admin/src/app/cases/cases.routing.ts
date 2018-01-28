@@ -3,6 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { CasesComponent } from './cases.component';
 
+import { CasesListComponent  } from './list/cases-list.component';
+import { CasesEditComponent } from './edit/case-edit.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -13,14 +16,28 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        component: CasesComponent,
+        redirectTo: 'list'
       },
       {
-        path: ':name',
-        component: CasesComponent,
+        path: 'list',
+        component: CasesListComponent,
+      },
+      {
+        path: ':id',
         data: {
-          title: ''
-        }
+          title: ' '
+        },
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'edit'
+          },
+          {
+            path: 'edit',
+            component: CasesEditComponent,
+          },
+        ]
       }
     ],
   }

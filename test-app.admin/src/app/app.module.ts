@@ -18,6 +18,7 @@ import { AuthenticationService } from './_services/authentication.service';
 import { HTTP_INTERCEPTORS, JsonpInterceptor } from '@angular/common/http';
 import { TokenInterceptor } from './_services/TokenInterceptor';
 import { JwtInterceptor } from './_services/JwtInterceptor';
+import { JsonInterceptor } from './_services/JsonInterceptor';
 
 // Components
 import { AppComponent } from './app.component';
@@ -31,6 +32,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ToastrModule } from 'ngx-toastr';
 import { AuthenticationManagerService } from './_services/authentication.manager.service';
+
+// Data services
+import { CasesService } from './_services/data/cases.service';
+import { SkinsService } from './_services/data/skins.service';
 
 @NgModule({
   declarations: [
@@ -54,8 +59,11 @@ import { AuthenticationManagerService } from './_services/authentication.manager
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: JsonInterceptor, multi: true },
     AuthenticationService,
     AuthenticationManagerService,
+    CasesService,
+    SkinsService,
     {
       provide: APP_CONFIG,
       useValue: AppConfig

@@ -23,6 +23,10 @@ namespace test_app.api.Data
 
         public String Image { get; set; }
 
+        public String SteamAnalystUrl { get; set; }
+
+        public String SteamUrl { get; set; }
+
         [Column("Rarity")]
         public string RarityString
         {
