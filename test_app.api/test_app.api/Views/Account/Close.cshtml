@@ -8,8 +8,16 @@
 <body>
     <h2 style="text-align: center;" id="countDown"></h2>
     <script type="text/javascript">
-        function onAuthed(url) {
-            window.opener.postMessage(JSON.stringify({ token: "@Model.Token", username: "@Model.Username" }), url);
+        function onAuthed() {
+            var urls = [
+                "@OptionsClientConfigurations.Value.Url",
+                "@OptionsClientConfigurations.Value.UrlAdmin"
+            ];
+
+            for (i = 0; i <= urls.length; i++) {
+                window.opener.postMessage(JSON.stringify({ token: "@Model.Token", username: "@Model.Username" }), urls[i]);
+            }
+
             var counter = 5;
             var newElement = document.getElementById("countDown");
             newElement.innerHTML = `The authorization was successful, the window will close automatically ${counter.toString()} seconds`;
@@ -24,13 +32,7 @@
             }, 1000);
         };
 
-        var redirectUrl = "@OptionsClientConfigurations.Value.UrlAdmin";
-        try {
-            onAuthed(redirectUrl);
-        } catch (ex) {
-            redirectUrl = "@OptionsClientConfigurations.Value.Url";
-            onAuthed(redirectUrl);
-        }
+        onAuthed();
 
     //setTimeout(() => {
     //        window.close();

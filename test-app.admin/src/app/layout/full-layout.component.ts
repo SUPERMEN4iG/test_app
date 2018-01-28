@@ -37,9 +37,9 @@ export class FullLayoutComponent implements OnInit, AfterViewInit {
     // listen currentUser
     this._authService.currentUser$.subscribe(x => {
       this.currentUser = x;
+      console.info(x);
 
       if (x == null) {
-        console.info(x);
         this.loginSteam();
       }
     });
