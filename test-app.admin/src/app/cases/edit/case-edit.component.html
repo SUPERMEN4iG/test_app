@@ -18,7 +18,7 @@
       <div class="col-md-4 form-group">
           <label for="availableSkins">Available skins</label>
           <select class="form-control" id="availableSkins" [(ngModel)]="selectedSkin">
-              <option *ngFor="let skin of skins | skinsAvailable:currentCase.skins" [ngValue]="skin.id">
+              <option *ngFor="let skin of skins" [ngValue]="skin.id">
                   {{skin.marketHashName}} ({{ skin.price | currency }})
               </option>
           </select>

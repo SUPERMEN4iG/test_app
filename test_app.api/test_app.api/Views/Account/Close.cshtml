@@ -15,7 +15,11 @@
             ];
 
             for (i = 0; i <= urls.length; i++) {
-                window.opener.postMessage(JSON.stringify({ token: "@Model.Token", username: "@Model.Username" }), urls[i]);
+                try {
+                    window.opener.postMessage(JSON.stringify({ token: "@Model.Token", username: "@Model.Username" }), urls[i]);
+                } catch (e) {
+                    console.error(e);
+                }
             }
 
             var counter = 5;

@@ -20,10 +20,14 @@ namespace test_app.api.Controllers
     [Route("api/Admin")]
     public class AdminController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
         public AdminController(
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
@@ -121,6 +125,48 @@ namespace test_app.api.Controllers
             context.SaveChanges();
 
             return Json("OK");
+        }
+
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Route("getstatistic")]
+        [HttpGet]
+        public async Task<IActionResult> GetStatistic()
+        {
+            var data = new AdminStatisticViewModel();
+
+            var now = DateTime.Today;
+            var periods = new[] { 5, 10, 20, 30 };
+
+            //var res = _context.Winners
+            //    .GroupBy(x => x.Case)
+            //    .Select(x => new {
+            //        Values = x
+            //            .GroupBy(d => new { Dayily = d.DateCreate.Day, Nedelya = d.DateCreate.AddDays(-7), Monthly = d.DateCreate.AddDays(-30) })
+            //            .Select(f => f.GroupBy(g => g.State).Select(c => new { State = c.Key, Count = c.Count(), Sum = c.Sum(s => s.State == Winner.WinnerState.None ? s.Case.Price : s.Price.GetValueOrDefault()) })),
+            //        Key = x.Key,
+            //    })
+            //    .ToList();
+
+            var res = _context.Winners
+                .GroupBy(x => x.Case)
+                .Select(x => new {
+                    Values = x
+                        .GroupBy(s => s.State).Select(d => d.GroupBy(dd => new { Dayily = dd.DateCreate, Nedelya = dd.DateCreate.AddDays(-7), Monthly = dd.DateCreate.AddDays(-30) })
+                            .Select(c => new
+                            {
+                                State = c.FirstOrDefault().State,
+                                Sum = c.Sum(ss => 
+                                    (ss.State == Winner.WinnerState.None) ? 0 : 
+                                    (ss.State == Winner.WinnerState.Sold) ? ss.Case.Price - ss.Price : 
+                                    (ss.State == Winner.WinnerState.Traded) ? ss.Case.Price - _context.Stock.FirstOrDefault(l => l.Skin == ss.Skin).Price : 0),
+                                Count = c.Count()
+                            })
+                        ),
+                    Key = x.Key,
+                })
+                .ToList();
+
+            return Json(res);
         }
     }
 }

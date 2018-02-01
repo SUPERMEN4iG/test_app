@@ -55,7 +55,7 @@ namespace test_app.api.Controllers
                     throw new Exception("wtf");
                 }
 
-                user.Balance += winner.Price;
+                user.Balance += winner.Price.Value;
 
                 context.Update(winner);
                 context.Update(user);

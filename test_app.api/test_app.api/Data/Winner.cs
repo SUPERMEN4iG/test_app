@@ -23,7 +23,7 @@ namespace test_app.api.Data
 
         public Stock Stock { get; set; }
 
-        public Decimal Price { get; set; }
+        public Decimal? Price { get; set; }
 
         public WinnerState State { get; set; } = WinnerState.None;
     }

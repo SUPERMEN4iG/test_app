@@ -3,10 +3,10 @@
     <h1>{{ caseCategory.category.fullName }}</h1>
 
     <div class="row" style="padding: 0; margin: 0;" *ngIf="caseCategory.cases.length > 0">
-      <div class="col-lg-3 mb-3" *ngFor="let case of caseCategory.cases">
+      <div class="col-lg-3 mb-3 b-case" *ngFor="let case of caseCategory.cases">
         <div class="card">
           <div class="card-block">
-            <h3 class="card-title">{{ case.fullName }} <span class="text-right" style="float: right;">{{ case.price | currency }}</span></h3>
+            <h3 class="card-title"><span class="id">#{{ case.id }}</span> {{ case.fullName }} <span class="text-right" style="float: right;">{{ case.price | currency }}</span></h3>
             <p class="card-text">
               <!-- <span *ngFor="let skin of case.skins">{{ skin.marketHashName }}</span> -->
             </p>
