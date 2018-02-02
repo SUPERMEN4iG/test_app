@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.Expressions;
+using test_app.api.Helper;
 using test_app.api.Models;
 
 namespace test_app.api.Data
@@ -48,6 +51,17 @@ namespace test_app.api.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.HasDbFunction(typeof(DbUtility)
+                .GetMethod(nameof(DbUtility.DateDiff)))
+                .HasTranslation(args => {
+                    var newArgs = args.ToArray();
+                    newArgs[0] = new SqlFragmentExpression((string)((ConstantExpression)newArgs[0]).Value);
+                    return new SqlFunctionExpression(
+                        "DATEDIFF",
+                        typeof(int),
+                        newArgs);
+                });
 
             builder.Entity<Skin>()
                 .HasIndex(p => new { p.Id, p.MarketHashName }).IsUnique();

@@ -147,22 +147,50 @@ namespace test_app.api.Controllers
             //    })
             //    .ToList();
 
+            /*
             var res = _context.Winners
+                .Select(inv => new
+                {
+                    DayRange = DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 1 ? 1 :
+                               DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) > 1 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 7 ? 7 :
+                               DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) > 7 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 30 ? 30 : 0,
+                    Price = inv.Price,
+                }).GroupBy(inv => inv.DayRange)
+                .Select(g => new
+                {
+                    DayRange = g.Key,
+                    Sum = g.Sum(inv => inv.Price)
+                }).ToList();
+                */
+
+            var res = _context.Winners
+                .Where(x => x.State != Winner.WinnerState.None && DbUtility.DateDiff("day", x.DateCreate, DateTime.Today) <= 30)
                 .GroupBy(x => x.Case)
                 .Select(x => new {
                     Values = x
-                        .GroupBy(s => s.State).Select(d => d.GroupBy(dd => new { Dayily = dd.DateCreate, Nedelya = dd.DateCreate.AddDays(-7), Monthly = dd.DateCreate.AddDays(-30) })
-                            .Select(c => new
-                            {
-                                State = c.FirstOrDefault().State,
-                                Sum = c.Sum(ss => 
-                                    (ss.State == Winner.WinnerState.None) ? 0 : 
-                                    (ss.State == Winner.WinnerState.Sold) ? ss.Case.Price - ss.Price : 
-                                    (ss.State == Winner.WinnerState.Traded) ? ss.Case.Price - _context.Stock.FirstOrDefault(l => l.Skin == ss.Skin).Price : 0),
-                                Count = c.Count()
+                        .GroupBy(s => s.State).Select(d => new {
+                            State = d.Key,
+                            Values = d.Select(inv => new {
+                                DayRange = DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) >= 0 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 1 ? 1 :
+                                           DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) > 1 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 7 ? 7 :
+                                           DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) > 7 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 30 ? 30 : 0,
+                                Price = inv.Price,
+                                State = inv.State,
+                                Case = inv.Case,
+                                Skin = inv.Skin
                             })
-                        ),
-                    Key = x.Key,
+                            .GroupBy(inv => inv.DayRange)
+                            .Select(g => new {
+                                DayRange = g.Key,
+                                Count = g.Count(),
+                                Sum = g.Sum(ss =>
+                                             (ss.State == Winner.WinnerState.None) ? 0 :
+                                             (ss.State == Winner.WinnerState.Sold) ? ss.Case.Price - ss.Price :
+                                             (ss.State == Winner.WinnerState.Traded) ? ss.Case.Price - _context.Stock.FirstOrDefault(l => l.Skin == ss.Skin).Price : 0)
+                            })
+                            .OrderBy(or => or.DayRange)
+                        }),
+                    Case = x.Key,
                 })
                 .ToList();
 
