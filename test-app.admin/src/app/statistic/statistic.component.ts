@@ -8,6 +8,7 @@ import { animate, AnimationBuilder, style } from '@angular/animations';
 
 import { ToastrService } from 'ngx-toastr';
 import { AuthenticationManagerService } from '../_services/authentication.manager.service';
+import { StatisticService } from '../_services/data/statistic.service';
 
 @Component({
   selector: 'statistic',
@@ -17,11 +18,22 @@ import { AuthenticationManagerService } from '../_services/authentication.manage
 export class StatisticComponent {
   private sub: any;
 
+  statistic;
+
   constructor(private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private _statisticService: StatisticService) {
   }
 
   ngOnInit() {
+    this._statisticService.data$.subscribe(
+      (data) => {
+        this.statistic = data;
+        console.info(this.statistic);
+      },
+      (err) => { console.error(err); }
+    );
+
     this.sub = this.route.params.subscribe(params => {
 
     });

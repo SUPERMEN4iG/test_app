@@ -127,6 +127,55 @@ namespace test_app.api.Controllers
             return Json("OK");
         }
 
+        public class AnonStatValue
+        {
+            public int DayRange { get; set; }
+
+            public int Count { get; set; }
+
+            public decimal? Sum { get; set; }
+        }
+
+        public class AnonStat
+        {
+            public enum StatState
+            {
+                None = 0,
+                Sold = 1,
+                Traded = 2,
+                Total = 3,
+                TotalToWithDraw = 4
+            }
+
+            public StatState State { get; set; }
+
+            public List<AnonStatValue> Values { get; set; }
+        }
+
+        class TestCompare : IEqualityComparer<AnonStat>
+        {
+            public bool Equals(AnonStat x, AnonStat y)
+            {
+                return x.State == y.State;
+            }
+            public int GetHashCode(AnonStat codeh)
+            {
+                return codeh.State.GetHashCode();
+            }
+        }
+
+        class TestCompare2 : IEqualityComparer<AnonStatValue>
+        {
+            public bool Equals(AnonStatValue x, AnonStatValue y)
+            {
+                return x.DayRange == y.DayRange;
+            }
+            public int GetHashCode(AnonStatValue codeh)
+            {
+                return codeh.DayRange.GetHashCode();
+            }
+        }
+
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [Route("getstatistic")]
         [HttpGet]
@@ -163,13 +212,97 @@ namespace test_app.api.Controllers
                 }).ToList();
                 */
 
+            var template = new List<AnonStat> {
+                new AnonStat() {
+                    State = AnonStat.StatState.None,
+                    Values = new List<AnonStatValue> {
+                        new AnonStatValue() {
+                            DayRange = 1,
+                            Count = 0,
+                            Sum = 0
+                        },
+                        new AnonStatValue() {
+                            DayRange = 7,
+                            Count = 0,
+                            Sum = 0
+                        },
+                        new AnonStatValue() {
+                            DayRange = 30,
+                            Count = 0,
+                            Sum = 0
+                        }
+                    }
+                },
+                new AnonStat() {
+                    State = AnonStat.StatState.Sold,
+                    Values = new List<AnonStatValue> {
+                        new AnonStatValue() {
+                            DayRange = 1,
+                            Count = 0,
+                            Sum = 0
+                        },
+                        new AnonStatValue() {
+                            DayRange = 7,
+                            Count = 0,
+                            Sum = 0
+                        },
+                        new AnonStatValue() {
+                            DayRange = 30,
+                            Count = 0,
+                            Sum = 0
+                        },
+                    }
+                },
+                new AnonStat() {
+                    State = AnonStat.StatState.Traded,
+                    Values = new List<AnonStatValue> {
+                        new AnonStatValue() {
+                            DayRange = 1,
+                            Count = 0,
+                            Sum = 0
+                        },
+                        new AnonStatValue() {
+                            DayRange = 7,
+                            Count = 0,
+                            Sum = 0
+                        },
+                        new AnonStatValue() {
+                            DayRange = 30,
+                            Count = 0,
+                            Sum = 0
+                        },
+                    }
+                },
+                new AnonStat() {
+                    State = AnonStat.StatState.Total,
+                    Values = new List<AnonStatValue> {
+                        new AnonStatValue() {
+                            DayRange = 1,
+                            Count = 0,
+                            Sum = 0
+                        },
+                        new AnonStatValue() {
+                            DayRange = 7,
+                            Count = 0,
+                            Sum = 0
+                        },
+                        new AnonStatValue() {
+                            DayRange = 30,
+                            Count = 0,
+                            Sum = 0
+                        },
+                    }
+                },
+            };
+
             var res = _context.Winners
                 .Where(x => x.State != Winner.WinnerState.None && DbUtility.DateDiff("day", x.DateCreate, DateTime.Today) <= 30)
                 .GroupBy(x => x.Case)
                 .Select(x => new {
                     Values = x
-                        .GroupBy(s => s.State).Select(d => new {
-                            State = d.Key,
+                        .GroupBy(s => s.State).Select(d => new AnonStat()
+                        {
+                            State = (AnonStat.StatState)d.Key,
                             Values = d.Select(inv => new {
                                 DayRange = DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) >= 0 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 1 ? 1 :
                                            DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) > 1 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 7 ? 7 :
@@ -180,19 +313,43 @@ namespace test_app.api.Controllers
                                 Skin = inv.Skin
                             })
                             .GroupBy(inv => inv.DayRange)
-                            .Select(g => new {
+                            .Select(g => new AnonStatValue()
+                            {
                                 DayRange = g.Key,
                                 Count = g.Count(),
                                 Sum = g.Sum(ss =>
                                              (ss.State == Winner.WinnerState.None) ? 0 :
                                              (ss.State == Winner.WinnerState.Sold) ? ss.Case.Price - ss.Price :
                                              (ss.State == Winner.WinnerState.Traded) ? ss.Case.Price - _context.Stock.FirstOrDefault(l => l.Skin == ss.Skin).Price : 0)
-                            })
-                            .OrderBy(or => or.DayRange)
-                        }),
+                            }).ToList()
+                        }).ToList(),
                     Case = x.Key,
                 })
                 .ToList();
+
+            // тут жёсткий замут с union
+            foreach (var c in res)
+            {
+                var temp1 = c.Values.ToList();
+                c.Values.RemoveAll(x => x != null);
+                c.Values.AddRange(temp1.Union(template).Distinct(new TestCompare()).ToList().OrderBy(x => x.State));
+
+                foreach (var s in c.Values)
+                {
+                    var temp2 = s.Values.ToList();
+                    s.Values.RemoveAll(x => x != null);
+                    s.Values.AddRange(temp2.Union(template.Where(d => d.State == s.State).SelectMany(ff => ff.Values)).Distinct(new TestCompare2()).ToList().OrderBy(x => x.DayRange));
+
+                    if (s.State == AnonStat.StatState.Total)
+                    {
+                        s.Values.ForEach(x => 
+                        {
+                            var sum = c.Values.FirstOrDefault(d => d.State == AnonStat.StatState.Sold).Values.FirstOrDefault(d => d.DayRange == x.DayRange).Sum;
+                            x.Sum = new Random().Next(0, 100);
+                        });
+                    }
+                }
+            }
 
             return Json(res);
         }

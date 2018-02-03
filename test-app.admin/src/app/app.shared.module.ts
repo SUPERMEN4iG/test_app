@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { CasesService } from './_services/data/cases.service';
 import { SkinsService } from './_services/data/skins.service';
+import { StatisticService } from './_services/data/statistic.service';
 
 @NgModule({
   imports:      [ CommonModule ],
@@ -16,7 +17,8 @@ export class DataSharedModule {
       ngModule: DataSharedModule,
       providers: [
         CasesService,
-        SkinsService
+        SkinsService,
+        StatisticService
       ]
     }
   }

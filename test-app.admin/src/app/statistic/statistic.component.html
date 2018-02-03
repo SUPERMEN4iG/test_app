@@ -1,11 +1,11 @@
 <h1>Statistic</h1>
 
 <h2>By cases</h2>
-<div class="row">
-  <div class="col-lg-3 mb-3">
+<div class="row" *ngIf="statistic">
+  <div class="col-lg-3 mb-3" *ngFor="let caseStat of statistic">
     <div class="card">
       <div class="card-block">
-        <h3 class="card-title">Case name</h3>
+        <h3 class="card-title">{{ caseStat.case.fullName }}</h3>
         <div class="card-text">
           <table class="table table-sm">
             <thead>
@@ -17,23 +17,12 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Sales</td>
-                <td>5 (<strong>$55.22</strong>)</td>
-                <td>12 (<strong>$125.22</strong>)</td>
-                <td>85 (<strong>$3340.22</strong>)</td>
-              </tr>
-              <tr>
-                <td>Returned</td>
-                <td>5</td>
-                <td>12</td>
-                <td>85</td>
-              </tr>
-              <tr>
-                <td>Traded</td>
-                <td>5</td>
-                <td>12</td>
-                <td>85</td>
+              <tr *ngFor="let stat of caseStat.values">
+                <td *ngIf="stat.state == 0">Sales</td>
+                <td *ngIf="stat.state == 1">Returned</td>
+                <td *ngIf="stat.state == 2">Traded</td>
+                <td *ngIf="stat.state == 3">Total</td>
+                <td *ngFor="let vars of stat.values">{{ vars.count }} (<strong>{{ vars.sum | currency }}</strong>)</td>
               </tr>
             </tbody>
           </table>
