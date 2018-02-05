@@ -29,9 +29,9 @@
         <div class="header">Top up balance</div>
         <div class="row" style="padding-left: 15px;padding-right: 15px;">
           <div class="input-group">
-              <input type="text" class="form-control" placeholder="$0.00">
+              <input type="text" class="form-control" [(ngModel)]="amount" placeholder="$0.00">
               <span class="input-group-btn">
-                <button class="btn btn-primary" type="button">Pay</button>
+                <button class="btn btn-primary" (click)="onClickRefillBalance();" type="button">Pay</button>
               </span>
           </div>
           <img class="pay g2a" src="../../assets/images/g2a.png" alt="">

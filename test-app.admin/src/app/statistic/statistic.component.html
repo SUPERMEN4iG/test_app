@@ -5,7 +5,7 @@
   <div class="col-lg-3 mb-3" *ngFor="let caseStat of statistic">
     <div class="card">
       <div class="card-block">
-        <h3 class="card-title">{{ caseStat.case.fullName }}</h3>
+        <h3 class="card-title">{{ caseStat.case.fullName }} <strong>{{ caseStat.case.price | currency }}</strong></h3>
         <div class="card-text">
           <table class="table table-sm">
             <thead>
@@ -27,7 +27,7 @@
             </tbody>
           </table>
           <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-primary">View drop rate</button>
+            <button type="button" class="btn btn-primary" (click)="onClickDropRate(caseStat.case, dropRateModal);">View drop rate</button>
             <button type="button" class="btn btn-primary">View drop solds</button>
             <button type="button" class="btn btn-primary">View</button>
           </div>
@@ -36,3 +36,30 @@
     </div>
   </div>
 </div>
+
+<ng-template #dropRateModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Statistic {{ currentCase.fullName }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Market Hash Name</th>
+            <th>Count</th>
+            <th>%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stat of currentCaseStatistic | sort: '-count'">
+            <td>{{ stat.marketHashName }}</td>
+            <td>{{ stat.count }}</td>
+            <td>{{ stat.chance | percent:'2.2-3' }}</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</ng-template>

@@ -48,6 +48,8 @@ namespace test_app.api.Data
 
         public DbSet<Stock> Stock { get; set; }
 
+        public DbSet<G2APayment> G2APayments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

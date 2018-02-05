@@ -8,15 +8,22 @@ import { StatisticRoutingModule } from './statistic.routing';
 
 import { DataSharedModule } from '../app.shared.module';
 
+import { SortPipeModule } from '../_pipes/sort/sort.module';
+
+// Modal Component
+import { ModalModule } from 'ngx-bootstrap/modal';
+
 @NgModule({
   imports: [
     StatisticRoutingModule,
     CommonModule,
     FormsModule,
-    DataSharedModule
+    DataSharedModule,
+    ModalModule.forRoot(),
+    SortPipeModule
   ],
   declarations: [
-    StatisticComponent
+    StatisticComponent,
   ],
   providers: [
     CurrencyPipe

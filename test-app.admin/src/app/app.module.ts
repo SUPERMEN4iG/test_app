@@ -25,9 +25,6 @@ import { AppComponent } from './app.component';
 import { FullLayoutComponent } from './layout/full-layout.component';
 import { MainComponent } from './pages/main/main.component';
 
-// Interface
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ToastrModule } from 'ngx-toastr';
@@ -41,14 +38,13 @@ import { SkinsService } from './_services/data/skins.service';
   declarations: [
     AppComponent,
     FullLayoutComponent,
-    MainComponent
+    MainComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     DataSharedModule.forRoot(),
-    NgbModule.forRoot(),
     BrowserAnimationsModule,
     ToastrModule.forRoot({
       timeOut: 5000,

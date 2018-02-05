@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UsersService } from '../_services/data/users.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { WinnerService } from '../_services/data/winner.service';
+import { PaymentService } from '../_services/data/payment.service';
 
 @Component({
   selector: 'profile',
@@ -24,6 +25,8 @@ export class ProfileComponent {
   user: any;
   currentUser: any;
 
+  amount: any;
+
   isDisableForEdit = true;
 
   constructor(private router: Router,
@@ -31,7 +34,8 @@ export class ProfileComponent {
               private _usersService: UsersService,
               private _authService: AuthenticationService,
               private _notification: ToastrService,
-              private _winnerService: WinnerService) {
+              private _winnerService: WinnerService,
+              private _paymentService: PaymentService) {
   }
 
   ngOnInit() {
@@ -39,8 +43,8 @@ export class ProfileComponent {
       this.profileId = params['id'];
 
       this._usersService.getUser(this.profileId).subscribe(
-        (data) => { 
-          this.user = data; console.info(this.user); 
+        (data) => {
+          this.user = data; console.info(this.user);
 
           this._authService.currentUser$.subscribe((cu: any) => {
             if (cu && cu.id == this.user.id) {
@@ -78,6 +82,17 @@ export class ProfileComponent {
       },
       (err) => {
         this._notification.error(err.message, 'Sell item');
+      }
+    );
+  }
+
+  onClickRefillBalance() {
+    this._paymentService.getG2ARefillData(this.amount).subscribe(
+      (data) => {
+        console.info(data);
+      },
+      (err) => {
+        this._notification.error(err.message, 'Refill balance');
       }
     );
   }

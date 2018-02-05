@@ -15,21 +15,13 @@ import * as _ from 'underscore';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
-export class StatisticService {
-  serviceEndPoint: String = 'admin/';
+export class PaymentService {
+  serviceEndPoint: String = 'payment/';
   apiEndPoint: String;
-  data: Array<any> = new Array<object>();
-  data$: BehaviorSubject<any[]>;
 
   constructor(private _http: HttpClient,
               @Inject(APP_CONFIG)private _appConfig: IAppConfig) {
     this.apiEndPoint = `${environment.apiEndPoint + this.serviceEndPoint}`;
-    this.data$ = <BehaviorSubject<Object[]>> new BehaviorSubject(new Array<Object>());
-    console.info(this.data);
-
-    if (this.data.length === 0) {
-      this.refresh(false);
-    }
   }
 
   private handleError(error: HttpResponse<ErrorResponse>) {
@@ -37,21 +29,8 @@ export class StatisticService {
     return Observable.throw((<any>error).error || 'Server error');
   }
 
-  public refresh(isFromCache: boolean) {
-    this.data$.next([]);
-
-    if (isFromCache === undefined || isFromCache === null || isFromCache === false) {
-      this.getStatistic().subscribe(x => {
-        this.data = x;
-        this.data$.next(x);
-      });
-    } else {
-      this.data$.next(this.data);
-    }
-  }
-
-  getStatistic() {
-    return this._http.get(`${this.apiEndPoint}getstatistic`)
+  getG2ARefillData(amount) {
+    return this._http.get(`${this.apiEndPoint}getg2arefilldata?amount=${amount}`)
       .map((x: any) => {
         try {
           const response = x;
@@ -63,19 +42,4 @@ export class StatisticService {
       })
       .catch(this.handleError);
   }
-
-  getDropRate(caseId) {
-    return this._http.get(`${this.apiEndPoint}getdroprate?caseId=${caseId}`)
-      .map((x: any) => {
-        try {
-          const response = x;
-
-          return response;
-        } catch (error) {
-          throw new Error(error);
-        }
-      })
-      .catch(this.handleError);
-  }
-
 }

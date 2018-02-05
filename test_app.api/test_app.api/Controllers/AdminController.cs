@@ -345,11 +345,34 @@ namespace test_app.api.Controllers
                         s.Values.ForEach(x => 
                         {
                             var sum = c.Values.FirstOrDefault(d => d.State == AnonStat.StatState.Sold).Values.FirstOrDefault(d => d.DayRange == x.DayRange).Sum;
-                            x.Sum = new Random().Next(0, 100);
+                            var sum2 = c.Values.FirstOrDefault(d => d.State == AnonStat.StatState.Traded).Values.FirstOrDefault(d => d.DayRange == x.DayRange).Sum;
+                            x.Sum = sum + sum2;
                         });
                     }
                 }
             }
+
+            return Json(res);
+        }
+
+        [Route("getdroprate")]
+        [HttpGet]
+        public async Task<IActionResult> GetDroprate(Int64 caseId)
+        {
+            var totalWins = _context.Winners.Where(x => x.Case.Id == caseId).Count();
+
+            var res = _context.Winners
+                .Where(x => x.Case.Id == caseId)
+                .GroupBy(x => x.Skin)
+                .Select(x => new
+                {
+                    MarketHashName = x.Key.MarketHashName,
+                    Id = x.Key.Id,
+                    Image = x.Key.Image,
+                    Price = x.Key.Price,
+                    Count = x.Count(),
+                    Chance = (float)x.Count() / totalWins
+                });
 
             return Json(res);
         }
