@@ -278,23 +278,79 @@ namespace test_app.api.Controllers
                     {
                         temp3.ForEach(x => 
                         {
-                            var sum = c.Values
+                            var solded = c.Values
                                 .FirstOrDefault(d => d.State == AnonStat.StatState.Sold)
                                 .Values
-                                .FirstOrDefault(d => d.DayRange == x.DayRange)
-                                .Sum;
+                                .FirstOrDefault(d => d.DayRange == x.DayRange);
 
-                            var sum2 = c.Values
+                            var traded = c.Values
                                 .FirstOrDefault(d => d.State == AnonStat.StatState.Traded)
                                 .Values
-                                .FirstOrDefault(d => d.DayRange == x.DayRange)
-                                .Sum;
+                                .FirstOrDefault(d => d.DayRange == x.DayRange);
 
-                            x.Sum = sum + sum2;
+                            x.Sum = solded.Sum + traded.Sum;
+                            x.Count = solded.Count + traded.Count;
                         });
                     }
 
+                    temp3.ForEach(x =>
+                    {
+                        switch (x.DayRange)
+                        {
+                            case 7:
+                                if (s.State != AnonStat.StatState.Total)
+                                {
+                                    var f = temp3.FirstOrDefault(ss => ss.DayRange == 1);
+                                    x.Count += f.Count;
+                                    x.Sum += f.Sum;
+                                }
+
+                                break;
+
+                            case 30:
+                                if (s.State != AnonStat.StatState.Total)
+                                {
+                                    var f = temp3.FirstOrDefault(ss => ss.DayRange == 7);
+                                    x.Count += f.Count;
+                                    x.Sum += f.Sum;
+                                }
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                    });
+
                     s.Values.AddRange(temp3);
+                }
+            }
+
+            foreach (var c in res)
+            {
+                foreach (var s in c.Values)
+                {
+                    if (s.State == AnonStat.StatState.None)
+                    {
+                        s.Values.ForEach(x =>
+                        {
+                            var solded = c.Values
+                                .FirstOrDefault(d => d.State == AnonStat.StatState.Sold)
+                                .Values
+                                .FirstOrDefault(d => d.DayRange == x.DayRange);
+
+                            var traded = c.Values
+                                .FirstOrDefault(d => d.State == AnonStat.StatState.Traded)
+                                .Values
+                                .FirstOrDefault(d => d.DayRange == x.DayRange);
+
+                            var count = solded.Count + traded.Count;
+                            var sum = count * c.Case.Price;
+
+                            x.Sum = sum;
+                            x.Count = count;
+                        });
+                    }
                 }
             }
 
@@ -317,6 +373,7 @@ namespace test_app.api.Controllers
                     Image = x.Key.Image,
                     Price = x.Key.Price,
                     Count = x.Count(),
+                    Sum = x.Sum(s => s.Skin.Price),
                     Chance = (float)x.Count() / totalWins
                 });
 

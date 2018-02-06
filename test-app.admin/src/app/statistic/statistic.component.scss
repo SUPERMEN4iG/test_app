@@ -1,0 +1,19 @@
+.b-case-stat {
+  .id {
+    text-align: left;
+    font-size: 9pt;
+    position: absolute;
+    vertical-align: text-top;
+    padding: 0;
+    margin: 0;
+    top: 6px;
+    left: 6px;
+    color: #8a8a8a;
+  }
+
+  table {
+    .red {
+      color: #d9534f;
+    }
+  }
+}

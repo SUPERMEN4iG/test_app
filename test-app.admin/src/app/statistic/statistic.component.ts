@@ -13,6 +13,8 @@ import { StatisticService } from '../_services/data/statistic.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
+import _ from 'underscore';
+
 @Component({
   selector: 'statistic',
   templateUrl: './statistic.component.html',
@@ -22,6 +24,7 @@ export class StatisticComponent {
   private sub: any;
 
   statistic;
+  totals = {};
 
   modalRef: BsModalRef;
 
@@ -42,7 +45,26 @@ export class StatisticComponent {
     this._statisticService.data$.subscribe(
       (data) => {
         this.statistic = data;
-        console.info(this.statistic);
+
+        // очень жёстко) но быстро
+        this.totals = _.chain(_.flatten(_.pluck(
+          _.where(_.flatten(_.pluck(this.statistic, 'values', 'state')), { state: 3 }),
+          'values')))
+          .groupBy("dayRange")
+          .map((v, k) => {
+            return [k, _.reduce(v, (res, obj) => {
+              return {
+                sum: res.sum + obj.sum,
+                count: res.count + obj.count
+              };
+            }, {
+              sum: 0,
+              count: 0
+            })];
+          })
+          .value();
+
+          console.info(this.totals);
       },
       (err) => { console.error(err); }
     );
