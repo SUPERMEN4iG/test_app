@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using test_app.api.Data;
+using test_app.api.Logic;
 using test_app.api.Models;
 using test_app.api.Models.AccountViewModels;
 using test_app.api.Services;
@@ -283,6 +284,12 @@ namespace test_app.api.Controllers
             return Challenge(properties, provider);
         }
 
+        [AllowAnonymous]
+        public IActionResult LoginError(BaseHttpResult error)
+        {
+            return PartialView(error);
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
@@ -290,12 +297,12 @@ namespace test_app.api.Controllers
             if (remoteError != null)
             {
                 ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToAction(nameof(Login));
+                return RedirectToAction("LoginError", BaseHttpResult.GenerateError(remoteError, ResponseType.AccessDenied));
             }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                return RedirectToAction(nameof(Login));
+                return RedirectToAction("LoginError", BaseHttpResult.GenerateError("error getting info", ResponseType.AccessDenied));
             }
 
             // Sign in the user with this external login provider if the user already has a login.

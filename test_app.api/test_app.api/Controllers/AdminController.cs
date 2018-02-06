@@ -212,7 +212,8 @@ namespace test_app.api.Controllers
                 }).ToList();
                 */
 
-            var template = new List<AnonStat> {
+            Func<List<AnonStat>> generateTemplate = () => {
+                return new List<AnonStat> {
                 new AnonStat() {
                     State = AnonStat.StatState.None,
                     Values = new List<AnonStatValue> {
@@ -294,6 +295,7 @@ namespace test_app.api.Controllers
                     }
                 },
             };
+            };
 
             var res = _context.Winners
                 .Where(x => x.State != Winner.WinnerState.None && DbUtility.DateDiff("day", x.DateCreate, DateTime.Today) <= 30)
@@ -332,23 +334,25 @@ namespace test_app.api.Controllers
             {
                 var temp1 = c.Values.ToList();
                 c.Values.RemoveAll(x => x != null);
-                c.Values.AddRange(temp1.Union(template).Distinct(new TestCompare()).ToList().OrderBy(x => x.State));
+                c.Values.AddRange(temp1.Union(generateTemplate()).Distinct(new TestCompare()).ToList().OrderBy(x => x.State));
 
                 foreach (var s in c.Values)
                 {
                     var temp2 = s.Values.ToList();
                     s.Values.RemoveAll(x => x != null);
-                    s.Values.AddRange(temp2.Union(template.Where(d => d.State == s.State).SelectMany(ff => ff.Values)).Distinct(new TestCompare2()).ToList().OrderBy(x => x.DayRange));
+                    var temp3 = temp2.Union(generateTemplate().Where(d => d.State == s.State).SelectMany(ff => ff.Values)).Distinct(new TestCompare2()).OrderBy(x => x.DayRange).ToList();
 
                     if (s.State == AnonStat.StatState.Total)
                     {
-                        s.Values.ForEach(x => 
+                        temp3.ForEach(x => 
                         {
                             var sum = c.Values.FirstOrDefault(d => d.State == AnonStat.StatState.Sold).Values.FirstOrDefault(d => d.DayRange == x.DayRange).Sum;
                             var sum2 = c.Values.FirstOrDefault(d => d.State == AnonStat.StatState.Traded).Values.FirstOrDefault(d => d.DayRange == x.DayRange).Sum;
                             x.Sum = sum + sum2;
                         });
                     }
+
+                    s.Values.AddRange(temp3);
                 }
             }
 

@@ -20,6 +20,7 @@ namespace test_app.api.Logic
         public String Message { get; set; }
         public Object Data { get; set; }
         public ResponseType Type { get; set; }
+        public DateTime DateTime { get; set; } = DateTime.Now;
 
         public static BaseHttpResult GenerateError(string message, ResponseType type)
         {

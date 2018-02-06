@@ -140,6 +140,21 @@ namespace test_app.api
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            // Диагностика выполнения для каждого request
+            app.Use(async (context, next) =>
+            {
+                var sw = new System.Diagnostics.Stopwatch();
+                sw.Start();
+                await next.Invoke();
+                sw.Stop();
+
+                System.Diagnostics.Debug.WriteLine(String.Format("[{0} ms] {1} params: [{2}]", 
+                    sw.ElapsedMilliseconds, 
+                    context.Request.Path.ToUriComponent(),
+                    context.Request.Query.Aggregate(new StringBuilder(), (s, i) => s.Append(String.Format("{0}: {1},", i.Key.ToString(), i.Value.ToString()))).ToString()
+                    ));
+            });
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
