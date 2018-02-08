@@ -12,9 +12,10 @@ using test_app.api.Data;
 namespace test_app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180208184441_v28")]
+    partial class v28
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,32 +176,6 @@ namespace test_app.api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Bots");
-                });
-
-            modelBuilder.Entity("test_app.api.Data.BotsPurcasesFullHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long?>("BotId");
-
-                    b.Property<DateTime>("BoughtAt");
-
-                    b.Property<DateTime>("DateCreate");
-
-                    b.Property<DateTime>("ListedAt");
-
-                    b.Property<string>("MarketHashName");
-
-                    b.Property<string>("Platform");
-
-                    b.Property<decimal>("Price");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BotId");
-
-                    b.ToTable("BotsPurcasesFullHistory");
                 });
 
             modelBuilder.Entity("test_app.api.Data.BotTradeoffer", b =>
@@ -396,32 +371,6 @@ namespace test_app.api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("G2APayments");
-                });
-
-            modelBuilder.Entity("test_app.api.Data.PurchasebotPurchases", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long?>("BotId");
-
-                    b.Property<long?>("BotQueueId");
-
-                    b.Property<DateTime>("DateCreate");
-
-                    b.Property<string>("MarketHashName");
-
-                    b.Property<string>("Platform");
-
-                    b.Property<decimal>("PriceUSD");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BotId");
-
-                    b.HasIndex("BotQueueId");
-
-                    b.ToTable("PurchasebotPurchases");
                 });
 
             modelBuilder.Entity("test_app.api.Data.PurshaseBotQueue", b =>
@@ -681,13 +630,6 @@ namespace test_app.api.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("test_app.api.Data.BotsPurcasesFullHistory", b =>
-                {
-                    b.HasOne("test_app.api.Data.Bot", "Bot")
-                        .WithMany()
-                        .HasForeignKey("BotId");
-                });
-
             modelBuilder.Entity("test_app.api.Data.BotTradeoffer", b =>
                 {
                     b.HasOne("test_app.api.Data.Bot", "Bot")
@@ -757,17 +699,6 @@ namespace test_app.api.Migrations
                     b.HasOne("test_app.api.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("test_app.api.Data.PurchasebotPurchases", b =>
-                {
-                    b.HasOne("test_app.api.Data.Bot", "Bot")
-                        .WithMany()
-                        .HasForeignKey("BotId");
-
-                    b.HasOne("test_app.api.Data.PurshaseBotQueue", "BotQueue")
-                        .WithMany()
-                        .HasForeignKey("BotQueueId");
                 });
 
             modelBuilder.Entity("test_app.api.Data.PurshaseBotQueue", b =>

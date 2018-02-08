@@ -44,6 +44,10 @@ namespace test_app.api.Data
 
         public DbSet<PurshaseBotQueue> PurshaseBotQueues { get; set; }
 
+        public DbSet<PurchasebotPurchases> PurchasebotPurchases { get; set; }
+
+        public DbSet<BotsPurcasesFullHistory> BotsPurcasesFullHistory { get; set; }
+
         public DbSet<CasesDrop> CasesDrops { get; set; }
 
         public DbSet<Stock> Stock { get; set; }

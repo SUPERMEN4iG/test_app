@@ -14,8 +14,10 @@ namespace test_app.api.Data
 
         public Bot LastBot { get; set; }
 
-        public DateTime DateLastRequest { get; set; }
+        public DateTime? DateLastRequest { get; set; }
 
-        public Skin Skin { get; set; }
+        public int TriesCount { get; set; }
+
+        public string MarketHashName { get; set; }
     }
 }

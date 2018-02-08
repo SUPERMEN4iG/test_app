@@ -21,6 +21,8 @@ namespace test_app.api.Data
 
         public Boolean IsHidden { get; set; }
 
+        public string Token { get; set; }
+
         /// <summary>
         /// URL трейдоффера
         /// </summary>

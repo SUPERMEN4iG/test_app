@@ -11,7 +11,8 @@ namespace test_app.api.Logic
         NotEnoughMoney = 1,
         AccessDenied = 2,
         ServerError = 3,
-        ValidationError = 4
+        ValidationError = 4,
+        NotFound = 5,
     }
 
     public class BaseHttpResult

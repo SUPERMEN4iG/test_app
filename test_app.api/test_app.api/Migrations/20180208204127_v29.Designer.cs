@@ -12,9 +12,10 @@ using test_app.api.Data;
 namespace test_app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180208204127_v29")]
+    partial class v29
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,32 +176,6 @@ namespace test_app.api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Bots");
-                });
-
-            modelBuilder.Entity("test_app.api.Data.BotsPurcasesFullHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long?>("BotId");
-
-                    b.Property<DateTime>("BoughtAt");
-
-                    b.Property<DateTime>("DateCreate");
-
-                    b.Property<DateTime>("ListedAt");
-
-                    b.Property<string>("MarketHashName");
-
-                    b.Property<string>("Platform");
-
-                    b.Property<decimal>("Price");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BotId");
-
-                    b.ToTable("BotsPurcasesFullHistory");
                 });
 
             modelBuilder.Entity("test_app.api.Data.BotTradeoffer", b =>
@@ -679,13 +654,6 @@ namespace test_app.api.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("test_app.api.Data.BotsPurcasesFullHistory", b =>
-                {
-                    b.HasOne("test_app.api.Data.Bot", "Bot")
-                        .WithMany()
-                        .HasForeignKey("BotId");
                 });
 
             modelBuilder.Entity("test_app.api.Data.BotTradeoffer", b =>
