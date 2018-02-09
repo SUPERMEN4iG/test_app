@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -33,17 +34,19 @@ namespace test_app.api.Controllers
         [Route("getqueue")]
         [ClaimRequirement("Premission", "CanBotUses")]
         [HttpGet]
-        public async Task<IActionResult> GetQueue(int botId)
+        public async Task<IActionResult> GetQueue()
         {
-            if (!_context.Bots.Any(x => x.Id == botId))
-            {
-                return BadRequest(BaseHttpResult.GenerateError("bot not found", ResponseType.NotFound));
-            }
-
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+                    var botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
+
+                    if (!_context.Bots.Any(x => x.Id == botId))
+                    {
+                        throw new Exception("bot not found");
+                    }
+                    
                     var items = _context.PurshaseBotQueues
                        .Where(x => x.Locked == false)
                        .OrderBy(x => x.TriesCount)
@@ -55,9 +58,9 @@ namespace test_app.api.Controllers
                         it.Locked = true;
                         it.LastBot.Id = botId;
                         it.DateLastRequest = DateTime.Now;
+                        _context.Update(it);
                     });
 
-                    _context.Update(items);
                     _context.SaveChanges();
 
                     transaction.Commit();
@@ -66,7 +69,11 @@ namespace test_app.api.Controllers
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
+                    if (ex.GetType() == typeof(SqlException))
+                    {
+                        transaction.Rollback();
+                    }
+                    
                     return BadRequest(BaseHttpResult.GenerateError(String.Format("server error: {0}", ex.Message), ResponseType.ServerError));
                 }
             }
@@ -83,13 +90,14 @@ namespace test_app.api.Controllers
             {
                 try
                 {
+                    var botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
                     var result = _context.PurshaseBotQueues.Where(x => ids.Contains(x.Id.ToString())).ToList();
                     result.ForEach((it) =>
                     {
                         it.Locked = false;
+                        _context.Update(it);
                     });
 
-                    _context.Update(result);
                     _context.SaveChanges();
                     transaction.Commit();
 
@@ -188,6 +196,7 @@ namespace test_app.api.Controllers
                         added.Platform = it.platform;
                         added.Price = it.price;
                         added.ListedAt = it.listed_at;
+                        _context.Add(added);
                     });
 
                     _context.SaveChanges();

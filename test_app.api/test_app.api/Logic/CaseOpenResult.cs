@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,19 +19,30 @@ namespace test_app.api.Logic
     public class BaseHttpResult
     {
         public Boolean IsSuccess { get; set; }
+
         public String Message { get; set; }
+
         public Object Data { get; set; }
+
         public ResponseType Type { get; set; }
+
         public DateTime DateTime { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// byte size of data
+        /// </summary>
+        public int Size { get; set; }
 
         public static BaseHttpResult GenerateError(string message, ResponseType type)
         {
-            return new BaseHttpResult() { IsSuccess = false, Data = null, Message = message, Type = type };
+            return new BaseHttpResult() { IsSuccess = false, Data = null, Message = message, Type = type, Size = 0 };
         }
 
         public static BaseHttpResult GenerateSuccess(object data, string message, ResponseType type = ResponseType.Ok)
         {
-            return new BaseHttpResult() { IsSuccess = true, Data = data, Message = message, Type = type };
+            // TODO: double serialize object to json need to optimization (probably)
+            var dataString = JsonConvert.SerializeObject(data);
+            return new BaseHttpResult() { IsSuccess = true, Data = data, Message = message, Type = type, Size = System.Text.Encoding.Default.GetBytes(dataString).Length };
         }
     }
 
