@@ -97,6 +97,21 @@ export class CasesService {
       .catch(this.handleError);
   };
 
+  testOpenCase(caseId, count) {
+
+    return this._http.get(`${this.apiEndPoint}testopencase?caseId=${caseId}&count=${count}`)
+      .map((x: any) => {
+        try {
+          const response = x;
+
+          return response;
+        } catch (error) {
+          throw new Error(error);
+        }
+      })
+      .catch(this.handleError);
+  }
+
   saveCase(dataCase) {
     return this._http.post(`${this.apiEndPoint}savecase`, JSON.stringify(dataCase))
       .map((x: any) => {

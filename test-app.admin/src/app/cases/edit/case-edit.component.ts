@@ -1,4 +1,5 @@
 import { Component, Input, ViewChild, TemplateRef, EventEmitter, Output, ElementRef } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
@@ -10,6 +11,8 @@ import { SkinsService } from '../../_services/data/skins.service';
 import { CasesService } from '../../_services/data/cases.service';
 
 import { ToastrService } from 'ngx-toastr';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import _ from 'underscore';
 
@@ -25,11 +28,17 @@ export class CasesEditComponent {
   skins;
   currentCase;
   selectedSkin;
+  currentCaseStatistic;
+
+  modalRef: BsModalRef;
 
   constructor(private router: Router,
               private route: ActivatedRoute,
               private _skinsService: SkinsService,
-              private _caseService: CasesService) {
+              private _caseService: CasesService,
+              private modalService: BsModalService,
+              private _notificationService: ToastrService,
+              private _currencyPipe: CurrencyPipe) {
   }
 
   ngOnInit() {
@@ -74,10 +83,10 @@ export class CasesEditComponent {
 
     this._caseService.saveCase(this.currentCase).subscribe(
       (data) => {
-        console.info(data);
+        this._notificationService.success("Saved", `Case ${this.currentCase.fullName} (${this._currencyPipe.transform(this.currentCase.price)})`);
       },
       (err) => {
-        console.error(err);
+        this._notificationService.error(err.message, `Case ${this.currentCase.fullName} (${this._currencyPipe.transform(this.currentCase.price)})`);
       }
     );
   }
@@ -91,7 +100,31 @@ export class CasesEditComponent {
           i++;
           return skin;
         });
-        console.info(s);
+        this._notificationService.success("Recalculation was successful, please save", `Case ${this.currentCase.fullName} (${this._currencyPipe.transform(this.currentCase.price)})`);
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
+  }
+
+  onTestCaseOpen(casea, count, template: TemplateRef<any>) {
+    this.currentCaseStatistic = {
+      title: `Test ${count} open ${casea.fullName}`,
+      totals: {},
+      data: []
+    };
+    this._caseService.testOpenCase(casea.id, count).subscribe(
+      (data) => {
+        this.openModal(template);
+        this.currentCaseStatistic.data = data.result;
+        this.currentCaseStatistic.totals = data.totals;
+        this.currentCaseStatistic.totals.totalIncome = data.totals.totalCasePrice - data.totals.totalSkinPrice;
+        console.info(data);
       },
       (err) => {
         console.error(err);

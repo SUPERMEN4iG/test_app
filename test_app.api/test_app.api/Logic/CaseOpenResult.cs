@@ -62,5 +62,10 @@ namespace test_app.api.Logic
         {
             return new CaseOpenResult() { IsSuccess = true, Winner = winner, Message = message, Type = type };
         }
+
+        public static CaseOpenResult GenerateSuccessTest(WinnerViewModel winner, string message, ResponseType type = ResponseType.Ok)
+        {
+            return new CaseOpenResult() { IsSuccess = true, Winner = winner, Message = message, Type = type };
+        }
     }
 }

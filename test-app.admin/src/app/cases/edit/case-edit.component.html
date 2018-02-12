@@ -28,9 +28,16 @@
       <div class="col-md-5">
         <button (click)="onCaclulateChances()" type="button" class="btn btn-primary">Calculate chances</button>
       </div>
+
+      <div class="col-md-5 btn-group">
+        <button (click)="onTestCaseOpen(currentCase, 10, dropRateModal)" type="button" class="btn btn-primary">Test 10 open</button>
+        <button (click)="onTestCaseOpen(currentCase, 100, dropRateModal)" type="button" class="btn btn-primary">Test 100 open</button>
+        <button (click)="onTestCaseOpen(currentCase, 1000, dropRateModal)" type="button" class="btn btn-primary">Test 1000 open</button>
+        <button (click)="onTestCaseOpen(currentCase, 10000, dropRateModal)" type="button" class="btn btn-primary">Test 10000 open</button>
+      </div>
     </div>
 
-    <div>
+    <div style="margin-top: 20px;">
       <table class="table table-striped">
         <thead>
           <tr>
@@ -57,3 +64,40 @@
     </div>
   </div>
 </div>
+
+<ng-template #dropRateModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">{{ currentCaseStatistic.title }}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body test-open-case">
+      <h4>Total: </h4>
+      <div class="totals">
+        <h5>Case: <span [ngClass]="currentCaseStatistic.totals.totalCasePrice > currentCaseStatistic.totals.totalSkinPrice ? 'plus' : 'minus'">{{ currentCaseStatistic.totals.totalCasePrice | currency }}</span></h5>
+        <h5>Skin: <span [ngClass]="currentCaseStatistic.totals.totalSkinPrice < currentCaseStatistic.totals.totalCasePrice ? 'plus' : 'minus'">{{ currentCaseStatistic.totals.totalSkinPrice | currency }}</span></h5>
+        <h5>Income: <span [ngClass]="currentCaseStatistic.totals.totalIncome > 0 ? 'plus' : 'minus'">{{ currentCaseStatistic.totals.totalIncome | currency }}</span> </h5>
+      </div>
+
+      <h4>Details: </h4>
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Market Hash Name</th>
+            <th>Count</th>
+            <th>%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stat of currentCaseStatistic.data | sort: '-count'">
+            <td>{{ stat.skin.id }}</td>
+            <td>{{ stat.skin.marketHashName }}</td>
+            <td>{{ stat.count }}</td>
+            <td>{{ stat.chance | percent:'2.2-3' }}</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</ng-template>

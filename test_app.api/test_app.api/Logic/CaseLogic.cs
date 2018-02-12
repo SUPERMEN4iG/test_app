@@ -9,23 +9,63 @@ using test_app.api.Models;
 
 namespace test_app.api.Logic
 {
+    public class WinnerViewModel
+    {
+        public string MarketHashName { get; set; }
+
+        public decimal Price { get; set; }
+
+        public string Image { get; set; }
+
+        public Skin Skin { get; set; }
+    }
+
     public class CaseLogic
     {
         private readonly ApplicationDbContext _context;
         private Case _case;
         private ApplicationUser _user;
 
-        public CaseLogic(ApplicationDbContext context, Case _case, ApplicationUser _user)
+        private IList<CasesDrop> _caseDrop { get; set; }
+
+        public CaseLogic(ApplicationDbContext context, Case _case, ApplicationUser _user, List<CasesDrop> caseDrop = null)
         {
             this._context = context;
             this._case = _case;
             this._user = _user;
+
+            if (caseDrop == null)
+            {
+                this._caseDrop = _context.CasesDrops.Where(x => x.CaseId == _case.Id).Include(x => x.Skin).ToList();
+            }
+            else
+            {
+                this._caseDrop = caseDrop;
+            }
+        }
+
+        public CaseOpenResult TestOpen()
+        {
+            CasesDrop selected = _caseDrop.RandomElementByWeight(x => (float)x.Chance);
+
+            Winner winner = new Winner()
+            {
+                Case = _case,
+                Skin = selected.Skin,
+                User = _user,
+                State = Winner.WinnerState.None
+            };
+
+            return CaseOpenResult.GenerateSuccessTest(new WinnerViewModel() {
+                MarketHashName = winner.Skin.MarketHashName,
+                Price = selected.Skin.Price,
+                Image = winner.Skin.Image,
+                Skin = winner.Skin
+            }, selected.Chance.ToString());
         }
 
         public CaseOpenResult Open()
         {
-            // for cache
-            var skinsChances = _context.CasesDrops.Where(x => x.CaseId == _case.Id).Include(x => x.Skin).ToList();
 
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -37,7 +77,7 @@ namespace test_app.api.Logic
                         return CaseOpenResult.GenerateError(String.Format("Not enough money"), ResponseType.NotEnoughMoney);
                     }
 
-                    CasesDrop selected = skinsChances.RandomElementByWeight(x => (float)x.Chance);
+                    CasesDrop selected = this._caseDrop.RandomElementByWeight(x => (float)x.Chance);
 
                     Winner winner = new Winner()
                     {

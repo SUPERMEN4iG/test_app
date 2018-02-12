@@ -11,14 +11,21 @@ import { CasesComponent } from './cases.component';
 import { CasesListComponent } from './list/cases-list.component';
 import { CasesEditComponent } from './edit/case-edit.component';
 
+import { SortPipeModule } from '../_pipes/sort/sort.module';
+
 import { DataSharedModule } from '../app.shared.module';
+
+// Modal Component
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   imports: [
     CasesRoutingModule,
     CommonModule,
     FormsModule,
-    DataSharedModule
+    DataSharedModule,
+    SortPipeModule,
+    ModalModule.forRoot(),
   ],
   declarations: [
     CasesComponent,

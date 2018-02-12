@@ -357,6 +357,7 @@ namespace test_app.api.Controllers
             return Json(res);
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [Route("getdroprate")]
         [HttpGet]
         public async Task<IActionResult> GetDroprate(Int64 caseId)
@@ -376,6 +377,56 @@ namespace test_app.api.Controllers
                     Sum = x.Sum(s => s.Skin.Price),
                     Chance = (float)x.Count() / totalWins
                 });
+
+            return Json(res);
+        }
+
+        public class TestOpenCaseViewModel
+        {
+            public class TestOpenCaseTotalsViewModel
+            {
+                public decimal TotalCasePrice { get; set; }
+
+                public decimal TotalSkinPrice { get; set; }
+            }
+
+            public TestOpenCaseTotalsViewModel Totals { get; set; } = new TestOpenCaseTotalsViewModel();
+
+            public List<object> Result { get; set; } = new List<object>();
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
+        [Route("testopencase")]
+        [HttpGet]
+        public async Task<IActionResult> TestOpenCase(Int64 caseId, Int64 count)
+        {
+            var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var casea = context.Cases.FirstOrDefault(x => x.Id == caseId);
+
+            List<CaseOpenResult> openResults = new List<CaseOpenResult>();
+            CaseLogic caseLogic = new CaseLogic(context, casea, user);
+
+            for (int i = 0; i < count; i++)
+            {
+                openResults.Add(caseLogic.TestOpen());
+            }
+
+            var res = new TestOpenCaseViewModel();
+
+            res.Result.AddRange(openResults
+                .GroupBy(x => ((WinnerViewModel)x.Winner).Skin)
+                .Select(g => new {
+                    Skin = new { g.Key.MarketHashName, g.Key.Id, g.Key.Price },
+                    Count = g.Count(),
+                    Chance = (float)g.Count() / count
+                })
+                .OrderBy(x => x.Skin.Id)
+                .ToList());
+
+            res.Totals.TotalCasePrice = casea.Price * count;
+            res.Totals.TotalSkinPrice = openResults.Sum(x => ((WinnerViewModel)x.Winner).Price);
 
             return Json(res);
         }
