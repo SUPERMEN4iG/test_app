@@ -10,7 +10,7 @@
           <li>
             <div class="b-profile">
               <div class="b-profile__inner">
-      
+
                 <div *ngIf="currentUser != null" class="b-profile-min">
                     <img [routerLink]="['/profile', currentUser.id]" [src]="currentUser.steamAvatar" alt="">
                     <div class="b-profile-min__info">
@@ -18,7 +18,7 @@
                       <button class="btn btn-outline-success" style="margin-top: 7px;text-transform: uppercase;">Add funds</button>
                       <button class="btn btn-outline-warning" (click)="logout();" style="margin-top: 7px;text-transform: uppercase;"><i class="fa fa-times" aria-hidden="true"></i></button>
                       <!-- <div class="b-profile-min__balance">balance: <b>{{ currentUser.balance }}$</b></div> -->
-      
+
                       <!-- <div class="dropdown-menu" ngbDropdownMenu>
                           <button class="dropdown-item">{{ currentUser.balance }}$</button>
                           <button [routerLink]="['/profile', currentUser.id]" class="dropdown-item">Profile</button>
@@ -28,7 +28,7 @@
                       </div> -->
                     </div>
                 </div>
-      
+
                 <button *ngIf="currentUser == null && !isLoadingLogin" class="btn btn-steam" (click)="loginSteam()" type="button">
                   <span>Login with <b>STEAM</b></span>
                 </button>
@@ -36,7 +36,7 @@
                     <i class="fa fa-sync-alt fa-spin fa-fw fa-2x"></i>
                   <span class="sr-only">Loading...</span>
                 </div>
-      
+
               </div>
             </div>
           </li>
@@ -56,7 +56,7 @@
               <div class="statistic__item_value">{{ mainData.opennedCases }}</div>
           </div>
         </div>
-  
+
         <div class="statistic__item col-4 col-md-2">
           <!-- <div class="statistic__item_icon"><i class="fa fa-users fa-2x"></i></div> -->
           <div class="statistic__item_right">
@@ -64,7 +64,7 @@
               <div class="statistic__item_value">{{ mainData.usersRegistered }}</div>
           </div>
         </div>
-  
+
         <div class="statistic__item col-4 col-md-2">
           <!-- <div class="statistic__item_icon"><i class="fa fa-meh fa-2x"></i></div> -->
           <div class="statistic__item_right">
@@ -72,8 +72,8 @@
               <div class="statistic__item_value">{{ mainData.online }}</div>
           </div>
         </div>
-  
-        
+
+
       </div>
 
     </div>

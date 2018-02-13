@@ -14,6 +14,7 @@ using test_app.api.Models;
 using test_app.api.Models.ViewModels;
 using test_app.api.Helper;
 using test_app.api.Logic;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace test_app.api.Controllers
 {
@@ -22,16 +23,19 @@ namespace test_app.api.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private IMemoryCache _cache;
+
 
         public AdminController(
             UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IMemoryCache cache)
         {
             _userManager = userManager;
             _context = context;
+            _cache = cache;
         }
-
-        private readonly UserManager<ApplicationUser> _userManager;
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [Route("getcasesdata")]
@@ -39,26 +43,32 @@ namespace test_app.api.Controllers
         public async Task<IActionResult> GetCasesData()
         {
             var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
-            var cases = context.Cases
-                .Include(x => x.Category)
-                .Where(x => x.IsAvalible == true)
-                .GroupBy(x => x.Category,
-                    (key, group) => new CasesCategoryViewModel()
-                    {
-                        Category = new CategoryViewMode() { Index = key.Index, Id = key.Id, StaticName = key.StaticName, FullName = key.FullName },
-                        Cases = group.Select(c => new Models.ViewModels.CaseViewModel()
+
+            var cases = _cache.GetOrCreate<object>("casesAdmin", entry => {
+                entry.SlidingExpiration = TimeSpan.FromHours(12);
+                entry.Priority = CacheItemPriority.Normal;
+
+                return context.Cases
+                    .Include(x => x.Category)
+                    .Where(x => x.IsAvalible == true)
+                    .GroupBy(x => x.Category,
+                        (key, group) => new CasesCategoryViewModel()
                         {
-                            Id = c.Id,
-                            StaticName = c.StaticName,
-                            FullName = c.FullName,
-                            Image = c.Image,
-                            Price = c.Price,
-                            PreviousPrice = c.PreviousPrice,
-                            Index = c.Index,
-                            CategoryName = c.Category.StaticName,
-                            Skins = c.CaseSkins.Select(s => new AdminSkinsViewModel() { Chance = s.Chance, Id = s.Skin.Id, MarketHashName = s.Skin.MarketHashName, Image = s.Skin.Image, Price = s.Skin.Price }).ToList()
-                        }).OrderBy(x => x.Index).ToList()
-                    }).OrderBy(x => x.Category.Index).ToList();
+                            Category = new CategoryViewMode() { Index = key.Index, Id = key.Id, StaticName = key.StaticName, FullName = key.FullName },
+                            Cases = group.Select(c => new Models.ViewModels.CaseViewModel()
+                            {
+                                Id = c.Id,
+                                StaticName = c.StaticName,
+                                FullName = c.FullName,
+                                Image = c.Image,
+                                Price = c.Price,
+                                PreviousPrice = c.PreviousPrice,
+                                Index = c.Index,
+                                CategoryName = c.Category.StaticName,
+                                Skins = c.CaseSkins.Select(s => new AdminSkinsViewModel() { Chance = s.Chance, Id = s.Skin.Id, MarketHashName = s.Skin.MarketHashName, Image = s.Skin.Image, Price = s.Skin.Price }).ToList()
+                            }).OrderBy(x => x.Index).ToList()
+                        }).OrderBy(x => x.Category.Index).ToList();
+            });
 
             return Json(cases);
         }
@@ -124,6 +134,9 @@ namespace test_app.api.Controllers
 
             context.Update(currentCase);
             context.SaveChanges();
+
+            _cache.Remove("casesAdmin");
+            _cache.Remove("casesReal");
 
             return Json("OK");
         }

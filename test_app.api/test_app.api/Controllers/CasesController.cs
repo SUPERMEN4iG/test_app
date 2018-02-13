@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using test_app.api.Data;
 using test_app.api.Logic;
 using test_app.api.Models;
@@ -18,44 +19,51 @@ namespace test_app.api.Controllers
     [Route("api/Cases")]
     public class CasesController : Controller
     {
+
         public CasesController(
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IMemoryCache cache)
         {
             _userManager = userManager;
+            _cache = cache;
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        private IMemoryCache _cache;
 
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("getcases")]
         [HttpGet]
         public async Task<IActionResult> GetCases()
         {
-            var cases = new object();
-
             var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
 
-            cases = context.Cases
-                .Include(x => x.Category)
-                .Where(x => x.IsAvalible == true)
-                .GroupBy(x => x.Category, 
-                    (key, group) => new
-                    {
-                        Category = new { key.Index, key.Id, key.StaticName, key.FullName },
-                        Cases = group.Select(c => new
+            var cases = _cache.GetOrCreate<object>("casesReal", entry => {
+                entry.SlidingExpiration = TimeSpan.FromHours(12);
+                entry.Priority = CacheItemPriority.Normal;
+
+                return context.Cases
+                    .Include(x => x.Category)
+                    .Where(x => x.IsAvalible == true)
+                    .GroupBy(x => x.Category,
+                        (key, group) => new
                         {
-                            Id = c.Id,
-                            StaticName = c.StaticName,
-                            FullName = c.FullName,
-                            Image = c.Image,
-                            Price = c.Price,
-                            PreviousPrice = c.PreviousPrice,
-                            Index = c.Index,
-                            CategoryName = c.Category.StaticName,
-                            Skins = c.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price })
-                        }).OrderBy(x => x.Index).ToList()
-                    }).OrderBy(x => x.Category.Index);
+                            Category = new { key.Index, key.Id, key.StaticName, key.FullName },
+                            Cases = group.Select(c => new
+                            {
+                                Id = c.Id,
+                                StaticName = c.StaticName,
+                                FullName = c.FullName,
+                                Image = c.Image,
+                                Price = c.Price,
+                                PreviousPrice = c.PreviousPrice,
+                                Index = c.Index,
+                                CategoryName = c.Category.StaticName,
+                                Skins = c.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price }).ToList()
+                            }).OrderBy(x => x.Index).ToList()
+                        }).OrderBy(x => x.Category.Index).ToList();
+            });
 
             return Json(cases);
         }
