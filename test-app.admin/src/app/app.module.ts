@@ -34,6 +34,8 @@ import { AuthenticationManagerService } from './_services/authentication.manager
 import { CasesService } from './_services/data/cases.service';
 import { SkinsService } from './_services/data/skins.service';
 
+import { NgProgressModule, NgProgressInterceptor  } from 'ngx-progressbar';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,12 +52,14 @@ import { SkinsService } from './_services/data/skins.service';
       timeOut: 5000,
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
-    })
+    }),
+    NgProgressModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: JsonInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: NgProgressInterceptor, multi: true },
     AuthenticationService,
     AuthenticationManagerService,
     CasesService,
