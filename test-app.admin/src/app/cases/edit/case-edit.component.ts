@@ -90,7 +90,7 @@ export class CasesEditComponent {
       }
     );
   }
-
+  //TODO: надо здесь сделать выбор маржи под которую хотим пересчитать! ))
   onCaclulateChances() {
     this._caseService.caclulateChances(this.currentCase.id).subscribe(
       (data) => {
