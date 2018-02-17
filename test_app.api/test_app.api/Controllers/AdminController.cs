@@ -94,7 +94,7 @@ namespace test_app.api.Controllers
             var founded = context.Cases.FirstOrDefault(x => x.Id == caseId);
 
             var calculator = new ChanceCalc(context);
-            var calced = calculator.Calc(caseId, (double)founded.Price, new List<long>());
+            var calced = calculator.Calc(caseId, (double)founded.Price,20, new List<long>());
 
             return Json(calced);
         }
