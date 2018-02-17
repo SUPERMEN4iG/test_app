@@ -18,6 +18,7 @@ namespace test_app.api.Helper {
         private ApplicationDbContext _context;
 
         private List<SkinViewModel> _fakeInventory;
+        private List<SkinViewModel> _ignoredSkins;
         private double _skin_max_chance;
 
         private List<SkinViewModel> _skinsPool;
@@ -29,18 +30,26 @@ namespace test_app.api.Helper {
             _skin_max_chance = 4;
         }
 
-        public List<SkinViewModel> Calc (int case_id, double case_price, List<long> skinIds) {
-
+        public List<SkinViewModel> Calc (int case_id, double case_price,double margine, List<long> skinIds) {
+            _marginality = margine;
             _casePrice = case_price;
             _fakeInventory = _context.CasesDrops.Where (x => x.CaseId == case_id && !skinIds.Contains (x.SkinId)).Select (skin => new SkinViewModel () {
                 Id = skin.SkinId,
                     Price = skin.Skin.Price
             }).ToList ();
+            _ignoredSkins = _context.CasesDrops.Where(x => x.CaseId == case_id && skinIds.Contains(x.SkinId)).Select(skin => new SkinViewModel()
+            {
+                Id = skin.SkinId,
+                Price = skin.Skin.Price,
+                Chance = 0
+            }).ToList();
+
             _skinsPool = new List<SkinViewModel>(_fakeInventory); // probably fixes
             push_skins ();
             _skinsPool.ForEach (skin => {
                 skin.Chance = System.Math.Round (skin_chances (skin.Id), 6) / 100;
             });
+            _skinsPool.Concat(_ignoredSkins);
             return _skinsPool;
 
         }
