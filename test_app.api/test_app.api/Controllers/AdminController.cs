@@ -87,14 +87,16 @@ namespace test_app.api.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
         [Route("caclulatechances")]
         [HttpGet]
-        public async Task<IActionResult> CaclulateChances(int caseId)
+        public async Task<IActionResult> CaclulateChances(int caseId, decimal margine)
         {
             var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
 
             var founded = context.Cases.FirstOrDefault(x => x.Id == caseId);
 
+            margine = margine / 100;
+
             var calculator = new ChanceCalc(context);
-            var calced = calculator.Calc(caseId, (double)founded.Price,20, new List<long>());
+            var calced = calculator.Calc(caseId, (double)founded.Price, (double)margine, new List<long>());
 
             return Json(calced);
         }

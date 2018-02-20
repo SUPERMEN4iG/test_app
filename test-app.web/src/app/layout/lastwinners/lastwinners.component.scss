@@ -3,44 +3,111 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    display: inline-block;
+    display: flex;
 
-    li { float: left; }
+    li {
+      float: left;
+
+      &:first-child {
+        .lastwinners__item {
+          border-right: none;
+        }
+      }
+
+      &:last-child {
+        .lastwinners__item {
+          .block_caption {
+            width: 142px;
+          }
+        }
+      }
+
+      &:not(:first-child):not(:last-child) {
+        .lastwinners__item {
+          border-right: none;
+        }
+      }
+    }
 
     .lastwinners__item {
       float: left;
-      width: 120px;
+      width: 142px;
       height: 100px;
-      background: rgba(45,43,46,0.7);
+      background: rgba(150, 64, 193, 0.7);
+      border: 4px solid #3f2e52;
       cursor: pointer;
 
       .block {
         display: flex;
         width: 100%;
         height: 100%;
+        position: relative;
 
         img {
           margin-left: auto;
           margin-right: auto;
           margin-top: auto;
           margin-bottom: auto;
+          z-index: 10;
+        }
+
+        .block-hover {
+          content: '';
+          width: 0px;
+          height: 0px;
+          left: 50%;
+          right: 50%;
+          margin: auto;
+          top: 30px;
+          bottom: 30px;
+          position: absolute;
+          z-index: 10;
+
+          &.rare {
+            box-shadow: 0px 0px 60px 30px #ba5dff;
+          }
         }
       }
 
       .block_caption {
-        background:rgba(0, 0, 0, 0.5);
-        width: 120px;
-        height: 100px;
-
+        background: rgba(0, 0, 0, 0.5);
+        width: 146px;
+        height: 85px;
         display: none;
-        max-width: 120px;
-        position: absolute;
-        top: 0;
+        /* max-width: 142px; */
+        position: relative;
         z-index: 999;
         text-align: left;
         padding: 0.5em;
         font-weight: bold;
         color: white;
+        border: 4px solid #3f2e52;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+        border-top: none;
+        margin: 0;
+        text-align: center;
+        left: -4px;
+        top: 4px;
+
+        .block_caption__inner {
+
+        }
+
+        .block_caption__skinname {
+          font-size: 9pt;
+          white-space: nowrap;
+        }
+
+        .block_caption__username {
+          color: #ecaa00;
+        }
+
+        .block_caption__casename {
+          font-weight: normal;
+          font-size: 10pt;
+          color: #8f8fff;
+        }
       }
 
       &:hover {

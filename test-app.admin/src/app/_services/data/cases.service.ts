@@ -83,7 +83,7 @@ export class CasesService {
     return _.find(results, (s) => { return s != undefined })[0];
   }
 
-  caclulateChances(caseId,margine) {
+  caclulateChances(caseId, margine) {
     return this._http.get(`${this.apiEndPoint}caclulatechances?caseId=${caseId}&margine=${margine}`)
       .map((x: any) => {
         try {
