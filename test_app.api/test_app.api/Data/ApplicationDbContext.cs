@@ -54,6 +54,8 @@ namespace test_app.api.Data
 
         public DbSet<G2APayment> G2APayments { get; set; }
 
+        public DbSet<G2AIPNLog> G2AIPNLogs { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

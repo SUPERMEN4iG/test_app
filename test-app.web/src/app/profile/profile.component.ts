@@ -89,7 +89,8 @@ export class ProfileComponent {
   onClickRefillBalance() {
     this._paymentService.getG2ARefillData(this.amount).subscribe(
       (data) => {
-        console.info(data);
+        window.location.href = `https://checkout.test.pay.g2a.com/index/gateway?token=${data.token}`;
+        // console.info(data);
       },
       (err) => {
         this._notification.error(err.message, 'Refill balance');

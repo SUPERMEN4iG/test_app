@@ -33,7 +33,7 @@ export class PaymentService {
     return this._http.get(`${this.apiEndPoint}getg2arefilldata?amount=${amount}`)
       .map((x: any) => {
         try {
-          const response = x;
+          const response = JSON.parse(x.data);
 
           return response;
         } catch (error) {

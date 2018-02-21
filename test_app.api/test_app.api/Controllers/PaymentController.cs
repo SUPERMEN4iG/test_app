@@ -27,9 +27,9 @@ namespace test_app.api.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private const string API_HASH = "b2c34bda-433d-4cd0-aafc-8294d85c59c4";
-        private const string MERCHANT_EMAIL = "nazhmudinomarov@gmail.com";
-        private const string API_SECRET = "Uelw-Qi0gw3fk6~rFON+n-u7gjNCSO+x=cgq=CqW%t*gz~L2Gi!+Wn&?KLCmj3XZ";
+        private const string API_HASH = "049eb318-e3a2-4724-a869-c3355b5fa73a";
+        private const string MERCHANT_EMAIL = "supermen4ig988@gmail.com";
+        private const string API_SECRET = "X6fH81H=sNvP7UK~^ZH$tK0ussFi-~*L&ec6fu%M5rlB9!46SL19f1=Lt5=h^_=$";
 
         public PaymentController(
             UserManager<ApplicationUser> userManager,
@@ -81,7 +81,7 @@ namespace test_app.api.Controllers
                         new G2ACreateQuoteRequest.G2ACreateQuoteRequestItem() {
                             sku = 1,
                             name = "EachSkins Balance",
-                            amount = Math.Round(Convert.ToDecimal(g2aPayment.Sum), 2).ToString(), // В документации типо он как string
+                            amount = Math.Round(Convert.ToDecimal(g2aPayment.Sum), 2),
                             qty = 1,
                             id = 1,
                             price = Math.Round(Convert.ToDecimal(g2aPayment.Sum), 2),
@@ -90,7 +90,7 @@ namespace test_app.api.Controllers
                     }
                 };
 
-                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(new Uri("https://checkout.pay.g2a.com/index/createQuote"));
+                HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create(new Uri("https://checkout.test.pay.g2a.com/index/createQuote"));
                 webRequest.Method = "POST";
                 webRequest.Headers.Add(HttpRequestHeader.Accept, "application/json");
                 webRequest.ContentType = "application/x-www-form-urlencoded";
@@ -154,6 +154,9 @@ namespace test_app.api.Controllers
                     pData.amount,
                     API_SECRET));
 
+            var req = JsonConvert.SerializeObject(pData).ToString();
+            var res = "";
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -171,6 +174,11 @@ namespace test_app.api.Controllers
                     G2APayment g2APayment = _context.G2APayments.FirstOrDefault(x => x.Id == pData.userOrderId);
                     ApplicationUser user = _context.Users.FirstOrDefault(x => x.Id == g2APayment.User.Id);
 
+                    if (g2APayment.Status == G2APayment.G2APaymentStatus.Success)
+                    {
+                        throw new Exception("status is already complete");
+                    }
+
                     user.Balance += pData.amount;
                     g2APayment.Status = G2APayment.G2APaymentStatus.Success;
 
@@ -179,15 +187,24 @@ namespace test_app.api.Controllers
                     _context.SaveChanges();
                     transaction.Commit();
 
+                    // TODO: Временные логи, на момент теста
+                    res = "success";
+                    _context.G2AIPNLogs.Add(new G2AIPNLog() { Request = req, Response = res });
+                    _context.SaveChanges();
+
                     return Json(BaseHttpResult.GenerateSuccess(g2APayment.Status, "success", ResponseType.Ok));
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
 
+                    // TODO: Временные логи, на момент теста
+                    res = ex.Message.ToString();
+                    _context.G2AIPNLogs.Add(new G2AIPNLog() { Request = req, Response = res });
+                    _context.SaveChanges();
+
                     return BadRequest(BaseHttpResult.GenerateError(ex.Message, ResponseType.ServerError));
                 }
-
             }
         }
 
@@ -225,7 +242,7 @@ namespace test_app.api.Controllers
 
                 public string name { get; set; }
 
-                public string amount { get; set; }
+                public decimal amount { get; set; }
 
                 public int qty { get; set; }
 
