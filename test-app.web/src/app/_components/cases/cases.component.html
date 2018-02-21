@@ -28,15 +28,17 @@
     <h2 class="b-cases-category__name">{{ caseCategory.category.fullName }}</h2>
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 1">
-      <div class="col-3 b-case_m rare" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
-        <div class="sprite-left-top"></div>
-        <div class="sprite-rigt-top"></div>
-        <div class="b-case_m__content">
-          <div class="b-case_m__name">{{ case.fullName }}</div>
-          <img class="hover" src="../../../assets/images/simple_ammunition.png" alt="">
-          <img src="../../../assets/images/case_rare.png" alt="">
+      <div class="col-12 col-md-3" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
+        <div class="b-case_m rare">
+            <div class="sprite-left-top"></div>
+            <div class="sprite-rigt-top"></div>
+            <div class="b-case_m__content">
+              <div class="b-case_m__name">{{ case.fullName }}</div>
+              <img class="hover" src="../../../assets/images/simple_ammunition.png" alt="">
+              <img src="../../../assets/images/case_rare.png" alt="">
+            </div>
+            <button class="btn btn-rare-case" type="button">{{ case.price | currency }}</button>
         </div>
-        <button class="btn btn-rare-case" type="button">{{ case.price | currency }}</button>
       </div>
     </div>
 

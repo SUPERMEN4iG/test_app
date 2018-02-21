@@ -57,10 +57,16 @@
   padding: 0;
   margin-right: 50px;
   margin-bottom: 35px;
-  left: 0;
-  right: 0;
-  margin-right: auto;
-  margin-left: auto;
+  // left: 0;
+  // right: 0;
+  // margin-right: auto;
+  // margin-left: auto;
+
+  &:first-child {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
 
   &:hover {
     .b-case_m__content {
