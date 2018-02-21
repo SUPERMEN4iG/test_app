@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -171,7 +172,7 @@ namespace test_app.api.Controllers
                         throw new Exception("status is not complete");
                     }
 
-                    G2APayment g2APayment = _context.G2APayments.FirstOrDefault(x => x.Id == pData.userOrderId);
+                    G2APayment g2APayment = _context.G2APayments.Include(x => x.User).FirstOrDefault(x => x.Id == pData.userOrderId);
                     ApplicationUser user = _context.Users.FirstOrDefault(x => x.Id == g2APayment.User.Id);
 
                     if (g2APayment.Status == G2APayment.G2APaymentStatus.Success)
@@ -200,6 +201,7 @@ namespace test_app.api.Controllers
 
                     // TODO: Временные логи, на момент теста
                     res = ex.Message.ToString();
+                    res += '|' + ex.StackTrace;
                     _context.G2AIPNLogs.Add(new G2AIPNLog() { Request = req, Response = res });
                     _context.SaveChanges();
 
