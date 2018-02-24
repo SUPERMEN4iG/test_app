@@ -48,26 +48,42 @@ namespace test_app.api.Controllers
                 entry.SlidingExpiration = TimeSpan.FromHours(12);
                 entry.Priority = CacheItemPriority.Normal;
 
-                return context.Cases
-                    .Include(x => x.Category)
-                    .Where(x => x.IsAvalible == true)
-                    .GroupBy(x => x.Category,
-                        (key, group) => new CasesCategoryViewModel()
-                        {
-                            Category = new CategoryViewMode() { Index = key.Index, Id = key.Id, StaticName = key.StaticName, FullName = key.FullName },
-                            Cases = group.Select(c => new Models.ViewModels.CaseViewModel()
-                            {
-                                Id = c.Id,
-                                StaticName = c.StaticName,
-                                FullName = c.FullName,
-                                Image = c.Image,
-                                Price = c.Price,
-                                PreviousPrice = c.PreviousPrice,
-                                Index = c.Index,
-                                CategoryName = c.Category.StaticName,
-                                Skins = c.CaseSkins.Select(s => new AdminSkinsViewModel() { Chance = s.Chance, Id = s.Skin.Id, MarketHashName = s.Skin.MarketHashName, Image = s.Skin.Image, Price = s.Skin.Price }).ToList()
-                            }).OrderBy(x => x.Index).ToList()
-                        }).OrderBy(x => x.Category.Index).ToList();
+                return context.CaseCategories.Select(cat=> new CasesCategoryViewModel(){
+                    Category = new CategoryViewMode(){Index = cat.Index, Id = cat.Id, StaticName = cat.StaticName, FullName = cat.FullName},
+                    Cases = cat.Cases.Where(cs=>cs.IsAvalible).Select(c => new Models.ViewModels.CaseViewModel()
+                    {
+                        Id = c.Id,
+                        StaticName = c.StaticName,
+                        FullName = c.FullName,
+                        Image = c.Image,
+                        Price = c.Price,
+                        PreviousPrice = c.PreviousPrice,
+                        Index = c.Index,
+                        CategoryName = c.Category.StaticName,
+                        Skins = c.CaseSkins.Select(s => new AdminSkinsViewModel() { Chance = s.Chance, Id = s.Skin.Id, MarketHashName = s.Skin.MarketHashName, Image = s.Skin.Image, Price = s.Skin.Price }).ToList()
+                    }).OrderBy(x => x.Index).ToList()
+                }).OrderBy(x => x.Category.Index).ToList();
+
+                //return context.Cases
+                    //.Include(x => x.Category)
+                    //.Where(x => x.IsAvalible == true)
+                    //.GroupBy(x => x.Category,
+                        //(key, group) => new CasesCategoryViewModel()
+                        //{
+                        //    Category = new CategoryViewMode() { Index = key.Index, Id = key.Id, StaticName = key.StaticName, FullName = key.FullName },
+                        //    Cases = group.Select(c => new Models.ViewModels.CaseViewModel()
+                        //    {
+                        //        Id = c.Id,
+                        //        StaticName = c.StaticName,
+                        //        FullName = c.FullName,
+                        //        Image = c.Image,
+                        //        Price = c.Price,
+                        //        PreviousPrice = c.PreviousPrice,
+                        //        Index = c.Index,
+                        //        CategoryName = c.Category.StaticName,
+                        //        Skins = c.CaseSkins.Select(s => new AdminSkinsViewModel() { Chance = s.Chance, Id = s.Skin.Id, MarketHashName = s.Skin.MarketHashName, Image = s.Skin.Image, Price = s.Skin.Price }).ToList()
+                        //    }).OrderBy(x => x.Index).ToList()
+                        //}).OrderBy(x => x.Category.Index).ToList();
             });
 
             return Json(cases);
