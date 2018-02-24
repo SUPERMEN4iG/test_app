@@ -109,8 +109,6 @@ namespace test_app.api.Controllers
 
             var founded = context.Cases.FirstOrDefault(x => x.Id == caseId);
 
-            margine = margine / 100;
-
             var calculator = new ChanceCalc(context);
             var calced = calculator.Calc(caseId, (double)founded.Price, (double)margine, new List<long>());
 
