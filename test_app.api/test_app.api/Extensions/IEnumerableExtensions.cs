@@ -15,9 +15,9 @@ namespace test_app.api.Extensions
 
             foreach (var item in sequence.Select(x => new { Value = x, Weight = weightSelector(x) }))
             {
-                currentWeightIndex += item.Weight;
+                currentWeightIndex -= item.Weight;
 
-                if (currentWeightIndex >= itemWeightIndex)
+                if (currentWeightIndex <= 0)
                     return item.Value;
             }
 
