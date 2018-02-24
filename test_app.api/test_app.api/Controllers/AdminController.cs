@@ -441,7 +441,7 @@ namespace test_app.api.Controllers
                 .ToList());
 
             res.Totals.TotalCasePrice = casea.Price * count;
-            res.Totals.TotalSkinPrice = openResults.Sum(x => ((WinnerViewModel)x.Winner).Price);
+            res.Totals.TotalSkinPrice = openResults.Sum(x => ((WinnerViewModel)x.Winner).Price * (decimal)0.8);
 
             return Json(res);
         }
