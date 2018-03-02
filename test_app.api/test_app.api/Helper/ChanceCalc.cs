@@ -33,9 +33,10 @@ namespace test_app.api.Helper {
         public List<SkinViewModel> Calc (int case_id, double case_price,double margine, List<long> skinIds) {
             _marginality = margine;
             _casePrice = case_price;
-            _fakeInventory = _context.CasesDrops.Where (x => x.CaseId == case_id && !skinIds.Contains (x.SkinId)).Select (skin => new SkinViewModel () {
+            _fakeInventory = _context.CasesDrops.Where(x => x.CaseId == case_id && !skinIds.Contains(x.SkinId)).Select(skin => new SkinViewModel()
+            {
                 Id = skin.SkinId,
-                    Price = skin.Skin.Price
+                Price = skin.Skin.Price * 0.8M
             }).ToList ();
             _ignoredSkins = _context.CasesDrops.Where(x => x.CaseId == case_id && skinIds.Contains(x.SkinId)).Select(skin => new SkinViewModel()
             {
