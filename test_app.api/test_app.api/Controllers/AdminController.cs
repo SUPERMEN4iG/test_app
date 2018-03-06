@@ -95,7 +95,7 @@ namespace test_app.api.Controllers
         public async Task<IActionResult> GetSkinsData()
         {
             var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
-            var skins = context.Skins.ToList().Select(x => new AdminSkinsViewModel() { Id = x.Id, Image = x.Image, MarketHashName = x.MarketHashName, Price = x.Price, Chance = 0 }).ToList();
+            var skins = context.Skins.ToList().Select(x => new AdminSkinsViewModel() { Id = x.Id, Image = x.Image, MarketHashName = x.MarketHashName, Price = x.Price, Chance = 0 }).OrderBy(x=>x.Price).ToList();
 
             return Json(skins);
         }
