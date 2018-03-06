@@ -61,7 +61,7 @@ namespace test_app.api.Controllers
                         Index = c.Index,
                         CategoryName = c.Category.StaticName,
                         Skins = c.CaseSkins.Select(s => new AdminSkinsViewModel() { Chance = s.Chance, Id = s.Skin.Id, MarketHashName = s.Skin.MarketHashName, Image = s.Skin.Image, Price = s.Skin.Price }).ToList()
-                    }).OrderBy(x => x.Index).ToList()
+                    }).OrderBy(x => x.Price).ToList()
                 }).OrderBy(x => x.Category.Index).ToList();
 
                 //return context.Cases
