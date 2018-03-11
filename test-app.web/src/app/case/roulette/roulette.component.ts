@@ -37,6 +37,8 @@ export class RouletteComponent {
   @Input() isSpinning: boolean = false;
   @Output() isSpinningChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  @Output() isStartAgain: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   @Input() currentCase: any;
 
   isWinned: boolean = false;
@@ -116,8 +118,8 @@ export class RouletteComponent {
   animationPlayer;
   moveRouletteToX(x, secs, onDone = null): void {
     const moveBallAnimation = this.animBuilder.build([
-      animate(`${secs}s ease`, style({
-          'transform': `translate(${x}px, 0px)`
+      animate(secs +'s ease', style({
+          'transform': 'translateX('+x+'px)'
       }))
     ]);
     this.animationPlayer = moveBallAnimation.create(this.casesCarusel.nativeElement);
@@ -198,6 +200,7 @@ export class RouletteComponent {
           this.countSpin++;
           this.isSpinning = false;
           this.isSpinningChange.emit(false);
+          this.isStartAgain.emit(false);
           this.isWinned = true;
           clearInterval(caseMessageInterval);
           this._mainService.increseOpennedCases();
@@ -208,6 +211,7 @@ export class RouletteComponent {
         this._notification.error(err.message, 'Open case');
         this.caseMessage = err.message;
         clearInterval(caseMessageInterval);
+        this.isStartAgain.emit(true);
       }
     );
   }

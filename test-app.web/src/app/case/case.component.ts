@@ -59,9 +59,15 @@ export class CaseComponent {
 
           this.currentCase = this.caseService.getByCaseName(this.caseName);
           console.info(this.currentCase);
+          this.winSkin = null;
+          this.isSpinning = false;
+          this.isOpenCaseClick = false;
       });
 
     });
+  }
+
+  ngAfterViewInit() {
   }
 
   openWinModal() {
@@ -88,6 +94,12 @@ export class CaseComponent {
   }
 
   openCase() {
+
+    this.roulette.isStartAgain.subscribe((isStartAgain) => {
+      if (isStartAgain) {
+        console.info("START AGAIN!");
+      }
+    });
 
     this.setOpacity(this.caseContainer.nativeElement, 0, 0.5, () => {
       this.isOpenCaseClick = true;

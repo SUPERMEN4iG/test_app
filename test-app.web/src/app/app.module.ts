@@ -31,6 +31,7 @@ import { LastwinnersComponent } from './layout/lastwinners/lastwinners.component
 import { CasesService } from './_services/data/cases.service';
 import { UsersService } from './_services/data/users.service';
 import { MainService } from './_services/data/main.service';
+import { LastWinnersService } from './_services/data/lastwinners.service';
 
 // Interface
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -40,6 +41,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { AuthenticationManagerService } from './_services/authentication.manager.service';
 import { WinnerService } from './_services/data/winner.service';
+import { WebsocketService } from './_services/websocket.service';
 
 @NgModule({
   declarations: [
@@ -71,6 +73,8 @@ import { WinnerService } from './_services/data/winner.service';
     WinnerService,
     UsersService,
     MainService,
+    WebsocketService,
+    LastWinnersService,
     {
       provide: APP_CONFIG,
       useValue: AppConfig

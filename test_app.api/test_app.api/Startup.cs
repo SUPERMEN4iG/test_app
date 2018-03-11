@@ -22,6 +22,8 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using test_app.api.Models.Configuration;
+using test_app.api.Logic.Extensions;
+using test_app.api.Logic.LastWinnersSocket;
 
 namespace test_app.api
 {
@@ -118,10 +120,11 @@ namespace test_app.api
                 manager.FeatureProviders.Add(new ReferencesMetadataReferenceFeatureProvider());
             });
             services.AddMemoryCache();
+            services.AddWebSocketManager();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -162,12 +165,16 @@ namespace test_app.api
 
             app.UseCors("CorsPolicy");
 
+            app.UseWebSockets();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.MapWebSocketManager("/lastwinners", serviceProvider.GetService<LastWinnersHandler>());
         }
     }
 }

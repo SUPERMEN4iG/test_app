@@ -18,6 +18,10 @@ namespace test_app.api.Logic
         public string Image { get; set; }
 
         public Skin Skin { get; set; }
+
+        public DateTime DateCreate { get; set; }
+
+        public Int64 Id { get; set; }
     }
 
     public class CaseLogic
@@ -113,7 +117,13 @@ namespace test_app.api.Logic
 
                     transaction.Commit();
 
-                    return CaseOpenResult.GenerateSuccess(new { winner.Skin.MarketHashName, price, winner.Skin.Image, winner.Id, winner.Skin.DateCreate, winner.State }, selected.Chance.ToString());
+                    return CaseOpenResult.GenerateSuccess(new WinnerViewModel {
+                        MarketHashName = winner.Skin.MarketHashName,
+                        Price = price,
+                        Image = winner.Skin.Image,
+                        Id = winner.Id,
+                        DateCreate = winner.Skin.DateCreate,
+                        Skin = null }, selected.Chance.ToString());
                 }
                 catch (Exception e)
                 {

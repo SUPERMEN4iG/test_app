@@ -17,7 +17,6 @@
       <button *ngIf="currentUser == null" (click)="loginSteam()" type="button" class="btn btn-outline-success btn-open-case">Sign in</button>
       <button *ngIf="currentUser != null && currentUser.balance < currentCase.price" type="button" class="btn btn-outline-success btn-open-case">Add funds</button>
     </div>
-
   </div>
 
   <div class="b-case-drop">

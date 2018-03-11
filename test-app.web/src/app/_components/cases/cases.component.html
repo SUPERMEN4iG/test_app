@@ -28,7 +28,7 @@
     <h2 class="b-cases-category__name">{{ caseCategory.category.fullName }}</h2>
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 1">
-      <div class="col-12 col-md-3" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
+      <div class="col-12 col-sm-6 col-md-4 col-xl-3" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
         <div class="b-case_m rare">
             <div class="sprite-left-top"></div>
             <div class="sprite-rigt-top"></div>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 2">
-      <div class="col-md-3 col-6 b-case_m standart" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
+      <div class="col-12 col-sm-6 col-md-4 col-xl-3 b-case_m standart" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
         <div class="b-case_m__content">
             <div class="b-case_m__name">{{ case.fullName }}</div>
             <img class="b-case_m__img" src="../../../assets/images/cases/stand_case_01.png" alt="">
@@ -56,7 +56,7 @@
     </div>
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 3">
-      <div class="col-md-3 col-6 b-case_m regular" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
+      <div class="col-12 col-sm-6 col-md-4 col-xl-3 b-case_m regular" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
         <div class="b-case_m__content">
             <div class="b-case_m__name">{{ case.fullName }}</div>
             <div class="b-case_m__img_hover" [ngClass]="case.caseClass"></div>
@@ -72,7 +72,7 @@
 
     <div class="row justify-content-md-center" *ngIf="caseCategory.category.index == 4">
 
-      <div class="col-md-3 col-6 b-case_m regular" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
+      <div class="col-12 col-sm-6 col-md-4 col-xl-3 b-case_m regular" *ngFor="let case of caseCategory.cases" [routerLink]="['/case', case.staticName]">
         <div class="b-case_m__content">
             <div class="b-case_m__name">{{ case.fullName }}</div>
             <div class="b-case_m__img_hover gold"></div>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using test_app.api.Data;
+using test_app.api.Logic.LastWinnersSocket;
 
 namespace test_app.api.Controllers
 {
@@ -13,6 +14,14 @@ namespace test_app.api.Controllers
     [Route("api/main")]
     public class MainController : Controller
     {
+        private LastWinnersHandler _lastWinnersHandler { get; set; }
+
+        public MainController(
+            LastWinnersHandler lastWinnersHandler)
+        {
+            _lastWinnersHandler = lastWinnersHandler;
+        }
+
         [HttpGet]
         [Route("getdata")]
         public async Task<IActionResult> GetData()
@@ -32,19 +41,20 @@ namespace test_app.api.Controllers
                 result.LastWinners.AddRange(context.Winners
                     .Include(x => x.Skin)
                     .Include(x => x.User)
+                    .Include(x => x.Case)
                     .OrderByDescending(x => x.DateCreate)
                     .Select(x => new {
-                        x.User.SteamUsername,
-                        x.Id,
-                        x.Skin.MarketHashName,
-                        x.Skin.Price,
-                        x.Skin.Rarity,
-                        x.Skin.Image
+                        user_name = x.User.SteamUsername,
+                        winner_id = x.Id,
+                        skin_name = x.Skin.MarketHashName,
+                        skin_rarity = x.Skin.Rarity,
+                        skin_image = x.Skin.Image,
+                        case_name = x.Case.FullName,
+                        case_static_name = x.Case.StaticName
                     })
-                    .ToList().Take(10));
+                    .ToList().Take(8));
 
-                // TODO: Добавить отслеживание онлайна возможно через WS
-                result.Online = 10;
+                result.Online = _lastWinnersHandler.GetCountConnections();
                 result.ServerTime = DateTime.Now;
             }
             catch (Exception ex)

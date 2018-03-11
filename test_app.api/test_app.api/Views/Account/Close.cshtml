@@ -24,14 +24,14 @@
 
             var counter = 5;
             var newElement = document.getElementById("countDown");
-            newElement.innerHTML = `The authorization was successful, the window will close automatically ${counter.toString()} seconds`;
+            newElement.innerHTML = 'The authorization was successful, the window will close automatically ' + counter.toString() +' seconds';
             id = setInterval(function() {
                 counter--;
                 if(counter <= 0) {
                     clearInterval(id);
                     window.close();
                 } else {
-                    newElement.innerHTML = `The authorization was successful, the window will close automatically ${counter.toString()} seconds`;
+                    newElement.innerHTML = 'The authorization was successful, the window will close automatically ' + counter.toString() + ' seconds';
                 }
             }, 1000);
         };

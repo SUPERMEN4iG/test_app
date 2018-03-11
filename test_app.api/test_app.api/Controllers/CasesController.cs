@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using test_app.api.Data;
 using test_app.api.Logic;
+using test_app.api.Logic.LastWinnersSocket;
 using test_app.api.Models;
 
 namespace test_app.api.Controllers
@@ -22,13 +24,16 @@ namespace test_app.api.Controllers
 
         public CasesController(
             UserManager<ApplicationUser> userManager,
-            IMemoryCache cache)
+            IMemoryCache cache,
+            LastWinnersHandler lastWinnersHandler)
         {
             _userManager = userManager;
             _cache = cache;
+            _lastWinnersHandler = lastWinnersHandler;
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
+        private LastWinnersHandler _lastWinnersHandler { get; set; }
         private readonly ApplicationDbContext _context;
         private IMemoryCache _cache;
 
@@ -82,6 +87,16 @@ namespace test_app.api.Controllers
 
             if (openResult.IsSuccess)
             {
+                var message = new {
+                    skin_name = openResult.Winner.MarketHashName,
+                    skin_image = openResult.Winner.Image,
+                    skin_rarity = 1,
+                    user_name = user.SteamUsername,
+                    user_id = user.Id,
+                    case_name = casea.FullName,
+                    case_static_name = casea.StaticName
+                };
+                await _lastWinnersHandler.SendMessageToAllAsync(JsonConvert.SerializeObject(message));
                 return Json(openResult);
             }
             else

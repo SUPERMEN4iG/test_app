@@ -66,7 +66,7 @@ namespace test_app.api.Controllers
                     x.State,
                     x.Price,
                     PriceForSell = x.Skin.Price
-                }).ToList();
+                }).OrderByDescending(x => x.DateCreate).ToList();
 
             user.wonItems.Clear();
             user.wonItems.AddRange(wonItems);

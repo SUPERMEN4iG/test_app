@@ -142,6 +142,11 @@
       text-transform: uppercase;
       text-align: center;
       font-family: 'Segoe UI' sans-serif;
+      white-space: nowrap;
+      overflow: hidden;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 75%;
     }
 
     .b-case_m__img {
@@ -281,5 +286,25 @@
     right: -13px;
     z-index: 3;
     top: -5px;
+  }
+}
+
+.row.justify-content-md-center {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+@media screen and (max-width: 575px)
+{
+  .b-case_m {
+    .b-case_m__content {
+      .b-case_m__img {
+        width: 45% !important;
+      }
+      .b-case_m__new {
+        margin-left: 120px !important;
+      }
+    }
   }
 }

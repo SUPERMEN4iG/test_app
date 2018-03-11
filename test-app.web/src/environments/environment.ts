@@ -7,4 +7,5 @@ export const environment = {
   production: false,
   endPoint: 'https://localhost:44362',
   apiEndPoint: `https://localhost:44362/api/`,
+  endPointWSLastWinners: 'ws://localhost:49638/lastwinners',
 };

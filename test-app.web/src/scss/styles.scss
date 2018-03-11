@@ -18,5 +18,9 @@ body {
 
 button[type="button"] {
   cursor: pointer;
-} 
+}
 
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
