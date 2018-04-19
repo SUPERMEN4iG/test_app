@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using test_app.api.Data;
@@ -21,6 +22,10 @@ namespace test_app.api.Helper {
         private List<SkinViewModel> _ignoredSkins;
         private double _skin_max_chance;
 
+        private decimal _totalPriceBuying = 0;
+
+        private Dictionary<long,int> _skinsCount;
+
         private List<SkinViewModel> _skinsPool;
 
         public ChanceCalc (ApplicationDbContext context) {
@@ -33,7 +38,7 @@ namespace test_app.api.Helper {
         public List<SkinViewModel> Calc (int case_id, double case_price,double margine, List<long> skinIds) {
             _marginality = margine;
             _casePrice = case_price;
-            _fakeInventory = _context.CasesDrops.Where(x => x.CaseId == case_id && !skinIds.Contains(x.SkinId)).Select(skin => new SkinViewModel()
+            _skinsPool = _context.CasesDrops.Where(x => x.CaseId == case_id && !skinIds.Contains(x.SkinId)).Select(skin => new SkinViewModel()
             {
                 Id = skin.SkinId,
                 Price = skin.Skin.Price * 0.8M
@@ -45,7 +50,37 @@ namespace test_app.api.Helper {
                 Chance = 0
             }).ToList();
 
-            _skinsPool = new List<SkinViewModel>(_fakeInventory); // probably fixes
+            _fakeInventory = new List<SkinViewModel>(); // probably fixes
+
+            _skinsCount = _skinsPool.ToDictionary(k=>k.Id,k=>0);
+
+        var maxPrice = _skinsPool.Max(x=>x.Price);
+
+         
+           
+    _skinsPool.ForEach(skin=>{
+        var times_to_add = 0;
+        if((double)skin.Price > this._casePrice * 0.6)
+        {
+            var t = maxPrice / skin.Price;
+            times_to_add = (int)Math.Round(t);
+            if (times_to_add < 1) 
+            {
+                times_to_add = 1;
+            }
+        }
+        else{
+            times_to_add = 1;
+        }
+
+        for(var i = 0; i < times_to_add; i++)
+        {
+            _fakeInventory.Add(skin);
+            _skinsCount[skin.Id]++;
+            this._totalPriceBuying +=skin.Price;
+        }
+        
+    });
             push_skins ();
             _skinsPool.ForEach (skin => {
                 skin.Chance = System.Math.Round (skin_chances (skin.Id), 6) / 100;
@@ -61,7 +96,7 @@ namespace test_app.api.Helper {
 
         private double calc_buying () {
 
-            return _fakeInventory.Sum(x => (double)x.Price);
+            return (double)_totalPriceBuying;
 
         }
 
@@ -70,7 +105,7 @@ namespace test_app.api.Helper {
         }
 
         private int skin_count (long skin_id) {
-            return _fakeInventory.Count (x => x.Id == skin_id);
+            return _skinsCount[skin_id];
         }
 
         private double skin_chances (long skin_id) {
@@ -111,13 +146,18 @@ namespace test_app.api.Helper {
                 }
                 if (marginality_diff > 0 && skin.Price < (decimal)_casePrice) {
                     _fakeInventory.Add (skin);
+                     _skinsCount[skin.Id]++;
+                    this._totalPriceBuying +=skin.Price;
                     pushed_any = true;
                 }
                 if (marginality_diff < 0 && skin.Price > (decimal)_casePrice) {
                     _fakeInventory.Add (skin);
+                     _skinsCount[skin.Id]++;
+                    this._totalPriceBuying +=skin.Price;
                     pushed_any = true;
                 }
             });
+           
             if (!found) {
                 if (!pushed_any) {
                     _skin_max_chance += 0.5;
