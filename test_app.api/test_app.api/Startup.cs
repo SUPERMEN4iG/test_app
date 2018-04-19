@@ -39,8 +39,10 @@ namespace test_app.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            // services.AddDbContext<ApplicationDbContext>(options =>
+            //     options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+            var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+               services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IConfiguration>(Configuration);
@@ -174,7 +176,7 @@ namespace test_app.api
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.MapWebSocketManager("/lastwinners", serviceProvider.GetService<LastWinnersHandler>());
+           // app.MapWebSocketManager("/lastwinners", serviceProvider.GetService<LastWinnersHandler>());
         }
     }
 }
