@@ -1,13 +1,32 @@
-<div *ngIf="user != null" class="b-profile">
-  <div class="col-12 row b-profile-head" style="margin-bottom: 20px; padding: 0;">
+<div class="b-loading" *ngIf="user == null && isLoading">
+  <div class="row justify-content-center">
+    <div class="col-6 col-sm-12 col-md-4">
+      <div class="clearfix">
+        <div class="row vertical-align" style="/* text-align: -webkit-center; */">
+
+          <div class="col-9 col-sm-7 col-md-6">
+            <h4 class="pt-3">Loading...</h4>
+            <p _class="text-muted">One moment please</p>
+          </div>
+        <div class="col-3 col-sm-5 col-md-6">
+            <i class="fa fa-cog fa-6x fa-spin" style="font-size:62px;float:right;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="user != null && !isLoading" class="b-profile">
+  <div class="col-12 row b-profile-head" *ngIf="!isDisableForEdit" style="margin-bottom: 20px;">
       <div class="col-md-8 col-12 b-profile-head__left">
         <div class="header">Settings</div>
         <div class="row">
-          <div class="col-2">
+          <div class="col-12 col-md-2">
             <img class="avatar" [src]="user.steamAvatar" alt="">
             <h5 class="username">{{ user.email }}</h5>
           </div>
-          <div class="col-10">
+          <div class="col-12 col-md-10">
             <div class="input-group">
               <input [disabled]="isDisableForEdit" [(ngModel)]="user.tradeofferUrl" type="text" class="form-control" placeholder="Enter you Trade url">
               <span class="input-group-btn">
@@ -51,6 +70,7 @@
                     <h6>{{ item.marketHashName }}</h6>
                     <div class="hover"></div>
                     <img [src]="item.image" alt="">
+                    <div *ngIf="item.state != 1" class="price">{{ item.priceForSell | currency }}</div>
                     <div class="text-center controls">
                       <div class="btn-group" *ngIf="item.state == 0">
                         <button (click)="onClickSell(item)" class="btn btn-success">Sell</button>

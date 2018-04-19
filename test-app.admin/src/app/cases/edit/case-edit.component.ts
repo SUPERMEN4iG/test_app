@@ -7,6 +7,8 @@ import { AuthenticationService } from '../../_services/authentication.service';
 
 import { animate, AnimationBuilder, style } from '@angular/animations';
 
+import { SkinsAvailablePipe } from './case-edit-skins.pipe';
+
 import { SkinsService } from '../../_services/data/skins.service';
 import { CasesService } from '../../_services/data/cases.service';
 
@@ -27,6 +29,7 @@ export class CasesEditComponent {
 
   margine: number;
 
+  avalibleSkins;
   skins;
   currentCase;
   selectedSkin;
@@ -40,7 +43,8 @@ export class CasesEditComponent {
               private _caseService: CasesService,
               private modalService: BsModalService,
               private _notificationService: ToastrService,
-              private _currencyPipe: CurrencyPipe) {
+              private _currencyPipe: CurrencyPipe,
+              private _skinsAvailablePipe: SkinsAvailablePipe) {
   }
 
   ngOnInit() {
@@ -55,7 +59,8 @@ export class CasesEditComponent {
             this._skinsService.data$.subscribe((sk) => {
               if (sk.length > 0) {
                 this.skins = sk;
-                this.selectedSkin = this.skins[0].id;
+                this.avalibleSkins = sk;
+                this.onAvalibleSkinsChange();
               }
             }, (err) => { console.error(err); });
           }
@@ -67,17 +72,33 @@ export class CasesEditComponent {
     });
   }
 
+  onAvalibleSkinsChange() {
+    this.skins = this._skinsAvailablePipe.transform(this.avalibleSkins, this.currentCase.skins);
+    if (this.skins.length > 0) {
+      this.selectedSkin = this.skins[0].id;
+    } else {
+      this.selectedSkin = null;
+    }
+  }
+
   setDecimal($event) {
     $event.target.value = parseFloat($event.target.value);
   }
 
   addSkin() {
     this.currentCase.skins.push(_.findWhere(this.skins, { id: this.selectedSkin }));
-    this.selectedSkin = null;
+    this.onAvalibleSkinsChange();
+  }
+
+  addAllSkins() {
+    var skinsAll = this._skinsAvailablePipe.transform(this.skins, this.currentCase.skins);
+    this.currentCase.skins = this.currentCase.skins.concat(skinsAll);
+    this.onAvalibleSkinsChange();
   }
 
   onRemoveSkin(skin) {
     this.currentCase.skins = _.without(this.currentCase.skins, skin);
+    this.onAvalibleSkinsChange();
   };
 
   onSave() {

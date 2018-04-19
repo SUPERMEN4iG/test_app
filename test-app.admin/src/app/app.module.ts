@@ -35,6 +35,7 @@ import { CasesService } from './_services/data/cases.service';
 import { SkinsService } from './_services/data/skins.service';
 
 import { NgProgressModule, NgProgressInterceptor  } from 'ngx-progressbar';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { NgProgressModule, NgProgressInterceptor  } from 'ngx-progressbar';
       positionClass: 'toast-bottom-right',
       preventDuplicates: true,
     }),
-    NgProgressModule
+    NgProgressModule,
+    NgbModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

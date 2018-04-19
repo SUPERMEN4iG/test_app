@@ -389,7 +389,7 @@ namespace test_app.api.Controllers
 
                 using (var client = new HttpClient())
                 {
-                    var response = await client.GetAsync($"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={_steamOptions.ApiKey}&steamids={steamId}");
+                    var response = await client.GetAsync($"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={_steamOptions.ApiKey}&steamids={steamId}");
 
                     response.EnsureSuccessStatusCode();
                     var stringResponse = await response.Content.ReadAsStringAsync();

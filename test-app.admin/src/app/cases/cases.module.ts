@@ -34,7 +34,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     SkinsAvailablePipe
   ],
   providers: [
-    CurrencyPipe
+    CurrencyPipe,
+    SkinsAvailablePipe
   ],
 })
 export class CasesModule { }

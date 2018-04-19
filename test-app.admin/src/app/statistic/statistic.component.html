@@ -7,7 +7,7 @@
   </div>
 </div>
 <div class="row" *ngIf="statistic">
-  <div class="col-xl-3 col-lg-4 col-md-6 mb-3 b-case-stat" *ngFor="let caseStat of statistic">
+  <div class="col-xs-12 col-sm-6 col-lg-4 col-xl-4 col-xxl-2 mb-3 b-case-stat" *ngFor="let caseStat of statistic">
     <div class="card">
       <div class="card-block">
         <h3 class="card-title"><span class="id">#{{ caseStat.case.id }}</span> {{ caseStat.case.fullName }} <span style="float: right;"><strong class="text-right">{{ caseStat.case.price | currency }}</strong></span></h3>

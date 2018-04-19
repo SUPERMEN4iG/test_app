@@ -17,14 +17,17 @@ import { CasesService } from '../../_services/data/cases.service';
 export class CasesComponent implements OnInit, AfterViewInit {
 
   cases = [];
+  isLoading = false;
 
   constructor(private _casesService: CasesService) {
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this._casesService.data$.subscribe(
       (data) => {
         this.cases = data;
+        this.isLoading = false;
       },
       (err) => console.error(err)
     );

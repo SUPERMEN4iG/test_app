@@ -1,0 +1,36 @@
+.b-terms {
+  color: white;
+  padding: 12px 12px;
+  margin-bottom: 20px;
+
+  .header {}
+
+  p {
+    margin: 0;
+  }
+
+  h4 {
+    padding: 6px 0;
+  }
+
+  .title {
+    text-align: center;
+    padding: 20px 0;
+    padding-bottom: 0;
+  }
+
+  .version {
+    display: block;
+  }
+
+  .table.table-meanings {
+    tr {
+      td {
+        &:first-child {
+          width: 25%;
+        }
+        border: none;
+      }
+    }
+  }
+}

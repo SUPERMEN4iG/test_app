@@ -26,8 +26,8 @@
       <div id="caruselLine"></div>
       <div id="caruselOver"></div>
       <div id="aCanvas">
-          <div #casesCarusel id="casesCarusel" style="margin-left: 0px; transition: 1s all ease-in;">
-              <div *ngFor="let skin of skinsRoulette">
+          <div #casesCarusel id="casesCarusel" style="margin-left: 0px">
+              <div *ngFor="let skin of skinsRoulette; let i = index" [attr.data-index]="i">
                   <div class="weaponblock weaponblock1">
                       <img [src]="skin.image" />
                       <div class="weaponblockinfo"><span>{{ skin.marketHashName }}<br/></span></div>
