@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  endPoint: 'http://46.101.178.188:5001',
-  apiEndPoint: 'http://46.101.178.188:5001/api/',
+  endPoint: 'http://eachskins.com:5001',
+  apiEndPoint: 'http://eachskins.com:5001/api/',
 };

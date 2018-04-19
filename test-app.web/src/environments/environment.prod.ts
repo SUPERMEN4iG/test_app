@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  endPoint: 'http://46.101.178.188:5001',
-  apiEndPoint: 'http://46.101.178.188:5001/api/',
-  endPointWSLastWinners: 'ws://46.101.178.188:5001/lastwinners',
+  endPoint: 'http://eachskins.com:5001',
+  apiEndPoint: 'http://eachskins.com:5001/api/',
+  endPointWSLastWinners: 'ws://eachskins.com:5001/lastwinners',
 };
