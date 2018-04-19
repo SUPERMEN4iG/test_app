@@ -122,31 +122,21 @@
   }
 }
 
-@media screen and (max-width: 769px)
+@media screen and (min-width: 320px) and (max-width: 425px)
 {
   .lastwinners {
+    text-align: center;
     .lastwinners_list {
 
       .lastwinners__item {
-        width: 111px;
-        height: 100px;
-      }
+        width: 80px;
+        height: 80px;
 
-      li:nth-last-child(-n+3) {
-        display: none;
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 376px)
-{
-  .lastwinners {
-    .lastwinners_list {
-
-      .lastwinners__item {
-        width: 92px;
-        height: 90px;
+        .block {
+          img {
+            width: 64px;
+          }
+        }
       }
 
       li:nth-last-child(-n+4) {
@@ -156,11 +146,68 @@
   }
 }
 
-@media screen and (max-width: 1024px)
+@media screen and (min-width: 425px) and (max-width: 768px)
 {
   .lastwinners {
+    text-align: center;
+    .lastwinners_list {
+
+      .lastwinners__item {
+        width: 92px;
+        height: 90px;
+
+        .block {
+          img {
+            width: 76px;
+          }
+        }
+      }
+
+      li:nth-last-child(-n+4) {
+        display: none;
+      }
+    }
+  }
+}
+
+
+@media screen and (min-width: 768px) and (max-width: 1024px)
+{
+  .lastwinners {
+    text-align: center;
+    .lastwinners_list {
+
+      .lastwinners__item {
+        width: 111px;
+        height: 100px;
+      }
+
+      li:nth-last-child(-n+2) {
+        display: none;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1200px)
+{
+  .lastwinners {
+    text-align: center;
     .lastwinners_list {
       li:nth-last-child(-n+2) {
+        display: none;
+      }
+    }
+  }
+}
+
+
+@media screen and (min-width: 1200px) and (max-width: 1280px)
+{
+  .lastwinners {
+    text-align: center;
+    .lastwinners_list {
+      li:nth-last-child(-n+1) {
         display: none;
       }
     }

@@ -23,6 +23,25 @@
   </div>
 </div> -->
 
+<div class="b-loading" *ngIf="isLoading">
+  <div class="row justify-content-center">
+    <div class="col-6 col-sm-12 col-md-4">
+      <div class="clearfix">
+        <div class="row vertical-align" style="/* text-align: -webkit-center; */">
+
+          <div class="col-9 col-sm-7 col-md-6">
+            <h4 class="pt-3">Loading...</h4>
+            <p _class="text-muted">One moment please</p>
+          </div>
+        <div class="col-3 col-sm-5 col-md-6">
+            <i class="fa fa-cog fa-6x fa-spin" style="font-size:62px;float:right;"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!isLoading">
 <div *ngFor="let caseCategory of cases" [ngClass]="caseCategory.category.index > 1 ? 'second-bg' : ''" class="b-cases-category">
   <div class="b-cases-category__inner">
     <h2 class="b-cases-category__name">{{ caseCategory.category.fullName }}</h2>
@@ -88,4 +107,5 @@
     </div>
 
   </div>
+</div>
 </div>

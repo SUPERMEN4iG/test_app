@@ -32,17 +32,6 @@ namespace test_app.api.Logic.Bot
         {
             try
             {
-                var tokenRequest = context.HttpContext.Request.Headers["Authorization"];
-
-                if (tokenRequest.Count == 0)
-                {
-                    throw new Exception("no token");
-                }
-
-                var token = tokenRequest.FirstOrDefault().Split("Bearer ")[1];
-                context.HttpContext.Items.Add("token", token);
-
-                #region Доп проверка на IP адрес
                 var ip = "";
 
                 #if DEBUG
@@ -51,9 +40,8 @@ namespace test_app.api.Logic.Bot
                 #if DEBUG
                 ip = context.HttpContext.Connection.RemoteIpAddress.ToString();
                 #endif
-                #endregion
 
-                var bot = _context.Bots.FirstOrDefault(x => x.Token == token && x.IsHidden == false);
+                var bot = _context.Bots.FirstOrDefault(x => x.Server == ip && x.IsHidden == false);
                 // добавляем в HttpContext.Items, потокобезопасно
                 context.HttpContext.Items.Add("botId", bot.Id);
             }

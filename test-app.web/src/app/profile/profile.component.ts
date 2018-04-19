@@ -23,6 +23,7 @@ export class ProfileComponent {
   private sub: any;
   profileId: string;
   user: any;
+  isLoading: boolean = false;
   currentUser: any;
 
   amount: any;
@@ -39,16 +40,19 @@ export class ProfileComponent {
   }
 
   ngOnInit() {
+    this.isLoading = true;
     this.sub = this.route.params.subscribe(params => {
       this.profileId = params['id'];
 
-      this._usersService.getUser(this.profileId).subscribe(
+      this._usersService.getUser(this.profileId).finally(() => { this.isLoading = false; }).subscribe(
         (data) => {
           this.user = data; console.info(this.user);
 
           this._authService.currentUser$.subscribe((cu: any) => {
             if (cu && cu.id == this.user.id) {
               this.isDisableForEdit = false;
+            } else {
+              this.isDisableForEdit = true;
             }
           });
         },
@@ -81,6 +85,7 @@ export class ProfileComponent {
         this._authService.updateUser('balance', (this._authService.currentUser.balance + item.price));
       },
       (err) => {
+        item.state = 0;
         this._notification.error(err.message, 'Sell item');
       }
     );

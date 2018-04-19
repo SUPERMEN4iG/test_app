@@ -22,6 +22,10 @@ const routes: Routes = [
       {
         path: 'profile',
         loadChildren: './profile/profile.module#ProfileModule'
+      },
+      {
+        path: 'terms',
+        loadChildren: './pages/terms/terms.module#TermsModule'
       }
     ]
   }

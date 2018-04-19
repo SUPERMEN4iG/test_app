@@ -47,6 +47,11 @@ export class RouletteComponent {
   prize = null;
   microposX = 0;
 
+  spingAudio = null;
+  winAudio = null;
+  itemActionAudio = null;
+  startAudio = null;
+
   currentWinner = null;
 
   @ViewChild('casesCarusel') casesCarusel: ElementRef;
@@ -143,6 +148,11 @@ export class RouletteComponent {
         this._userService.appnedWin(this._authService.currentUser.id, this.currentWinner);
         this._authService.updateUser('balance', (this._authService.currentUser.balance + this.currentWinner.price));
         this._notification.success(`Sold for ${this.currencyPipe.transform(this.currentWinner.price)}`, 'Sell item');
+
+        this.itemActionAudio = new Audio();
+        this.spingAudio.src = "../../../assets/sounds/item_action.mp3";
+        this.spingAudio.load();
+        this.spingAudio.play();
       },
       (err) => {
         this._notification.error(err.message, 'Sell item');
@@ -166,8 +176,14 @@ export class RouletteComponent {
 
     }, 300);
 
+    this.startAudio = new Audio();
+    this.startAudio.src = "../../../assets/sounds/start.mp3";
+    this.startAudio.load();
+    this.startAudio.play();
+
     this.caseService.openCase(this.currentCase.id).subscribe(
       (data) => {
+
         let winSkin = data.winner;
         this._authService.updateUser('balance', this.floorN(this._authService.currentUser.balance - this.currentCase.price, 2));
         this._userService.appnedWin(this._authService.currentUser.id, winSkin);
@@ -196,15 +212,71 @@ export class RouletteComponent {
                     ((this.SKIN_WIDTH) * 4) +
                     this.microposX;
 
+        var currentTiming = 250;
+        var currentTimeout = null;
+
+        var startDate = new Date().getTime();
+
+        var cElement = 1;
+        var cElementWidth = 0;
+
+        var testLooping = setInterval(() => {
+          // var dateDiff = (1 + 10) / ((new Date().getTime() - startDate));
+          // console.info(dateDiff);
+          var rayX = -1 * (this.casesCarusel.nativeElement.getBoundingClientRect().x);
+          cElementWidth = this.SKIN_WIDTH * cElement;
+          // console.info(rayX);
+
+          if (cElementWidth - this.SKIN_WIDTH / 2 <= rayX && cElementWidth + this.SKIN_WIDTH / 2 >= rayX) {
+            this.spingAudio = new Audio();
+            this.spingAudio.src = "../../../assets/sounds/scroll.wav";
+            this.spingAudio.load();
+            this.spingAudio.play();
+            cElement++;
+          }
+        }, 1);
+
+        var loopSpinning = () => {
+          this.spingAudio = new Audio();
+          this.spingAudio.src = "../../../assets/sounds/scroll.wav";
+          this.spingAudio.load();
+          this.spingAudio.play();
+
+          if (currentTiming <= 340) {
+             currentTiming += 5;
+          } else {
+            currentTiming += 100;
+          }
+
+          // console.info(currentTiming);
+
+          if (currentTiming < 945) {
+            currentTimeout = window.setTimeout(loopSpinning, currentTiming);
+          } else {
+            clearTimeout(currentTimeout);
+          }
+        };
+        // loopSpinning();
+
         this.moveRouletteToX(-1 * prizePosition_x, this.SPIN_SECS, () => {
           this.countSpin++;
           this.isSpinning = false;
           this.isSpinningChange.emit(false);
           this.isStartAgain.emit(false);
           this.isWinned = true;
+          clearTimeout(currentTimeout);
           clearInterval(caseMessageInterval);
           this._mainService.increseOpennedCases();
           this.currentWinner = winSkin;
+
+          clearInterval(testLooping);
+
+          setTimeout(() => {
+            this.winAudio = new Audio();
+            this.winAudio.src = "../../../assets/sounds/win.mp3";
+            this.winAudio.load();
+            this.winAudio.play();
+          }, 200);
         });
       },
       (err) => {

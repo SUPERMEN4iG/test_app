@@ -21,6 +21,8 @@ export class FullLayoutComponent implements OnInit, AfterViewInit {
   public currentUser: any = {};
   public isLoadingLogin: boolean = false;
 
+  isCollapsed = false;
+
   mainData = {
     opennedCases: 0,
     usersRegistered: 0,

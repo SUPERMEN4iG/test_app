@@ -34,7 +34,7 @@ namespace test_app.api.Controllers
         [Route("getqueue")]
         [ClaimRequirement("Premission", "CanBotUses")]
         [HttpGet]
-        public async Task<IActionResult> GetQueue()
+        public async Task<IActionResult> GetQueue(int count)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -48,14 +48,13 @@ namespace test_app.api.Controllers
                     }
                     
                     var items = _context.PurshaseBotQueues
-                       .Where(x => x.Locked == false)
                        .OrderBy(x => x.TriesCount)
-                       .Take(QUEUE_ITEMS_LIMIT_PER_REQUEST)
+                       .Take(count)
                        .ToList();
 
                     items.ForEach((it) =>
                     {
-                        it.Locked = true;
+                        it.TriesCount += 1;
                         it.LastBot.Id = botId;
                         it.DateLastRequest = DateTime.Now;
                         _context.Update(it);
@@ -79,37 +78,37 @@ namespace test_app.api.Controllers
             }
         }
 
-        [Route("releaselocks")]
-        [ClaimRequirement("Premission", "CanBotUses")]
-        [HttpGet]
-        public async Task<IActionResult> ReleaseLocks(string ids)
-        {
-            var idArray = ids.Split(',');
+        //[Route("releaselocks")]
+        //[ClaimRequirement("Premission", "CanBotUses")]
+        //[HttpGet]
+        //public async Task<IActionResult> ReleaseLocks(string ids)
+        //{
+        //    var idArray = ids.Split(',');
 
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    var botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
-                    var result = _context.PurshaseBotQueues.Where(x => ids.Contains(x.Id.ToString())).ToList();
-                    result.ForEach((it) =>
-                    {
-                        it.Locked = false;
-                        _context.Update(it);
-                    });
+        //    using (var transaction = _context.Database.BeginTransaction())
+        //    {
+        //        try
+        //        {
+        //            var botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
+        //            var result = _context.PurshaseBotQueues.Where(x => ids.Contains(x.Id.ToString())).ToList();
+        //            result.ForEach((it) =>
+        //            {
+        //                it.Locked = false;
+        //                _context.Update(it);
+        //            });
 
-                    _context.SaveChanges();
-                    transaction.Commit();
+        //            _context.SaveChanges();
+        //            transaction.Commit();
 
-                    return Json(BaseHttpResult.GenerateSuccess(idArray, "success"));
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    return BadRequest(BaseHttpResult.GenerateError(ex.Message, ResponseType.ServerError));
-                }
-            }
-        }
+        //            return Json(BaseHttpResult.GenerateSuccess(idArray, "success"));
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            transaction.Rollback();
+        //            return BadRequest(BaseHttpResult.GenerateError(ex.Message, ResponseType.ServerError));
+        //        }
+        //    }
+        //}
 
         public class InsertNewPurchaseViewModel
         {
@@ -176,41 +175,41 @@ namespace test_app.api.Controllers
             public string platform { get; set; }
         }
 
-        [Route("savehistory")]
-        [ClaimRequirement("Premission", "CanBotUses")]
-        [HttpPost]
-        public async Task<IActionResult> SaveHistory([FromBody] List<SaveHistoryViewModel> list)
-        {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-                    var botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
+        //[Route("savehistory")]
+        //[ClaimRequirement("Premission", "CanBotUses")]
+        //[HttpPost]
+        //public async Task<IActionResult> SaveHistory([FromBody] List<SaveHistoryViewModel> list)
+        //{
+        //    using (var transaction = _context.Database.BeginTransaction())
+        //    {
+        //        try
+        //        {
+        //            var botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
 
-                    list.ForEach((it) => 
-                    {
-                        var added = new BotsPurcasesFullHistory();
-                        added.Bot.Id = botId;
-                        added.MarketHashName = it.market_hash_name;
-                        added.BoughtAt = it.bought_at;
-                        added.Platform = it.platform;
-                        added.Price = it.price;
-                        added.ListedAt = it.listed_at;
-                        _context.Add(added);
-                    });
+        //            list.ForEach((it) => 
+        //            {
+        //                var added = new BotsPurcasesFullHistory();
+        //                added.Bot.Id = botId;
+        //                added.MarketHashName = it.market_hash_name;
+        //                added.BoughtAt = it.bought_at;
+        //                added.Platform = it.platform;
+        //                added.Price = it.price;
+        //                added.ListedAt = it.listed_at;
+        //                _context.Add(added);
+        //            });
 
-                    _context.SaveChanges();
+        //            _context.SaveChanges();
 
-                    transaction.Commit();
+        //            transaction.Commit();
 
-                    return Json(BaseHttpResult.GenerateSuccess(botId, "success"));
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    return BadRequest(BaseHttpResult.GenerateError(ex.Message, ResponseType.ServerError));
-                }
-            }
-        }
+        //            return Json(BaseHttpResult.GenerateSuccess(botId, "success"));
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            transaction.Rollback();
+        //            return BadRequest(BaseHttpResult.GenerateError(ex.Message, ResponseType.ServerError));
+        //        }
+        //    }
+        //}
     }
 }
