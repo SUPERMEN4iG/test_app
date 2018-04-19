@@ -24,16 +24,13 @@ namespace test_app.api.Controllers
 
         public CasesController(
             UserManager<ApplicationUser> userManager,
-            IMemoryCache cache,
-            LastWinnersHandler lastWinnersHandler)
+            IMemoryCache cache)
         {
             _userManager = userManager;
             _cache = cache;
-            _lastWinnersHandler = lastWinnersHandler;
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
-        private LastWinnersHandler _lastWinnersHandler { get; set; }
         private readonly ApplicationDbContext _context;
         private IMemoryCache _cache;
 
@@ -96,7 +93,6 @@ namespace test_app.api.Controllers
                     case_name = casea.FullName,
                     case_static_name = casea.StaticName
                 };
-                await _lastWinnersHandler.SendMessageToAllAsync(JsonConvert.SerializeObject(message));
                 return Json(openResult);
             }
             else

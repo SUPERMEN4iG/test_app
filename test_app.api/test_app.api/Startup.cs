@@ -176,7 +176,7 @@ namespace test_app.api
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-           // app.MapWebSocketManager("/lastwinners", serviceProvider.GetService<LastWinnersHandler>());
+           //app.MapWebSocketManager("/lastwinners", serviceProvider.GetService<LastWinnersHandler>());
         }
     }
 }
