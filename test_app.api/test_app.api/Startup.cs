@@ -116,7 +116,7 @@ namespace test_app.api
             }));
 
             services.AddTransient<WebSocketConnectionManager>();
-            services.AddTransient<LastWinnersHandler>();
+            services.AddSingleton<LastWinnersHandler>();
 
             //services.AddWebSocketManager();
 
