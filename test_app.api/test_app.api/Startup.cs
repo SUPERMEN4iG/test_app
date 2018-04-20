@@ -115,6 +115,8 @@ namespace test_app.api
                     .AllowCredentials();
             }));
 
+            services.AddWebSocketManager();
+
             services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).ConfigureApplicationPartManager(manager =>
             {
                 var oldMetadataReferenceFeatureProvider = manager.FeatureProviders.First(f => f is MetadataReferenceFeatureProvider);
@@ -122,7 +124,6 @@ namespace test_app.api
                 manager.FeatureProviders.Add(new ReferencesMetadataReferenceFeatureProvider());
             });
             services.AddMemoryCache();
-            services.AddWebSocketManager();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -169,14 +170,14 @@ namespace test_app.api
 
             app.UseWebSockets();
 
+            app.MapWebSocketManager("/lastwinners", serviceProvider.GetService<LastWinnersHandler>());
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-           app.MapWebSocketManager("/lastwinners", serviceProvider.GetService<LastWinnersHandler>());
         }
     }
 }

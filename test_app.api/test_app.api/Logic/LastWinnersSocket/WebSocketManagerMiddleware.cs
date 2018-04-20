@@ -14,7 +14,7 @@ namespace test_app.api.Logic.LastWinnersSocket
         private WebSocketHandler _webSocketHandler { get; set; }
 
         public WebSocketManagerMiddleware(RequestDelegate next,
-                                          WebSocketHandler webSocketHandler)
+                                          WebSocketHandler webSocketHandler = null)
         {
             _next = next;
             _webSocketHandler = webSocketHandler;

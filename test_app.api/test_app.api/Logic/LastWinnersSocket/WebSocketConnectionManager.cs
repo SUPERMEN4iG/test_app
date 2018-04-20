@@ -12,6 +12,10 @@ namespace test_app.api.Logic.LastWinnersSocket
     {
         private ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
 
+        public WebSocketConnectionManager()
+        {
+        }
+
         public WebSocket GetSocketById(string id)
         {
             return _sockets.FirstOrDefault(p => p.Key == id).Value;
