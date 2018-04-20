@@ -51,8 +51,8 @@ namespace test_app.api.Controllers
                         skin_image = x.Skin.Image,
                         case_name = x.Case.FullName,
                         case_static_name = x.Case.StaticName
-                    })
-                    .ToList().Take(8));
+                    }).Take(8)
+                    .ToList());
 
                 result.Online = _lastWinnersHandler.GetCountConnections();
                 result.ServerTime = DateTime.Now;
