@@ -83,9 +83,9 @@ namespace test_app.api.Data
                 .HasForeignKey(cs => cs.SkinId);
 
             builder.Entity<CasesDrop>()
-                .HasOne(cs => cs.Skin)
+                .HasOne(cs => cs.Case)
                 .WithMany(c => c.CaseSkins)
-                .HasForeignKey(cs => cs.SkinId);
+                .HasForeignKey(cs => cs.CaseId);
 
             builder.Entity<CasesDrop>()
                 .Property(x => x.Chance).HasColumnType("decimal(9, 8)");

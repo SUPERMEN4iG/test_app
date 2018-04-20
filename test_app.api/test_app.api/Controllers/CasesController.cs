@@ -24,14 +24,17 @@ namespace test_app.api.Controllers
 
         public CasesController(
             UserManager<ApplicationUser> userManager,
-            IMemoryCache cache)
+            IMemoryCache cache,
+            LastWinnersHandler lastWinnersHandler)
         {
             _userManager = userManager;
             _cache = cache;
+            _lastWinnersHandler = lastWinnersHandler;
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
+        private LastWinnersHandler _lastWinnersHandler { get; set; }
         private IMemoryCache _cache;
 
         //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -47,6 +50,9 @@ namespace test_app.api.Controllers
 
                 return context.Cases
                     .Include(x => x.Category)
+                    .Include(x => x.CaseSkins)
+                    .ThenInclude(x => x.Skin)
+                    .ToList()
                     .Where(x => x.IsAvalible == true)
                     .GroupBy(x => x.Category,
                         (key, group) => new
@@ -61,8 +67,8 @@ namespace test_app.api.Controllers
                                 Price = c.Price,
                                 PreviousPrice = c.PreviousPrice,
                                 Index = c.Index,
-                                CategoryName = c.Category.StaticName,
-                                Skins = c.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price }).ToList()
+                                CategoryName = key.StaticName,
+                                Skins = c.CaseSkins.ToList().Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price }),
                             }).OrderBy(x => x.Index).ToList()
                         }).OrderBy(x => x.Category.Index).ToList();
             });
@@ -93,6 +99,7 @@ namespace test_app.api.Controllers
                     case_name = casea.FullName,
                     case_static_name = casea.StaticName
                 };
+                await _lastWinnersHandler.SendMessageToAllAsync(JsonConvert.SerializeObject(message));
                 return Json(openResult);
             }
             else

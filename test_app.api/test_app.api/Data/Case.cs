@@ -24,6 +24,6 @@ namespace test_app.api.Data
 
         public Boolean IsAvalible { get; set; }
 
-        public ICollection<CasesDrop> CaseSkins { get; set; }
+        public virtual ICollection<CasesDrop> CaseSkins { get; set; }
     }
 }

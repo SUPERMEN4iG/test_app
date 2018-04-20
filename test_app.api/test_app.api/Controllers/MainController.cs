@@ -14,8 +14,12 @@ namespace test_app.api.Controllers
     [Route("api/main")]
     public class MainController : Controller
     {
-        public MainController()
+        private LastWinnersHandler _lastWinnersHandler { get; set; }
+
+        public MainController(
+            LastWinnersHandler lastWinnersHandler)
         {
+            _lastWinnersHandler = lastWinnersHandler;
         }
 
         [HttpGet]
@@ -50,7 +54,7 @@ namespace test_app.api.Controllers
                     })
                     .ToList().Take(8));
 
-                result.Online = 0;
+                result.Online = _lastWinnersHandler.GetCountConnections();
                 result.ServerTime = DateTime.Now;
             }
             catch (Exception ex)
