@@ -13,16 +13,16 @@ namespace test_app.api.Logic.Extensions
     {
         public static IServiceCollection AddWebSocketManager(this IServiceCollection services)
         {
-            //services.AddTransient<WebSocketConnectionManager>();
+            services.AddTransient<WebSocketConnectionManager>();
 
-            //foreach (var type in Assembly.GetEntryAssembly().ExportedTypes)
-            //{
-            //    if (type.GetTypeInfo().BaseType == typeof(WebSocketHandler))
-            //    {
-            //        services.AddSingleton(type);
-            //        Debug.WriteLine("added");
-            //    }
-            //}
+            foreach (var type in Assembly.GetEntryAssembly().ExportedTypes)
+            {
+                if (type.GetTypeInfo().BaseType == typeof(WebSocketHandler))
+                {
+                    services.AddTransient(type);
+                    Debug.WriteLine("added");
+                }
+            }
 
             return services;
         }
