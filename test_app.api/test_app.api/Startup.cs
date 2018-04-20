@@ -115,7 +115,10 @@ namespace test_app.api
                     .AllowCredentials();
             }));
 
-            services.AddWebSocketManager();
+            services.AddTransient<WebSocketConnectionManager>();
+            services.AddTransient<LastWinnersHandler>();
+
+            //services.AddWebSocketManager();
 
             services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).ConfigureApplicationPartManager(manager =>
             {
