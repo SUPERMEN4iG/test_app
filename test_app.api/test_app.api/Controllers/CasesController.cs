@@ -52,6 +52,19 @@ namespace test_app.api.Controllers
                     .Include(x => x.Category)
                     .Include(x => x.CaseSkins)
                     .ThenInclude(x => x.Skin)
+                    .Select(x => new
+                    {
+                        x.Id,
+                        x.IsAvalible,
+                        Category = new { x.Category.Id, x.Category.Index, x.Category.StaticName, x.Category.FullName },
+                        x.StaticName,
+                        x.FullName,
+                        x.Image,
+                        x.Price,
+                        x.PreviousPrice,
+                        x.Index,
+                        CaseSkins = x.CaseSkins
+                    })
                     .ToList()
                     .Where(x => x.IsAvalible == true)
                     .GroupBy(x => x.Category,
@@ -68,7 +81,7 @@ namespace test_app.api.Controllers
                                 PreviousPrice = c.PreviousPrice,
                                 Index = c.Index,
                                 CategoryName = key.StaticName,
-                                Skins = c.CaseSkins.ToList().Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price }),
+                                Skins = c.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price }).ToList(),
                             }).OrderBy(x => x.Index).ToList()
                         }).OrderBy(x => x.Category.Index).ToList();
             });
