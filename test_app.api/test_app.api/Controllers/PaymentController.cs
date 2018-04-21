@@ -132,14 +132,21 @@ namespace test_app.api.Controllers
                     return Json(BaseHttpResult.GenerateSuccess(responseString, "success", ResponseType.Ok));
                 }
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
-                WebResponse errResp = ex.Response;
-                using (Stream respStream = errResp.GetResponseStream())
+                if (ex.GetType() == typeof(WebException))
                 {
-                    StreamReader reader = new StreamReader(respStream);
-                    string text = reader.ReadToEnd();
-                    return BadRequest(BaseHttpResult.GenerateError(String.Format("{0}", text), ResponseType.ServerError));
+                    WebResponse errResp = ((WebException)ex).Response;
+                    using (Stream respStream = errResp.GetResponseStream())
+                    {
+                        StreamReader reader = new StreamReader(respStream);
+                        string text = reader.ReadToEnd();
+                        return BadRequest(BaseHttpResult.GenerateError(String.Format("{0}", text), ResponseType.ServerError));
+                    }
+                }
+                else
+                {
+                    return BadRequest(BaseHttpResult.GenerateError(String.Format("{0}", ex.Message.ToString()), ResponseType.ServerError));
                 }
             }
         }

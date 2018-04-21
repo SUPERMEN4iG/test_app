@@ -58,6 +58,29 @@
       </div>
   </div>
 
+  <div class="row justify-content-center b-profile-head b-profile-head-non" *ngIf="isDisableForEdit" style="margin-bottom: 20px;">
+    <div class="col-12 col-sm-12 col-md-6">
+      <div class="clearfix">
+        <div class="row vertical-align" style="/* text-align: -webkit-center; */">
+
+          <div class="col-12 col-sm-4 col-md-4 b-text">
+            <h5>Cases: {{user.wonItems.length}}</h5>
+          </div>
+
+          <div class="col-12 col-sm-4 col-md-4 b-avatar">
+            <img class="avatar" [src]="user.steamAvatar" alt="">
+            <h5>{{ user.email }}</h5>
+          </div>
+
+          <div class="col-12 col-sm-4 col-md-4 b-text">
+            <h5><a href="https://steamcommunity.com/profiles/{{user.id}}" target="_blank">Steam Profile</a></h5>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="b-profile-case-drop">
     <div class="b-case-drop">
       <div class="b-case-drop__inner ">
@@ -71,7 +94,7 @@
                     <div class="hover"></div>
                     <img [src]="item.image" alt="">
                     <div *ngIf="item.state != 1" class="price">{{ item.priceForSell | currency }}</div>
-                    <div class="text-center controls">
+                    <div class="text-center controls" *ngIf="!isDisableForEdit">
                       <div class="btn-group" *ngIf="item.state == 0">
                         <button (click)="onClickSell(item)" class="btn btn-success">Sell</button>
                         <button class="btn btn-warning">Take</button>
