@@ -31,3 +31,4 @@ msbuild.wrn
 .vs/
 /.vagrant/machines/default/virtualbox
 /backup.sql
+.vagrant
