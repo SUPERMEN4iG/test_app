@@ -42,4 +42,18 @@
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20180422170004_UpdateStock2.Designer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Migrations\20180422034941_Init.Designer.cs">
+      <DependentUpon>20180422034941_Init.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Migrations\20180422140559_SomeFixes.Designer.cs">
+      <DependentUpon>20180422140559_SomeFixes.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Migrations\20180422164223_UpdateStock.Designer.cs">
+      <DependentUpon>20180422164223_UpdateStock.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

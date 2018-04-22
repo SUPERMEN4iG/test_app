@@ -295,8 +295,8 @@ namespace test_app.api.Controllers
                                 Count = g.Count(),
                                 Sum = g.Sum(ss =>
                                              (ss.State == Winner.WinnerState.None) ? 0 :
-                                             (ss.State == Winner.WinnerState.Sold) ? ss.Case.Price - ss.Price :
-                                             (ss.State == Winner.WinnerState.Traded) ? ss.Case.Price - _context.Stock.FirstOrDefault(l => l.Skin == ss.Skin).Price : 0)
+                                             (ss.State == Winner.WinnerState.Sold) ? ss.Case.Price - ss.Price * 0.8M :
+                                            (ss.State == Winner.WinnerState.Traded) ? ss.Case.Price - ss.Price : 0)
                             }).ToList()
                         }).ToList(),
                     Case = x.Key,

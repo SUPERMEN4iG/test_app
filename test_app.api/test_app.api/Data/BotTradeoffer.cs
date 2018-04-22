@@ -8,19 +8,23 @@ namespace test_app.api.Data
     public class BotTradeoffer : BaseTimestampsDataObject<Int64>
     {
         // TODO: Может быть строка?
-        public Int64 TradeofferId { get; set; }
+        public Nullable<Int64> TradeofferId { get; set; }
+
+        public Nullable<Int64> TradeId { get; set; }
 
         public Bot Bot { get; set; }
 
         public TradeOfferState TradeOfferState { get; set; }
 
-        public String SteamIdOther { get; set; }
+        public Int64 SteamIdOther { get; set; }
 
         public Int64 ItemsToGive { get; set; }
 
         public DateTime DateExpiration { get; set; }
 
         public DateTime DateInsertion { get; set; }
+
+        public virtual Stock StockItem { get; set; }
     }
 
     public enum TradeOfferState : Int32

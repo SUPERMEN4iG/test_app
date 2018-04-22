@@ -41,6 +41,10 @@ namespace test_app.api.Controllers
                 {
                     var winner = context.Winners.Include(x => x.Skin).Include(x => x.User).LastOrDefault(x => x.Id == id);
 
+                  
+                    //TODO: Нужно проверять есть ли не завершенные трейды!!!!
+
+
                     if (winner.State != Winner.WinnerState.None)
                     {
                         throw new Exception("wtf");
@@ -76,6 +80,64 @@ namespace test_app.api.Controllers
                 return BadRequest(BaseHttpResult.GenerateError("Server error", ResponseType.ServerError));
             }
         }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Route("take")]
+        [HttpGet]
+        public async Task<IActionResult> Take(Int32 id)
+        {
+            try
+            {
+
+                var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
+
+
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    var winner = context.Winners.Include(x => x.Skin).Include(x => x.User).LastOrDefault(x => x.Id == id);
+
+                    if (winner.State != Winner.WinnerState.None)
+                    {
+                        throw new Exception("wtf");
+                    }
+
+                    winner.State = Winner.WinnerState.Sold;
+
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+
+                    if (user.Id != winner.User.Id)
+                    {
+                        throw new Exception("wtf");
+                    }
+
+                    user.Balance += winner.Skin.Price * 0.8M;
+                    try
+                    {
+                        context.Update(winner);
+                        context.Update(user);
+                        var res = context.SaveChanges();
+
+                        transaction.Commit();
+                        return Json(BaseHttpResult.GenerateSuccess(winner.Skin.Price * 0.8M, "Item was sold"));
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(BaseHttpResult.GenerateError("Server error", ResponseType.ServerError));
+            }
+
+        }
+
+
+
 
     }
 }

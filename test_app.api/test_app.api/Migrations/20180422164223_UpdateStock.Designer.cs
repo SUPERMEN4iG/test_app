@@ -12,9 +12,10 @@ using test_app.api.Data;
 namespace test_app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180422164223_UpdateStock")]
+    partial class UpdateStock
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,21 +220,15 @@ namespace test_app.api.Migrations
 
                     b.Property<long>("ItemsToGive");
 
-                    b.Property<long>("SteamIdOther");
-
-                    b.Property<long?>("StockItemId");
-
-                    b.Property<long?>("TradeId");
+                    b.Property<string>("SteamIdOther");
 
                     b.Property<int>("TradeOfferState");
 
-                    b.Property<long?>("TradeofferId");
+                    b.Property<long>("TradeofferId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BotId");
-
-                    b.HasIndex("StockItemId");
 
                     b.ToTable("BotTradeoffers");
                 });
@@ -712,10 +707,6 @@ namespace test_app.api.Migrations
                     b.HasOne("test_app.api.Data.Bot", "Bot")
                         .WithMany()
                         .HasForeignKey("BotId");
-
-                    b.HasOne("test_app.api.Data.Stock", "StockItem")
-                        .WithMany("Tradeoffers")
-                        .HasForeignKey("StockItemId");
                 });
 
             modelBuilder.Entity("test_app.api.Data.Case", b =>

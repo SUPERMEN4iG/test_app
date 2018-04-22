@@ -11,6 +11,7 @@ namespace test_app.api.Data
 
         public Skin Skin { get; set; }
 
-        public Decimal Price { get; set; }
+        public virtual List<BotTradeoffer> Tradeoffers { get; set; }
+
     }
 }

@@ -98,10 +98,9 @@ namespace test_app.api.Logic
                     _context.SaveChanges();
 
                     // Получаем текущую цену
-                    var stockItems = _context.Stock.Include(x => x.Skin).Where(x => x.Skin.Id == winner.Skin.Id);
-                    var cnt = stockItems.Count();
-                    var stockItem = stockItems.Count() > 0 ? stockItems.FirstOrDefault() : null;
-                    var price = (stockItem == null) ? winner.Skin.Price : stockItem.Price;
+                   
+            
+                  
 
                     //var random = new Random().NextDouble();
                     //CasesDrop selected = null;
@@ -119,7 +118,7 @@ namespace test_app.api.Logic
 
                     return CaseOpenResult.GenerateSuccess(new WinnerViewModel {
                         MarketHashName = winner.Skin.MarketHashName,
-                        Price = price,
+                        Price = winner.Skin.Price * 0.8M,
                         Image = winner.Skin.Image,
                         Id = winner.Id,
                         DateCreate = winner.Skin.DateCreate,
