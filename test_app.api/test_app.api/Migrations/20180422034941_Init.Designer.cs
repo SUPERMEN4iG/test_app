@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
@@ -11,15 +12,15 @@ using test_app.api.Data;
 namespace test_app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171223191557_v13")]
-    partial class v13
+    [Migration("20180422034941_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -39,8 +40,7 @@ namespace test_app.api.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -168,11 +168,39 @@ namespace test_app.api.Migrations
 
                     b.Property<DateTime>("SyncTime");
 
+                    b.Property<string>("Token");
+
                     b.Property<string>("TradeOffer");
 
                     b.HasKey("Id");
 
                     b.ToTable("Bots");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.BotsPurcasesFullHistory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long?>("BotId");
+
+                    b.Property<DateTime>("BoughtAt");
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<DateTime>("ListedAt");
+
+                    b.Property<string>("MarketHashName");
+
+                    b.Property<string>("Platform");
+
+                    b.Property<decimal>("Price");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BotId");
+
+                    b.ToTable("BotsPurcasesFullHistory");
                 });
 
             modelBuilder.Entity("test_app.api.Data.BotTradeoffer", b =>
@@ -214,11 +242,15 @@ namespace test_app.api.Migrations
 
                     b.Property<DateTime>("DateCreate");
 
+                    b.Property<string>("FullName");
+
                     b.Property<string>("Image");
 
                     b.Property<int>("Index");
 
                     b.Property<bool>("IsAvalible");
+
+                    b.Property<decimal?>("PreviousPrice");
 
                     b.Property<decimal>("Price");
 
@@ -237,6 +269,10 @@ namespace test_app.api.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreate");
+
+                    b.Property<string>("FullName");
+
+                    b.Property<int>("Index");
 
                     b.Property<string>("StaticName");
 
@@ -295,6 +331,9 @@ namespace test_app.api.Migrations
 
                     b.Property<long>("SkinId");
 
+                    b.Property<decimal>("Chance")
+                        .HasColumnType("decimal(9, 8)");
+
                     b.Property<DateTime>("DateCreate");
 
                     b.Property<long>("Id")
@@ -337,6 +376,70 @@ namespace test_app.api.Migrations
                     b.ToTable("CaseSellLogs");
                 });
 
+            modelBuilder.Entity("test_app.api.Data.G2AIPNLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<string>("Request");
+
+                    b.Property<string>("Response");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("G2AIPNLogs");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.G2APayment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Currency");
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<int>("Status");
+
+                    b.Property<decimal>("Sum");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("G2APayments");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.PurchasebotPurchases", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long?>("BotId");
+
+                    b.Property<long?>("BotQueueId");
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<string>("MarketHashName");
+
+                    b.Property<string>("Platform");
+
+                    b.Property<decimal>("PriceUSD");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BotId");
+
+                    b.HasIndex("BotQueueId");
+
+                    b.ToTable("PurchasebotPurchases");
+                });
+
             modelBuilder.Entity("test_app.api.Data.PurshaseBotQueue", b =>
                 {
                     b.Property<long>("Id")
@@ -344,19 +447,19 @@ namespace test_app.api.Migrations
 
                     b.Property<DateTime>("DateCreate");
 
-                    b.Property<DateTime>("DateLastRequest");
+                    b.Property<DateTime?>("DateLastRequest");
 
                     b.Property<long?>("LastBotId");
 
                     b.Property<bool>("Locked");
 
-                    b.Property<long?>("SkinId");
+                    b.Property<string>("MarketHashName");
+
+                    b.Property<int>("TriesCount");
 
                     b.HasKey("Id");
 
                     b.HasIndex("LastBotId");
-
-                    b.HasIndex("SkinId");
 
                     b.ToTable("PurshaseBotQueues");
                 });
@@ -374,15 +477,21 @@ namespace test_app.api.Migrations
 
                     b.Property<decimal>("Price");
 
+                    b.Property<string>("RarityString")
+                        .HasColumnName("Rarity");
+
                     b.Property<long?>("StackCaseId");
+
+                    b.Property<string>("SteamAnalystUrl");
+
+                    b.Property<string>("SteamUrl");
 
                     b.HasKey("Id");
 
                     b.HasIndex("StackCaseId");
 
                     b.HasIndex("Id", "MarketHashName")
-                        .IsUnique()
-                        .HasFilter("[MarketHashName] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Skins");
                 });
@@ -399,9 +508,6 @@ namespace test_app.api.Migrations
                     b.Property<string>("Name");
 
                     b.Property<decimal>("Price");
-
-                    b.Property<string>("RarityString")
-                        .HasColumnName("Rarity");
 
                     b.HasKey("Id");
 
@@ -428,6 +534,28 @@ namespace test_app.api.Migrations
                     b.ToTable("StackCaseSkins");
                 });
 
+            modelBuilder.Entity("test_app.api.Data.Stock", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long?>("BotId");
+
+                    b.Property<DateTime>("DateCreate");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<long?>("SkinId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BotId");
+
+                    b.HasIndex("SkinId");
+
+                    b.ToTable("Stock");
+                });
+
             modelBuilder.Entity("test_app.api.Data.Winner", b =>
                 {
                     b.Property<long>("Id")
@@ -437,11 +565,13 @@ namespace test_app.api.Migrations
 
                     b.Property<DateTime>("DateCreate");
 
-                    b.Property<bool>("IsSent");
-
-                    b.Property<bool>("IsSold");
+                    b.Property<decimal?>("Price");
 
                     b.Property<long?>("SkinId");
+
+                    b.Property<int>("State");
+
+                    b.Property<long?>("StockId");
 
                     b.Property<string>("UserId");
 
@@ -450,6 +580,8 @@ namespace test_app.api.Migrations
                     b.HasIndex("CaseId");
 
                     b.HasIndex("SkinId");
+
+                    b.HasIndex("StockId");
 
                     b.HasIndex("UserId");
 
@@ -499,6 +631,8 @@ namespace test_app.api.Migrations
 
                     b.Property<string>("SteamUsername");
 
+                    b.Property<string>("TradeofferUrl");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -511,8 +645,7 @@ namespace test_app.api.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -562,6 +695,13 @@ namespace test_app.api.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("test_app.api.Data.BotsPurcasesFullHistory", b =>
+                {
+                    b.HasOne("test_app.api.Data.Bot", "Bot")
+                        .WithMany()
+                        .HasForeignKey("BotId");
+                });
+
             modelBuilder.Entity("test_app.api.Data.BotTradeoffer", b =>
                 {
                     b.HasOne("test_app.api.Data.Bot", "Bot")
@@ -572,7 +712,7 @@ namespace test_app.api.Migrations
             modelBuilder.Entity("test_app.api.Data.Case", b =>
                 {
                     b.HasOne("test_app.api.Data.CaseCategory", "Category")
-                        .WithMany()
+                        .WithMany("Cases")
                         .HasForeignKey("CategoryId");
                 });
 
@@ -626,15 +766,29 @@ namespace test_app.api.Migrations
                         .HasForeignKey("WinnerId");
                 });
 
+            modelBuilder.Entity("test_app.api.Data.G2APayment", b =>
+                {
+                    b.HasOne("test_app.api.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("test_app.api.Data.PurchasebotPurchases", b =>
+                {
+                    b.HasOne("test_app.api.Data.Bot", "Bot")
+                        .WithMany()
+                        .HasForeignKey("BotId");
+
+                    b.HasOne("test_app.api.Data.PurshaseBotQueue", "BotQueue")
+                        .WithMany()
+                        .HasForeignKey("BotQueueId");
+                });
+
             modelBuilder.Entity("test_app.api.Data.PurshaseBotQueue", b =>
                 {
                     b.HasOne("test_app.api.Data.Bot", "LastBot")
                         .WithMany()
                         .HasForeignKey("LastBotId");
-
-                    b.HasOne("test_app.api.Data.Skin", "Skin")
-                        .WithMany()
-                        .HasForeignKey("SkinId");
                 });
 
             modelBuilder.Entity("test_app.api.Data.Skin", b =>
@@ -657,6 +811,17 @@ namespace test_app.api.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("test_app.api.Data.Stock", b =>
+                {
+                    b.HasOne("test_app.api.Data.Bot", "Bot")
+                        .WithMany()
+                        .HasForeignKey("BotId");
+
+                    b.HasOne("test_app.api.Data.Skin", "Skin")
+                        .WithMany()
+                        .HasForeignKey("SkinId");
+                });
+
             modelBuilder.Entity("test_app.api.Data.Winner", b =>
                 {
                     b.HasOne("test_app.api.Data.Case", "Case")
@@ -666,6 +831,10 @@ namespace test_app.api.Migrations
                     b.HasOne("test_app.api.Data.Skin", "Skin")
                         .WithMany()
                         .HasForeignKey("SkinId");
+
+                    b.HasOne("test_app.api.Data.Stock", "Stock")
+                        .WithMany()
+                        .HasForeignKey("StockId");
 
                     b.HasOne("test_app.api.Models.ApplicationUser", "User")
                         .WithMany()

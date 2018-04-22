@@ -18,8 +18,8 @@ namespace test_app.api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
+                .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -39,8 +39,7 @@ namespace test_app.api.Migrations
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -491,8 +490,7 @@ namespace test_app.api.Migrations
                     b.HasIndex("StackCaseId");
 
                     b.HasIndex("Id", "MarketHashName")
-                        .IsUnique()
-                        .HasFilter("[MarketHashName] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Skins");
                 });
@@ -646,8 +644,7 @@ namespace test_app.api.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -714,7 +711,7 @@ namespace test_app.api.Migrations
             modelBuilder.Entity("test_app.api.Data.Case", b =>
                 {
                     b.HasOne("test_app.api.Data.CaseCategory", "Category")
-                        .WithMany()
+                        .WithMany("Cases")
                         .HasForeignKey("CategoryId");
                 });
 

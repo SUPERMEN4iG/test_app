@@ -24,6 +24,7 @@ using Microsoft.IdentityModel.Tokens;
 using test_app.api.Models.Configuration;
 using test_app.api.Logic.Extensions;
 using test_app.api.Logic.LastWinnersSocket;
+using Npgsql;
 
 namespace test_app.api
 {
@@ -39,10 +40,10 @@ namespace test_app.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
-            // var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
-            //    services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+            // services.AddDbContext<ApplicationDbContext>(options =>
+            //     options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
+             var connectionString = Configuration["ConnectionStrings:DefaultConnection"];
+                services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IConfiguration>(Configuration);
