@@ -33,34 +33,49 @@ namespace test_app.api.Controllers
         {
             try
             {
+
                 var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
 
-                var winner = context.Winners.Include(x => x.Skin).Include(x => x.User).LastOrDefault(x => x.Id == id);
 
-                if (winner.State != Winner.WinnerState.None) {
-                    throw new Exception("wtf");
-                }
-
-                winner.State = Winner.WinnerState.Sold;
-
-                var user = await _userManager.GetUserAsync(HttpContext.User);
-
-                if (user.Id != winner.User.Id)
+                using (var transaction = context.Database.BeginTransaction())
                 {
-                    throw new Exception("wtf");
+                    var winner = context.Winners.Include(x => x.Skin).Include(x => x.User).LastOrDefault(x => x.Id == id);
+
+                    if (winner.State != Winner.WinnerState.None)
+                    {
+                        throw new Exception("wtf");
+                    }
+
+                    winner.State = Winner.WinnerState.Sold;
+
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+
+                    if (user.Id != winner.User.Id)
+                    {
+                        throw new Exception("wtf");
+                    }
+
+                    user.Balance += winner.Skin.Price * 0.8M;
+                    try{
+                        context.Update(winner);
+                        context.Update(user);
+                        var res = context.SaveChanges();
+
+                        transaction.Commit();
+                        return Json(BaseHttpResult.GenerateSuccess(winner.Skin.Price * 0.8M, "Item was sold"));
+                    }
+                    catch(Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw ex;
+                    }
+
                 }
-
-                user.Balance += winner.Skin.Price * 0.8M;
-
-                context.Update(winner);
-                context.Update(user);
-                var res = await context.SaveChangesAsync();
-
-                return Json(BaseHttpResult.GenerateSuccess(winner.Skin.Price * 0.8M, "Item was sold"));
 
             } catch (Exception ex) {
                 return BadRequest(BaseHttpResult.GenerateError("Server error", ResponseType.ServerError));
             }
         }
+
     }
 }
