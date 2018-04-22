@@ -189,6 +189,7 @@ namespace test_app.api.Controllers
 
                     user.Balance += pData.amount;
                     g2APayment.Status = G2APayment.G2APaymentStatus.Success;
+                    g2APayment.TransactionId = pData.transactionId;
 
                     _context.Update(g2APayment);
                     _context.Update(user);

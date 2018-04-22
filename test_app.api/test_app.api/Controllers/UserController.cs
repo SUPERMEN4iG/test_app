@@ -64,8 +64,7 @@ namespace test_app.api.Controllers
                     x.Skin.MarketHashName,
                     x.Skin.Image,
                     x.State,
-                    x.Price,
-                    PriceForSell = x.Skin.Price
+                    x.Skin.Price * 0.8M,
                 }).OrderByDescending(x => x.DateCreate).ToList();
 
             user.wonItems.Clear();

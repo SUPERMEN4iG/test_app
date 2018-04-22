@@ -41,12 +41,7 @@ namespace test_app.api.Controllers
                     throw new Exception("wtf");
                 }
 
-                var stockItems = context.Stock.Include(x => x.Skin).Where(x => x.Skin.Id == winner.Skin.Id);
-                var cnt = stockItems.Count();
-                var stockItem = stockItems.Count() > 0 ? stockItems.FirstOrDefault() : null;
-
                 winner.State = Winner.WinnerState.Sold;
-                winner.Price = (stockItem == null) ? winner.Skin.Price : stockItem.Price;
 
                 var user = await _userManager.GetUserAsync(HttpContext.User);
 
@@ -55,13 +50,13 @@ namespace test_app.api.Controllers
                     throw new Exception("wtf");
                 }
 
-                user.Balance += winner.Price.Value;
+                user.Balance += winner.Skin.Price * 0.8M;
 
                 context.Update(winner);
                 context.Update(user);
                 var res = await context.SaveChangesAsync();
 
-                return Json(BaseHttpResult.GenerateSuccess(winner.Price, "Item was sold"));
+                return Json(BaseHttpResult.GenerateSuccess(winner.Skin.Price * 0.8M, "Item was sold"));
 
             } catch (Exception ex) {
                 return BadRequest(BaseHttpResult.GenerateError("Server error", ResponseType.ServerError));

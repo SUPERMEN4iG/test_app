@@ -271,7 +271,7 @@ namespace test_app.api.Controllers
                 };
             };
 
-            var res = _context.Winners
+            var res = _context.Winners.Include(x=>x.Skin)
                 .Where(x => x.State != Winner.WinnerState.None && DbUtility.DateDiff("day", x.DateCreate, DateTime.Today) <= 30)
                 .GroupBy(x => x.Case)
                 .Select(x => new {
@@ -283,7 +283,7 @@ namespace test_app.api.Controllers
                                 DayRange = DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) >= 0 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 1 ? 1 :
                                            DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) > 1 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 7 ? 7 :
                                            DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) > 7 && DbUtility.DateDiff("day", inv.DateCreate, DateTime.Today) <= 30 ? 30 : 0,
-                                Price = inv.Price,
+                        Price = inv.Skin.Price,
                                 State = inv.State,
                                 Case = inv.Case,
                                 Skin = inv.Skin
@@ -304,7 +304,7 @@ namespace test_app.api.Controllers
                 .ToList();
 
             // тут жёсткий замут с union
-            foreach (var c in res)
+            foreach (var c in res.ToList())
             {
                 var temp1 = c.Values.ToList();
                 c.Values.RemoveAll(x => x != null);

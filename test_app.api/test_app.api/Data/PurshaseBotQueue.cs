@@ -13,6 +13,8 @@ namespace test_app.api.Data
         public Boolean Locked { get; set; }
 
         public Bot LastBot { get; set; }
+         
+        public decimal MaxPriceUsd { get; set; }
 
         public DateTime? DateLastRequest { get; set; }
 

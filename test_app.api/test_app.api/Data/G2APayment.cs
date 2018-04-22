@@ -19,6 +19,8 @@ namespace test_app.api.Data
 
         public decimal Sum { get; set; }
 
+        public string TransactionId { get; set; }
+
         public string Currency { get; set; }
 
         public G2APaymentStatus Status { get; set; }
