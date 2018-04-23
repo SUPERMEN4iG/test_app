@@ -81,7 +81,7 @@ namespace test_app.api.Controllers
                                 PreviousPrice = c.PreviousPrice,
                                 Index = c.Index,
                                 CategoryName = key.StaticName,
-                                Skins = c.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, s.Skin.Price }).ToList(),
+                                Skins = c.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Image, Price = s.Skin.Price * 0.8M }).ToList(),
                             }).OrderBy(x => x.Index).ToList()
                         }).OrderBy(x => x.Category.Index).ToList();
             });
