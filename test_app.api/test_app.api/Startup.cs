@@ -69,6 +69,7 @@ namespace test_app.api
 
             services.Configure<ClientConfigurations>(
                 Configuration.GetSection("Client"));
+                
 
             //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             //JwtSecurityTokenHandler.DefaultOutboundClaimTypeMap.Clear();
@@ -139,6 +140,8 @@ namespace test_app.api
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
 
+
+
                 using (var serviceScope =
                     app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
@@ -150,6 +153,8 @@ namespace test_app.api
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+          
 
             // Диагностика выполнения для каждого request
             app.Use(async (context, next) =>
@@ -164,6 +169,10 @@ namespace test_app.api
                     context.Request.Path.ToUriComponent(),
                     context.Request.Query.Aggregate(new StringBuilder(), (s, i) => s.Append(String.Format("{0}: {1},", i.Key.ToString(), i.Value.ToString()))).ToString()
                     ));
+            });
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto
             });
 
             app.UseStaticFiles();
