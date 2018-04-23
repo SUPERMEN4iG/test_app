@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--memory", "2048", "--cpus", "2"]
   end
   
-  config.vm.network "forwarded_port", guest: 1433, host: 1433, host_ip: "127.0.0.1", id: "SQL Server"
+  config.vm.network "forwarded_port", guest: 5432, host: 5432, host_ip: "127.0.0.1", id: "PSQL Server"
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,

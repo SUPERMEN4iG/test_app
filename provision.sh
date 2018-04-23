@@ -1,57 +1,30 @@
 echo 'INSTALL SCRIPT RUN'
 
 #defines
-MSSQL_SA_PASSWORD=rTeRex7CC8CgmCRm
-MSSQL_PID=Developer
-MSSQL_TCP_PORT=1433
+PSQL_SA_PASSWORD=12345
+PSQL_SA_LOGIN=sa
+PSQL_TCP_PORT=5432
+PSQL_DB_NAME=each
+PSQL_VERSION=9.5
+PSQL_SUBVERSION=173ubuntu0.1
+PSQL_FULLVERSION=$PSQL_VERSION+$PSQL_SUBVERSION
 #defines
 
-curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-sudo add-apt-repository "$(curl https://packages.microsoft.com/config/ubuntu/16.04/mssql-server-2017.list)"
 sudo apt-get update
-sudo apt-get install -y mssql-server
-sudo apt-get install mssql-server-agent
+sudo apt-get install postgresql=$PSQL_FULLVERSION -y
 
-# MSSQL Configuration
-sudo ACCEPT_EULA='Y' MSSQL_PID=$MSSQL_PID MSSQL_SA_PASSWORD=$MSSQL_SA_PASSWORD MSSQL_TCP_PORT=$MSSQL_TCP_PORT  /opt/mssql/bin/mssql-conf setup  
-# MSSQL Password: rTeRex7CC8CgmCRm
+sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/$PSQL_VERSION/main/postgresql.conf
+
+cat >/etc/postgresql/$PSQL_VERSION/main/pg_hba.conf << EOF
+# Accept all IPv4 connections - FOR DEVELOPMENT ONLY!!!
+host    all         all         0.0.0.0/0             md5
+EOF
+
+sudo su postgres -c "psql -c \"CREATE ROLE "$PSQL_SA_LOGIN" SUPERUSER LOGIN PASSWORD '"$PSQL_SA_PASSWORD"'\" "
+sudo su postgres -c "createdb -E UTF8 -T template0 --locale=en_US.utf8 -O "$PSQL_SA_LOGIN" "$PSQL_DB_NAME""
+
+sudo systemctl restart postgresql 
 sleep 3
-systemctl status mssql-server
-
-echo PATH="$PATH:/opt/mssql-tools/bin" >> ~/.bash_profile
-echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
-
-curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
-curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
-sudo apt-get update
-sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
-#sudo apt-get install mssql-server-agent
-#echo -e "Y\n" | sudo apt-get install mssql-tools unixodbc-dev
-#sudo /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P rTeRex7CC8CgmCRm -Q 'SELECT Name FROM sys.Databases'
-
-echo Restarting SQL Server...
-sudo systemctl restart mssql-server
-
-counter=1
-errstatus=1
-while [ $counter -le 5 ] && [ $errstatus = 1 ]
-do
-  echo Waiting for SQL Server to start...
-  sleep 3
-  /opt/mssql-tools/bin/sqlcmd \
-    -S localhost \
-    -U SA \
-    -P $MSSQL_SA_PASSWORD \
-    -Q "SELECT @@VERSION" 2>/dev/null
-  errstatus=$?
-  ((counter++))
-done
-
-# Display error if connection failed:
-if [ $errstatus = 1 ]
-then
-  echo Cannot connect to SQL Server, installation aborted
-  exit $errstatus
-fi
+sudo systemctl status postgresql 
 
 echo 'INSTALL SCRIPT FINISH'
