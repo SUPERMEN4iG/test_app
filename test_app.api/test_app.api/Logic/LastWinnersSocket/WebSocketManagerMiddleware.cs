@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
@@ -26,23 +27,31 @@ namespace test_app.api.Logic.LastWinnersSocket
                 return;
 
             var socket = await context.WebSockets.AcceptWebSocketAsync();
-            await _webSocketHandler.OnConnected(socket);
 
-            await Receive(socket, async (result, buffer) =>
+            try
             {
-                if (result.MessageType == WebSocketMessageType.Text)
-                {
-                    await _webSocketHandler.ReceiveAsync(socket, result, buffer);
-                    return;
-                }
+                await _webSocketHandler.OnConnected(socket);
 
-                else if (result.MessageType == WebSocketMessageType.Close)
+                await Receive(socket, async (result, buffer) =>
                 {
-                    await _webSocketHandler.OnDisconnected(socket);
-                    return;
-                }
+                    if (result.MessageType == WebSocketMessageType.Text)
+                    {
+                        await _webSocketHandler.ReceiveAsync(socket, result, buffer);
+                        return;
+                    }
 
-            });
+                    else if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        await _webSocketHandler.OnDisconnected(socket);
+                        return;
+                    }
+
+                });
+            }
+            catch (System.Net.WebSockets.WebSocketException ex)
+            {
+                await _webSocketHandler.OnDisconnected(socket);
+            }
 
             //await _next.Invoke(context);
         }

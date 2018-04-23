@@ -93,7 +93,7 @@
                     <h6>{{ item.marketHashName }}</h6>
                     <div class="hover"></div>
                     <img [src]="item.image" alt="">
-                    <div *ngIf="item.state != 1" class="price">{{ item.priceForSell | currency }}</div>
+                    <div *ngIf="item.state != 1" class="price">{{ item.price | currency }}</div>
                     <div class="text-center controls" *ngIf="!isDisableForEdit">
                       <div class="btn-group" *ngIf="item.state == 0">
                         <button (click)="onClickSell(item)" class="btn btn-success">Sell</button>

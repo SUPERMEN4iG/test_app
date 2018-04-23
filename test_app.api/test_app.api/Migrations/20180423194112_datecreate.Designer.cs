@@ -12,9 +12,10 @@ using test_app.api.Data;
 namespace test_app.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180423194112_datecreate")]
+    partial class datecreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,8 +154,7 @@ namespace test_app.api.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<bool>("IsAdminsOnly");
 
@@ -189,8 +189,7 @@ namespace test_app.api.Migrations
                     b.Property<DateTime>("BoughtAt");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<DateTime>("ListedAt");
 
@@ -215,8 +214,7 @@ namespace test_app.api.Migrations
                     b.Property<long?>("BotId");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<DateTime>("DateExpiration");
 
@@ -253,8 +251,7 @@ namespace test_app.api.Migrations
                     b.Property<long?>("CategoryId");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<string>("FullName");
 
@@ -283,8 +280,7 @@ namespace test_app.api.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<string>("FullName");
 
@@ -305,8 +301,7 @@ namespace test_app.api.Migrations
                     b.Property<long?>("CaseId");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<decimal>("Percent");
 
@@ -329,8 +324,7 @@ namespace test_app.api.Migrations
                     b.Property<long?>("CaseId");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<string>("Text");
 
@@ -355,8 +349,7 @@ namespace test_app.api.Migrations
                         .HasColumnType("decimal(9, 8)");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -376,8 +369,7 @@ namespace test_app.api.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<decimal>("Price");
 
@@ -406,8 +398,7 @@ namespace test_app.api.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<string>("Request");
 
@@ -426,8 +417,7 @@ namespace test_app.api.Migrations
                     b.Property<string>("Currency");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<int>("Status");
 
@@ -454,8 +444,7 @@ namespace test_app.api.Migrations
                     b.Property<long?>("BotQueueId");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<string>("MarketHashName");
 
@@ -478,8 +467,7 @@ namespace test_app.api.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<DateTime?>("DateLastRequest");
 
@@ -506,8 +494,7 @@ namespace test_app.api.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<string>("Image");
 
@@ -540,8 +527,7 @@ namespace test_app.api.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<string>("Image");
 
@@ -561,8 +547,7 @@ namespace test_app.api.Migrations
                     b.Property<long>("SkinId");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
@@ -584,8 +569,7 @@ namespace test_app.api.Migrations
                     b.Property<long?>("BotId");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<long?>("SkinId");
 
@@ -606,8 +590,7 @@ namespace test_app.api.Migrations
                     b.Property<long?>("CaseId");
 
                     b.Property<DateTime>("DateCreate")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<long?>("SkinId");
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,5 +17,13 @@ namespace test_app.api.Data
         public ICollection<Skin> Skins { get; set; }
 
         public Decimal Price { get; set; }
+
+        // Mapping
+        internal class StackCaseConfiguration : DbEntityConfiguration<StackCase, Int64>
+        {
+            public override void Configure(EntityTypeBuilder<StackCase> entity)
+            {
+            }
+        }
     }
 }

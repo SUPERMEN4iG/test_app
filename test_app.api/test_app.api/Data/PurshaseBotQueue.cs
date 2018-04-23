@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace test_app.api.Data
@@ -21,5 +22,13 @@ namespace test_app.api.Data
         public int TriesCount { get; set; }
 
         public string MarketHashName { get; set; }
+
+        // Mapping
+        internal class PurshaseBotQueueConfiguration : DbEntityConfiguration<PurshaseBotQueue, Int64>
+        {
+            public override void Configure(EntityTypeBuilder<PurshaseBotQueue> entity)
+            {
+            }
+        }
     }
 }

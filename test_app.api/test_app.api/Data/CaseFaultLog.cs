@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,5 +17,13 @@ namespace test_app.api.Data
         public ApplicationUser User { get; set; }
 
         public String Text { get; set; }
+
+        // Mapping
+        internal class CaseFaultLogConfiguration : DbEntityConfiguration<CaseFaultLog, Int64>
+        {
+            public override void Configure(EntityTypeBuilder<CaseFaultLog> entity)
+            {
+            }
+        }
     }
 }

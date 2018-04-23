@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,14 @@ namespace test_app.api.Data
         public DateTime DateInsertion { get; set; }
 
         public virtual Stock StockItem { get; set; }
+
+        // Mapping
+        internal class BotTradeofferConfiguration : DbEntityConfiguration<BotTradeoffer, Int64>
+        {
+            public override void Configure(EntityTypeBuilder<BotTradeoffer> entity)
+            {
+            }
+        }
     }
 
     public enum TradeOfferState : Int32
