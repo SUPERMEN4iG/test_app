@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -25,5 +26,13 @@ namespace test_app.api.Data
         public Boolean IsAvalible { get; set; }
 
         public virtual ICollection<CasesDrop> CaseSkins { get; set; }
+
+        // Mapping
+        internal class CaseConfiguration : DbEntityConfiguration<Case, Int64>
+        {
+            public override void Configure(EntityTypeBuilder<Case> entity)
+            {
+            }
+        }
     }
 }

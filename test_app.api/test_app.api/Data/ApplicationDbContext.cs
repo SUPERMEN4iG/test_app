@@ -71,37 +71,25 @@ namespace test_app.api.Data
                         newArgs);
                 });
 
-            builder.Entity<Skin>()
-                .HasIndex(p => new { p.Id, p.MarketHashName }).IsUnique();
-
-            builder.Entity<CasesDrop>()
-                .HasKey(t => new { t.CaseId, t.SkinId });
-
-            builder.Entity<CasesDrop>()
-                .HasOne(cs => cs.Skin)
-                .WithMany(c => c.CaseSkins)
-                .HasForeignKey(cs => cs.SkinId);
-
-            builder.Entity<CasesDrop>()
-                .HasOne(cs => cs.Case)
-                .WithMany(c => c.CaseSkins)
-                .HasForeignKey(cs => cs.CaseId);
-
-            builder.Entity<CasesDrop>()
-                .Property(x => x.Chance).HasColumnType("decimal(9, 8)");
-
-            builder.Entity<StackCaseSkin>()
-                .HasKey(t => new { t.StackCaseId, t.SkinId });
-
-            builder.Entity<StackCaseSkin>()
-                .HasOne(cs => cs.Skin)
-                .WithMany(c => c.StackCaseSkins)
-                .HasForeignKey(cs => cs.SkinId);
-
-            builder.Entity<StackCaseSkin>()
-                .HasOne(cs => cs.Skin)
-                .WithMany(c => c.StackCaseSkins)
-                .HasForeignKey(cs => cs.SkinId);
+            // TODO: Укажем маппинг явно, надо сделать через Assembly..
+            builder.AddConfiguration(new Bot.BotConfiguration());
+            builder.AddConfiguration(new BotsPurcasesFullHistory.BotsPurcasesFullHistoryConfiguration());
+            builder.AddConfiguration(new BotTradeoffer.BotTradeofferConfiguration());
+            builder.AddConfiguration(new Case.CaseConfiguration());
+            builder.AddConfiguration(new CaseCategory.CaseCategoryConfiguration());
+            builder.AddConfiguration(new CaseDiscount.CaseDiscountConfiguration());
+            builder.AddConfiguration(new CaseFaultLog.CaseFaultLogConfiguration());
+            builder.AddConfiguration(new CasesDrop.CasesDropConfiguration());
+            builder.AddConfiguration(new CaseSellLog.CaseSellLogConfiguration());
+            builder.AddConfiguration(new G2AIPNLog.G2AIPNLogConfiguration());
+            builder.AddConfiguration(new G2APayment.G2APaymentConfiguration());
+            builder.AddConfiguration(new PurchasebotPurchases.PurchasebotPurchasesConfiguration());
+            builder.AddConfiguration(new PurshaseBotQueue.PurshaseBotQueueConfiguration());
+            builder.AddConfiguration(new Skin.SkinConfiguration());
+            builder.AddConfiguration(new StackCase.StackCaseConfiguration());
+            builder.AddConfiguration(new StackCaseSkin.StackCaseSkinConfiguration());
+            builder.AddConfiguration(new Stock.StockConfiguration());
+            builder.AddConfiguration(new Winner.WinnerConfiguration());
 
             //builder.Entity<PurshaseBotQueue>()
             //    .HasOne(x => x.Skin)

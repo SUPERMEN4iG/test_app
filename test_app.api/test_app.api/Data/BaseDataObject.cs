@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace test_app.api.Data
@@ -45,11 +48,28 @@ namespace test_app.api.Data
 
         private DateTime? _dateCreate;
         [DataType(DataType.DateTime)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime DateCreate
         {
             get => _dateCreate ?? DateTime.UtcNow;
             set => _dateCreate = value;
         }
+    }
+
+    internal static class ModelBuilderExtensions
+    {
+        public static void AddConfiguration<TEntity, TKey>(
+          this ModelBuilder modelBuilder,
+          DbEntityConfiguration<TEntity, TKey> entityConfiguration) where TEntity : BaseDataObject<TKey>
+        {
+            modelBuilder.Entity<TEntity>().Property(x => x.DateCreate).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            modelBuilder.Entity<TEntity>(entityConfiguration.Configure);
+        }
+    }
+
+    internal abstract class DbEntityConfiguration<TEntity, TKey> where TEntity : BaseDataObject<TKey>
+    {
+        public abstract void Configure(EntityTypeBuilder<TEntity> entity);
     }
 
     public abstract class BaseTimestampsDataObject<T> : BaseDataObject<T>, IBaseTimestampsDataObject<T>

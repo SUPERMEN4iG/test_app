@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,5 +28,13 @@ namespace test_app.api.Data
         /// URL трейдоффера
         /// </summary>
         public String TradeOffer { get; set; }
+
+        // Mapping
+        internal class BotConfiguration : DbEntityConfiguration<Bot, Int64>
+        {
+            public override void Configure(EntityTypeBuilder<Bot> entity)
+            {
+            }
+        }
     }
 }

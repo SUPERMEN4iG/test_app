@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,5 +25,13 @@ namespace test_app.api.Data
         public string Currency { get; set; }
 
         public G2APaymentStatus Status { get; set; }
+
+        // Mapping
+        internal class G2APaymentConfiguration : DbEntityConfiguration<G2APayment, Int64>
+        {
+            public override void Configure(EntityTypeBuilder<G2APayment> entity)
+            {
+            }
+        }
     }
 }

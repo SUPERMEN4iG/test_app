@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,5 +25,13 @@ namespace test_app.api.Data
         public Stock Stock { get; set; }
 
         public WinnerState State { get; set; } = WinnerState.None;
+
+        // Mapping
+        internal class WinnerConfiguration : DbEntityConfiguration<Winner, Int64>
+        {
+            public override void Configure(EntityTypeBuilder<Winner> entity)
+            {
+            }
+        }
     }
 }
