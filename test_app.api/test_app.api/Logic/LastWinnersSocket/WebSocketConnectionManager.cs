@@ -37,10 +37,14 @@ namespace test_app.api.Logic.LastWinnersSocket
 
         public async Task RemoveSocket(string id)
         {
+            if (String.IsNullOrEmpty(id)) return;
+
             WebSocket socket;
             _sockets.TryRemove(id, out socket);
 
-            await socket.CloseAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
+            if (socket.State == WebSocketState.Aborted) return;
+
+            await socket.CloseOutputAsync(closeStatus: WebSocketCloseStatus.NormalClosure,
                                     statusDescription: "Closed by the WebSocketManager",
                                     cancellationToken: CancellationToken.None);
         }

@@ -25,6 +25,11 @@ namespace test_app.api.Logic.LastWinnersSocket
 
         public virtual async Task OnDisconnected(WebSocket socket)
         {
+            if (this.WebSocketConnectionManager.GetAll().Count > 1)
+            {
+                Debug.WriteLine("SALAM SDELAL");
+            }
+
             await WebSocketConnectionManager.RemoveSocket(WebSocketConnectionManager.GetId(socket));
         }
 

@@ -24,48 +24,60 @@ namespace test_app.api.Logic.LastWinnersSocket
         public async Task Invoke(HttpContext context)
         {
             if (!context.WebSockets.IsWebSocketRequest)
-                return;
-
-            var socket = await context.WebSockets.AcceptWebSocketAsync();
-
-            try
             {
-                await _webSocketHandler.OnConnected(socket);
+                await _next.Invoke(context);
+                return;
+            }
 
-                await Receive(socket, async (result, buffer) =>
+            var socket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
+            await _webSocketHandler.OnConnected(socket).ConfigureAwait(false);
+
+            await Receive(socket, async (result, buffer) =>
+            {
+                if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    if (result.MessageType == WebSocketMessageType.Text)
-                    {
-                        await _webSocketHandler.ReceiveAsync(socket, result, buffer);
-                        return;
-                    }
-
-                    else if (result.MessageType == WebSocketMessageType.Close)
+                    await _webSocketHandler.ReceiveAsync(socket, result, buffer).ConfigureAwait(false);
+                    return;
+                }
+                else if (result.MessageType == WebSocketMessageType.Close)
+                {
+                    try
                     {
                         await _webSocketHandler.OnDisconnected(socket);
-                        return;
                     }
+                    catch (WebSocketException)
+                    {
+                        throw;
+                    }
+                    return;
+                }
 
-                });
-            }
-            catch (System.Net.WebSockets.WebSocketException ex)
-            {
-                await _webSocketHandler.OnDisconnected(socket);
-            }
+            });
 
             //await _next.Invoke(context);
         }
 
         private async Task Receive(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
         {
-            var buffer = new byte[1024 * 4];
-
             while (socket.State == WebSocketState.Open)
             {
-                var result = await socket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer),
+                var buffer = new byte[1024 * 4];
+                try
+                {
+                    var result = await socket.ReceiveAsync(buffer: new ArraySegment<byte>(buffer),
                                                        cancellationToken: CancellationToken.None);
 
-                handleMessage(result, buffer);
+                    handleMessage(result, buffer);
+                }
+                catch (WebSocketException ex)
+                {
+                    if (ex.WebSocketErrorCode != WebSocketError.Success)
+                    {
+                        socket.Abort();
+                    }
+                }
+
+                await _webSocketHandler.OnDisconnected(socket);
             }
         }
     }

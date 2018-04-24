@@ -181,7 +181,11 @@ namespace test_app.api
 
             app.UseCors("CorsPolicy");
 
-            app.UseWebSockets();
+            app.UseWebSockets(new WebSocketOptions()
+            {
+                KeepAliveInterval = TimeSpan.FromSeconds(60),
+                ReceiveBufferSize = 4 * 1024,
+            });
 
             app.MapWebSocketManager("/lastwinners", serviceProvider.GetService<LastWinnersHandler>());
 
