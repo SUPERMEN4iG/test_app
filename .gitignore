@@ -32,3 +32,4 @@ msbuild.wrn
 /.vagrant/machines/default/virtualbox
 /backup.sql
 .vagrant
+/test_app.api/test_app.api/appsettings.Development.json

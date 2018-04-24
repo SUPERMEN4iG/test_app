@@ -19,7 +19,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace test_app.api.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Admin")]
+    [Route("api/admin")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
