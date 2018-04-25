@@ -8,7 +8,7 @@ namespace test_app.api.Helper {
     public class ChanceCalc {
         private int _skin_limit { get; set; }
 
-        private int _limit = 100000;
+        private int _limit = 1000000;
         private int iteration;
         private double _marginality;
 
@@ -32,7 +32,7 @@ namespace test_app.api.Helper {
             _context = context;
             iteration = 0;
             _precision = 0.01;
-            _skin_max_chance = 4;
+            _skin_max_chance = 3;
         }
 
         public List<SkinViewModel> Calc (int case_id, double case_price,double margine, List<long> skinIds) {
