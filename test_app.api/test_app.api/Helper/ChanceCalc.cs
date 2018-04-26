@@ -8,7 +8,7 @@ namespace test_app.api.Helper {
     public class ChanceCalc {
         private int _skin_limit { get; set; }
 
-        private int _limit = 1000000;
+        private int _limit = 100000;
         private int iteration;
         private double _marginality;
 
@@ -31,7 +31,7 @@ namespace test_app.api.Helper {
         public ChanceCalc (ApplicationDbContext context) {
             _context = context;
             iteration = 0;
-            _precision = 0.01;
+            _precision = 0.00001;
             _skin_max_chance = 3;
         }
 
@@ -83,7 +83,7 @@ namespace test_app.api.Helper {
     });
             push_skins ();
             _skinsPool.ForEach (skin => {
-                skin.Chance = System.Math.Round (skin_chances (skin.Id), 6) / 100;
+                skin.Chance = System.Math.Round (skin_chances (skin.Id), 6);
             });
             _skinsPool.Concat(_ignoredSkins);
             return _skinsPool;
