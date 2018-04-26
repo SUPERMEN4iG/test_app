@@ -59,26 +59,12 @@ namespace test_app.api.Helper {
          
            
     _skinsPool.ForEach(skin=>{
-        var times_to_add = 0;
-        if((double)skin.Price > this._casePrice * 0.6)
-        {
-            var t = maxPrice / skin.Price;
-            times_to_add = (int)Math.Round(t);
-            if (times_to_add < 1) 
-            {
-                times_to_add = 1;
-            }
-        }
-        else{
-            times_to_add = 1;
-        }
+       
 
-        for(var i = 0; i < times_to_add; i++)
-        {
             _fakeInventory.Add(skin);
             _skinsCount[skin.Id]++;
             this._totalPriceBuying +=skin.Price;
-        }
+        
         
     });
             push_skins ();
