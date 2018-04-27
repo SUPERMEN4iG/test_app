@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using test_app.api.Data;
+using test_app.api.Extensions;
 using test_app.api.Models;
 
 namespace test_app.api.Helper {
@@ -60,7 +61,7 @@ namespace test_app.api.Helper {
            
     _skinsPool.ForEach(skin=>{
         var times_to_add = 0;
-        if((double)skin.Price > 1)
+        if((double)skin.Price > this._casePrice * 0.6)
         {
             var t = maxPrice / skin.Price;
             times_to_add = (int)Math.Round(t);
@@ -86,9 +87,18 @@ namespace test_app.api.Helper {
                 skin.Chance = System.Math.Round (skin_chances (skin.Id), 6);
             });
             _skinsPool.Concat(_ignoredSkins);
+
             return _skinsPool;
 
         }
+
+        private double TestOpen (){
+
+            var skinModel = _skinsPool.RandomElementByWeight(x => (float)x.Chance);
+            return (double)skinModel.Price;
+        } 
+
+
 
         private double calc_selling () {
             return _fakeInventory.Count * _casePrice;
@@ -143,19 +153,24 @@ namespace test_app.api.Helper {
                 if (marginality_diff <= _precision && marginality_diff >= -_precision) {
                     found = true;
                     return;
+                }else{
+
+                    if (marginality_diff > 0 && skin.Price < (decimal)_casePrice)
+                    {
+                        _fakeInventory.Add(skin);
+                        _skinsCount[skin.Id]++;
+                        this._totalPriceBuying += skin.Price;
+                        pushed_any = true;
+                    }
+                    if (marginality_diff < 0 && skin.Price > (decimal)_casePrice)
+                    {
+                        _fakeInventory.Add(skin);
+                        _skinsCount[skin.Id]++;
+                        this._totalPriceBuying += skin.Price;
+                        pushed_any = true;
+                    }
                 }
-                if (marginality_diff > 0 && skin.Price < (decimal)_casePrice) {
-                    _fakeInventory.Add (skin);
-                     _skinsCount[skin.Id]++;
-                    this._totalPriceBuying +=skin.Price;
-                    pushed_any = true;
-                }
-                if (marginality_diff < 0 && skin.Price > (decimal)_casePrice) {
-                    _fakeInventory.Add (skin);
-                     _skinsCount[skin.Id]++;
-                    this._totalPriceBuying +=skin.Price;
-                    pushed_any = true;
-                }
+               
             });
            
             if (!found) {
