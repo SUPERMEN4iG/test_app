@@ -62,7 +62,7 @@ namespace test_app.api.Logic
 
             return CaseOpenResult.GenerateSuccessTest(new WinnerViewModel() {
                 MarketHashName = winner.Skin.MarketHashName,
-                Price = selected.Skin.Price,
+                Price = selected.Skin.Price * 0.8M,
                 Image = winner.Skin.Image,
                 Skin = winner.Skin
             }, selected.Chance.ToString());
