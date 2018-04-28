@@ -476,7 +476,7 @@ namespace test_app.api.Controllers
                 .ToList());
 
             res.Totals.TotalCasePrice = casea.Price * count;
-            res.Totals.TotalSkinPrice = openResults.Sum(x => ((WinnerViewModel)x.Winner).Price * (decimal)0.8);
+            res.Totals.TotalSkinPrice = openResults.Sum(x => ((WinnerViewModel)x.Winner).Price * 0.8M);
 
             return Json(res);
         }

@@ -48,6 +48,12 @@ namespace test_app.api.Logic
             }
         }
 
+        public decimal TestOpen2 (){
+
+            var skinModel = _caseDrop.RandomElementByWeight(x => (float)x.Chance);
+            return skinModel.Skin.Price;
+        } 
+
         public CaseOpenResult TestOpen()
         {
             CasesDrop selected = _caseDrop.RandomElementByWeight(x => (float)x.Chance);
@@ -62,7 +68,7 @@ namespace test_app.api.Logic
 
             return CaseOpenResult.GenerateSuccessTest(new WinnerViewModel() {
                 MarketHashName = winner.Skin.MarketHashName,
-                Price = selected.Skin.Price * 0.8M,
+                Price = selected.Skin.Price,
                 Image = winner.Skin.Image,
                 Skin = winner.Skin
             }, selected.Chance.ToString());
