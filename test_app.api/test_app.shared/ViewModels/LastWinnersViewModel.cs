@@ -26,7 +26,7 @@ namespace test_app.shared.ViewModels
     {
         public string MarketHashName { get; set; }
 
-        public decimal Price { get; set; }
+        public double Price { get; set; }
 
         public string Image { get; set; }
 

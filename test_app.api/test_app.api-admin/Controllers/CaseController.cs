@@ -180,7 +180,7 @@ namespace test_app.api_admin.Controllers
                 .OrderBy(x => x.Skin.Id)
                 .ToList());
 
-            res.Totals.TotalCasePrice = casea.Price * count;
+            res.Totals.TotalCasePrice = (double)casea.Price * count;
             res.Totals.TotalSkinPrice = openResults.Sum(x => ((WinnerViewModel)x.Winner).Price * 0.8);
 
             return Json(res);
