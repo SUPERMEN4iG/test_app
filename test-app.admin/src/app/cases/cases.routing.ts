@@ -5,6 +5,7 @@ import { CasesComponent } from './cases.component';
 
 import { CasesListComponent  } from './list/cases-list.component';
 import { CasesEditComponent } from './edit/case-edit.component';
+import { CasesStatisticComponent } from './statistic/case-statistic.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
           {
             path: 'edit',
             component: CasesEditComponent,
+          },
+          {
+            path: 'statistic',
+            component: CasesStatisticComponent,
           },
         ]
       }

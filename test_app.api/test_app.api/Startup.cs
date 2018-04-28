@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor.Compilation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using test_app.api.Data;
 using test_app.api.Models;
 using test_app.api.Services;
 using AspNet.Security.OpenId;
@@ -21,10 +20,13 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using test_app.api.Models.Configuration;
 using test_app.api.Logic.Extensions;
 using test_app.api.Logic.LastWinnersSocket;
 using Npgsql;
+using test_app.shared;
+using test_app.shared.Data;
+using test_app.shared.Repositories;
+using test_app.shared.ViewModels;
 
 namespace test_app.api
 {
@@ -120,13 +122,29 @@ namespace test_app.api
             services.AddTransient<WebSocketConnectionManager>();
             services.AddSingleton<LastWinnersHandler>();
 
+            #region биндинг non-repository для сущностей
+            services.AddScoped<IRepositoryFactory, UnitOfWork<ApplicationDbContext>>();
+            services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
+            services.AddScoped<IUnitOfWork<ApplicationDbContext>, UnitOfWork<ApplicationDbContext>>();
+            #endregion
+
+            #region биндинг repository сущностей
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IWinnerRepository, WinnerRepository>();
+            services.AddScoped<ICaseRepository, CaseRepository>();
+            services.AddScoped<IG2ARepository, G2ARepository>();
+            services.AddScoped<IBotRepository, BotRepository>();
+            services.AddScoped<IStockRepository, StockRepository>();
+            services.AddScoped<ICaseDropRepository, CaseDropRepository>();
+            #endregion
+
             //services.AddWebSocketManager();
 
             services.AddMvc().AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).ConfigureApplicationPartManager(manager =>
             {
                 var oldMetadataReferenceFeatureProvider = manager.FeatureProviders.First(f => f is MetadataReferenceFeatureProvider);
                 manager.FeatureProviders.Remove(oldMetadataReferenceFeatureProvider);
-                manager.FeatureProviders.Add(new ReferencesMetadataReferenceFeatureProvider());
+                manager.FeatureProviders.Add(new shared.ReferencesMetadataReferenceFeatureProvider());
             });
             services.AddMemoryCache();
         }
@@ -139,22 +157,20 @@ namespace test_app.api
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
-
-
-
-                using (var serviceScope =
-                    app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-                {
-                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
-                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>().EnsureSeedData();
-                }
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
 
-          
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                if (!serviceScope.ServiceProvider.GetService<ApplicationDbContext>().AllMigrationsApplied())
+                {
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>().Database.Migrate();
+                    serviceScope.ServiceProvider.GetService<ApplicationDbContext>().EnsureSeedData();
+                }
+            }
 
             // Диагностика выполнения для каждого request
             app.Use(async (context, next) =>

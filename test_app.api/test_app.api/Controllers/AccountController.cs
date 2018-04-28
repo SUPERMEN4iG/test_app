@@ -16,11 +16,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using test_app.api.Data;
 using test_app.api.Logic;
 using test_app.api.Models;
 using test_app.api.Models.AccountViewModels;
 using test_app.api.Services;
+using test_app.shared;
+using test_app.shared.Data;
+using test_app.shared.Logic;
+using test_app.shared.ViewModels;
 
 namespace test_app.api.Controllers
 {
@@ -310,9 +313,10 @@ namespace test_app.api.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation("User logged in with {Name} provider.", info.LoginProvider);
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                var roles = await _userManager.GetRolesAsync(user);
 
-                //await GenerateToken(info);
-                return PartialView("Close", GenerateToken(info));
+                return PartialView("Close", TokenHelper.Generate(user, roles));
             }
             if (result.IsLockedOut)
             {
@@ -364,7 +368,7 @@ namespace test_app.api.Controllers
             var response = new AuthResponseModel
             {
                 Token = encodedJwt,
-                Username = info.Principal.Identity.Name
+                Username = user.UserName
             };
 
             // сериализация ответа

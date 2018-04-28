@@ -16,7 +16,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class CasesService {
-  serviceEndPoint: String = 'admin/';
+  serviceEndPoint: String = 'case/';
   apiEndPoint: String;
   data: Array<any> = new Array<object>();
   data$: BehaviorSubject<any[]>;
@@ -125,5 +125,17 @@ export class CasesService {
       })
       .catch(this.handleError);
   };
+
+  getStatistic(caseId) {
+    return this._http.get(`${this.apiEndPoint}getstatistic?caseId=${caseId}`)
+      .map((x: any) => {
+        try {
+          return x;
+        } catch (error) {
+          throw new Error(error);
+        }
+      })
+      .catch(this.handleError);
+  }
 
 }

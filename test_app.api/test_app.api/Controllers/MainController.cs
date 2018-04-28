@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using test_app.api.Data;
 using test_app.api.Logic.LastWinnersSocket;
+using test_app.shared;
+using test_app.shared.Data;
+using test_app.shared.Repositories;
+using test_app.shared.ViewModels;
 
 namespace test_app.api.Controllers
 {
@@ -15,44 +18,38 @@ namespace test_app.api.Controllers
     public class MainController : Controller
     {
         private LastWinnersHandler _lastWinnersHandler { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
+        private readonly IWinnerRepository _winnerRepository;
 
         public MainController(
-            LastWinnersHandler lastWinnersHandler)
+            LastWinnersHandler lastWinnersHandler,
+            IUnitOfWork unitOfWork,
+            IUserRepository userRepository,
+            IWinnerRepository winnerRepository)
         {
             _lastWinnersHandler = lastWinnersHandler;
+            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
+            _winnerRepository = winnerRepository;
         }
 
         [HttpGet]
         [Route("getdata")]
-        public async Task<IActionResult> GetData()
+        public IActionResult GetData()
         {
-            var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
             var result = new GetDataResult();
 
-            result.OpennedCases = 0;
-            result.UsersRegistered = 0;
+            result.OpennedCases = 0L;
+            result.UsersRegistered = 0L;
             result.Online = 0;
-            result.LastWinners = new List<object>();
+            result.LastWinners = new List<LastWinnersViewModel>();
 
             try {
-                result.OpennedCases = context.Winners.Count();
-                result.UsersRegistered = context.Users.Count();
+                result.OpennedCases = _winnerRepository.GetWinnersCount();
+                result.UsersRegistered = _userRepository.GetUsersCount();
 
-                result.LastWinners.AddRange(context.Winners
-                    .Include(x => x.Skin)
-                    .Include(x => x.User)
-                    .Include(x => x.Case)
-                    .OrderByDescending(x => x.DateCreate)
-                    .Select(x => new {
-                        user_name = x.User.SteamUsername,
-                        winner_id = x.Id,
-                        skin_name = x.Skin.MarketHashName,
-                        skin_rarity = x.Skin.Rarity,
-                        skin_image = x.Skin.Image,
-                        case_name = x.Case.FullName,
-                        case_static_name = x.Case.StaticName
-                    }).Take(8)
-                    .ToList());
+                result.LastWinners.AddRange(_winnerRepository.GetLastWinners());
 
                 result.Online = _lastWinnersHandler.GetCountConnections();
                 result.ServerTime = DateTime.Now;
@@ -72,6 +69,6 @@ namespace test_app.api.Controllers
         public Int64 UsersRegistered { get; set; }
         public Int64 Online { get; set; }
         public DateTime ServerTime { get; set; }
-        public List<object> LastWinners { get; set; }
+        public List<LastWinnersViewModel> LastWinners { get; set; }
     }
 }

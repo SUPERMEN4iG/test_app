@@ -73,6 +73,8 @@ export class CasesEditComponent {
   }
 
   onAvalibleSkinsChange() {
+    console.info(this.avalibleSkins);
+    console.info(this.currentCase.skins);
     this.skins = this._skinsAvailablePipe.transform(this.avalibleSkins, this.currentCase.skins);
     if (this.skins.length > 0) {
       this.selectedSkin = this.skins[0].id;

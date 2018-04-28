@@ -5,10 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using test_app.api.Data;
 using test_app.api.Logic;
 using test_app.api.Logic.Bot;
 using test_app.api.Logic.Extensions;
+using test_app.shared;
+using test_app.shared.Data;
+using test_app.shared.Repositories;
+using test_app.shared.ViewModels;
 
 namespace test_app.api.Controllers
 {
@@ -16,34 +19,48 @@ namespace test_app.api.Controllers
     [Route("api/steambot")]
     public class SteamBotController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IBotRepository _botRepository;
+        private readonly IStockRepository _stockRepository;
+        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
 
         public SteamBotController(
-            ApplicationDbContext context)
+            IUnitOfWork<ApplicationDbContext> unitOfWork,
+            IStockRepository stockRepository,
+            IBotRepository botRepository)
         {
-            _context = context;
+            _botRepository = botRepository;
+            _unitOfWork = unitOfWork;
+            _stockRepository = stockRepository;
         }
 
         [Route("ping")]
         [HttpGet]
-        public async Task<IActionResult> Ping()
+        public IActionResult Ping()
         {
-            try
+            using (var transaction = _unitOfWork.Context.Database.BeginTransaction())
             {
-                string ip = "";
-                ip = this.HttpContext.GetIpAddress();
+                try
+                {
+                    string ip = "";
+                    ip = this.HttpContext.GetIpAddress();
 
-                var bot = _context.Bots.Where(x => x.Server == ip).FirstOrDefault();
-                bot.SyncTime = DateTime.Now;
+                    var bot = _botRepository.Get(x => x.Server == ip).FirstOrDefault();
 
-                _context.Update(bot);
-                await _context.SaveChangesAsync();
+                    if (bot == null) throw new Exception("bot not found");
 
-                return Json(BaseHttpResult.GenerateSuccess(new { ip }, "ok"));
-            }
-            catch (Exception ex)
-            {
-                return Json(BaseHttpResult.GenerateError(ex.Message.ToString(), ResponseType.ServerError));
+                    bot.SyncTime = DateTime.Now;
+
+                    _botRepository.Update(bot);
+                    _unitOfWork.SaveChanges();
+                    transaction.Commit();
+
+                    return Json(BaseHttpResult.GenerateSuccess(new { ip }, "ok"));
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Json(BaseHttpResult.GenerateError(ex.Message.ToString(), ResponseType.ServerError));
+                }
             }
         }
 
@@ -73,38 +90,44 @@ namespace test_app.api.Controllers
         [Route("updateinventory")]
         [HttpPost]
         [ClaimRequirement("Premission", "CanBotUses")]
-        public async Task<IActionResult> UpdateInventory([FromBody]UpdateInventoryRequestViewModel requestData)
+        public IActionResult UpdateInventory([FromBody]UpdateInventoryRequestViewModel requestData)
         {
-            try
+            using (var transaction = _unitOfWork.Context.Database.BeginTransaction())
             {
-                long botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
-                var bot = _context.Bots.Where(x => x.Id == botId).FirstOrDefault();
+                try
+                {
+                    long botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
+                    var bot = _botRepository.Get(x => x.Id == botId).FirstOrDefault();
 
-                var results = new ConcurrentQueue<UpdateInventoryResponseViewModel>();
+                    var results = new ConcurrentQueue<UpdateInventoryResponseViewModel>();
 
-                Parallel.ForEach(requestData.items, (item) => {
-                    try
+                    Parallel.ForEach(requestData.items, (item) =>
                     {
-                        var stock = new Stock()
+                        try
                         {
-                            Skin = new Skin() { Id = item.id },
-                            Bot = new Bot() { Id = botId }
-                        };
-                        _context.Stock.Add(stock);
-                    }
-                    catch (Exception ex)
-                    {
-                        results.Enqueue(new UpdateInventoryResponseViewModel() { item_id = item.id, status = "error", error = ex.Message.ToString() });
-                    }
-                });
+                            var stock = new Stock()
+                            {
+                                Skin = new Skin() { Id = item.id },
+                                Bot = new Bot() { Id = botId }
+                            };
+                            _stockRepository.Add(stock);
+                        }
+                        catch (Exception ex)
+                        {
+                            results.Enqueue(new UpdateInventoryResponseViewModel() { item_id = item.id, status = "error", error = ex.Message.ToString() });
+                        }
+                    });
 
-                _context.SaveChanges();
+                    _unitOfWork.SaveChanges();
+                    transaction.Commit();
 
-                return Json(BaseHttpResult.GenerateSuccess(results, "ok"));
-            }
-            catch (Exception ex)
-            {
-                return Json(BaseHttpResult.GenerateError(ex.Message.ToString(), ResponseType.ServerError));
+                    return Json(BaseHttpResult.GenerateSuccess(results, "ok"));
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Json(BaseHttpResult.GenerateError(ex.Message.ToString(), ResponseType.ServerError));
+                }
             }
         }
     }

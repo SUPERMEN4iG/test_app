@@ -10,9 +10,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using test_app.api.Data;
 using test_app.api.Logic;
 using test_app.api.Models;
+using test_app.shared;
+using test_app.shared.Data;
+using test_app.shared.Repositories;
+using test_app.shared.ViewModels;
 
 namespace test_app.api.Controllers
 {
@@ -20,13 +23,19 @@ namespace test_app.api.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserRepository _userRepository;
+        private readonly IWinnerRepository _winnerRepository;
+
         public UserController(
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IUserRepository userRepository,
+            IWinnerRepository winnerRepository)
         {
             _userManager = userManager;
+            _userRepository = userRepository;
+            _winnerRepository = winnerRepository;
         }
-
-        private readonly UserManager<ApplicationUser> _userManager;
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("getuserdata")]
@@ -42,33 +51,11 @@ namespace test_app.api.Controllers
         [HttpGet]
         public IActionResult GetUser(string id)
         {
-            var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
+            var user = _userRepository.GetUserById(id);
+            var wonItems = _winnerRepository.GetWinners(id);
 
-            var user = context.Users.Where(x => x.Id == id).Select(x => new
-            {
-                x.Id,
-                x.SteamAvatar,
-                x.Email,
-                x.UserName,
-                x.TradeofferUrl,
-                wonItems = new List<object>()
-            }).FirstOrDefault();
-
-            var wonItems = context.Winners
-                .Where(x => x.User.Id == user.Id)
-                .Include(x => x.Skin)
-                .Select(x => new
-                {
-                    x.Id,
-                    x.DateCreate,
-                    x.Skin.MarketHashName,
-                    x.Skin.Image,
-                    x.State,
-                    Price = x.Skin.Price * 0.8M,
-                }).OrderByDescending(x => x.DateCreate).ToList();
-
-            user.wonItems.Clear();
-            user.wonItems.AddRange(wonItems);
+            user.WonItems.Clear();
+            user.WonItems.AddRange(wonItems);
 
             return Json(user);
         }
@@ -88,7 +75,6 @@ namespace test_app.api.Controllers
                 return BadRequest(BaseHttpResult.GenerateError("Tradeoffer url not valid", ResponseType.ValidationError));
             }
 
-            var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             user.TradeofferUrl = req.tradeofferurl;

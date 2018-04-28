@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using test_app.api.Data;
+using test_app.shared.Data;
 
 namespace test_app.api.Models.ViewModels
 {

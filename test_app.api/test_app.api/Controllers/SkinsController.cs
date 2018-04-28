@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using test_app.api.Data;
 using test_app.api.Models;
+using test_app.shared;
+using test_app.shared.Data;
 
 namespace test_app.api.Controllers
 {
@@ -24,27 +25,5 @@ namespace test_app.api.Controllers
         }
 
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ApplicationDbContext _context;
-
-        [Route("getskins")]
-        [HttpGet]
-        public async Task<IActionResult> GetSkins()
-        {
-            var skins = new object();
-
-            var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
-
-            skins = context.Cases
-                .Include(x => x.CaseSkins)
-                .ThenInclude(x => x.Skin)
-                .GroupBy(x => x.StaticName,
-                    (key, group) => new
-                    {
-                        Case = key,
-                        Skins = group.SelectMany(d => d.CaseSkins.Select(s => new { s.Skin.Id, s.Skin.MarketHashName, s.Skin.Price, s.Skin.Image }))
-                    }).ToList();
-
-            return Json(skins);
-        }
     }
 }

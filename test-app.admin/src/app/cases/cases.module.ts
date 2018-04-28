@@ -17,6 +17,7 @@ import { DataSharedModule } from '../app.shared.module';
 
 // Modal Component
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CasesStatisticComponent } from './statistic/case-statistic.component';
 
 @NgModule({
   imports: [
@@ -31,6 +32,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     CasesComponent,
     CasesListComponent,
     CasesEditComponent,
+    CasesStatisticComponent,
     SkinsAvailablePipe
   ],
   providers: [

@@ -14,10 +14,13 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using test_app.api.Data;
 using test_app.api.Helper.Hash;
 using test_app.api.Logic;
 using test_app.api.Models;
+using test_app.shared;
+using test_app.shared.Data;
+using test_app.shared.Repositories;
+using test_app.shared.ViewModels;
 
 namespace test_app.api.Controllers
 {
@@ -25,8 +28,10 @@ namespace test_app.api.Controllers
     [Route("api/payment")]
     public class PaymentController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IG2ARepository _G2ARepository;
+        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
+        private readonly IUserRepository _userRepository;
 
         private const string API_HASH = "049eb318-e3a2-4724-a869-c3355b5fa73a";
         private const string MERCHANT_EMAIL = "supermen4ig988@gmail.com";
@@ -34,10 +39,14 @@ namespace test_app.api.Controllers
 
         public PaymentController(
             UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context)
+            IG2ARepository g2ARepository,
+            IUserRepository userRepository,
+            IUnitOfWork<ApplicationDbContext> unitOfWork)
         {
             _userManager = userManager;
-            _context = context;
+            _G2ARepository = g2ARepository;
+            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -57,8 +66,9 @@ namespace test_app.api.Controllers
                 g2aPayment.Sum = amount;
                 g2aPayment.Currency = "USD";
                 g2aPayment.Status = G2APayment.G2APaymentStatus.None;
-                _context.Add(g2aPayment);
-                _context.SaveChanges();
+
+                _G2ARepository.Add(g2aPayment);
+                _unitOfWork.SaveChanges();
 
                 var hashComputed = String.Format("{0}{1}{2}{3}", 
                     g2aPayment.Id, 
@@ -153,7 +163,7 @@ namespace test_app.api.Controllers
 
         [HttpPost]
         [Route("g2arefill")]
-        public async Task<IActionResult> G2ARefillIPN(G2ARefillViewModel pData)
+        public IActionResult G2ARefillIPN(G2ARefillViewModel pData)
         {
             var vertifiedHash = SHA256Helper.ComputeHash(
                 String.Format("{0}{1}{2}{3}",
@@ -165,7 +175,7 @@ namespace test_app.api.Controllers
             var req = JsonConvert.SerializeObject(pData).ToString();
             var res = "";
 
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _unitOfWork.Context.Database.BeginTransaction())
             {
                 try
                 {
@@ -179,8 +189,8 @@ namespace test_app.api.Controllers
                         throw new Exception("status is not complete");
                     }
 
-                    G2APayment g2APayment = _context.G2APayments.Include(x => x.User).FirstOrDefault(x => x.Id == pData.userOrderId);
-                    ApplicationUser user = _context.Users.FirstOrDefault(x => x.Id == g2APayment.User.Id);
+                    G2APayment g2APayment = _G2ARepository.GetPayment(pData.userOrderId);
+                    ApplicationUser user = _userRepository.Get(x => x.Id == g2APayment.User.Id).FirstOrDefault();
 
                     if (g2APayment.Status == G2APayment.G2APaymentStatus.Success)
                     {
@@ -191,15 +201,15 @@ namespace test_app.api.Controllers
                     g2APayment.Status = G2APayment.G2APaymentStatus.Success;
                     g2APayment.TransactionId = pData.transactionId;
 
-                    _context.Update(g2APayment);
-                    _context.Update(user);
-                    _context.SaveChanges();
-                    transaction.Commit();
+                    _G2ARepository.Update(g2APayment);
+                    _userRepository.Update(user);
 
                     // TODO: Временные логи, на момент теста
                     res = "success";
-                    _context.G2AIPNLogs.Add(new G2AIPNLog() { Request = req, Response = res });
-                    _context.SaveChanges();
+                    _G2ARepository.AddIpnLog(req, res);
+
+                    _unitOfWork.SaveChanges();
+                    transaction.Commit();
 
                     return Json(BaseHttpResult.GenerateSuccess(g2APayment.Status, "success", ResponseType.Ok));
                 }
@@ -210,8 +220,9 @@ namespace test_app.api.Controllers
                     // TODO: Временные логи, на момент теста
                     res = ex.Message.ToString();
                     res += '|' + ex.StackTrace;
-                    _context.G2AIPNLogs.Add(new G2AIPNLog() { Request = req, Response = res });
-                    _context.SaveChanges();
+
+                    _G2ARepository.AddIpnLog(req, res);
+                    _unitOfWork.SaveChanges();
 
                     return BadRequest(BaseHttpResult.GenerateError(ex.Message, ResponseType.ServerError));
                 }

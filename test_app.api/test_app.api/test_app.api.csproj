@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet-test_app.api-40D7C42A-4E98-4C58-9439-112CF70E330E</UserSecretsId>
     <PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+	<RuntimeFrameworkVersion>2.0.3</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,20 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20180422170004_UpdateStock2.Designer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Migrations\20180422034941_Init.Designer.cs">
-      <DependentUpon>20180422034941_Init.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20180422140559_SomeFixes.Designer.cs">
-      <DependentUpon>20180422140559_SomeFixes.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20180422164223_UpdateStock.Designer.cs">
-      <DependentUpon>20180422164223_UpdateStock.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Migrations\20180422170131_UpdateStock2.Designer.cs">
-      <DependentUpon>20180422170131_UpdateStock2.cs</DependentUpon>
-    </Compile>
+    <ProjectReference Include="..\test_app.shared\test_app.shared.csproj" />
   </ItemGroup>
 </Project>

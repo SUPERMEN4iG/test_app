@@ -8,9 +8,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using test_app.api.Data;
 using test_app.api.Logic;
 using test_app.api.Models;
+using test_app.shared;
+using test_app.shared.Data;
+using test_app.shared.Repositories;
+using test_app.shared.ViewModels;
 
 namespace test_app.api.Controllers
 {
@@ -19,11 +22,17 @@ namespace test_app.api.Controllers
     public class WinnerController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
+        private readonly IWinnerRepository _winnerRepository;
 
         public WinnerController(
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IUnitOfWork<ApplicationDbContext> unitOfWork,
+            IWinnerRepository winnerRepository)
         {
             _userManager = userManager;
+            _winnerRepository = winnerRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -33,15 +42,10 @@ namespace test_app.api.Controllers
         {
             try
             {
-
-                var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
-
-
-                using (var transaction = context.Database.BeginTransaction())
+                using (var transaction = _unitOfWork.Context.Database.BeginTransaction())
                 {
-                    var winner = context.Winners.Include(x => x.Skin).Include(x => x.User).LastOrDefault(x => x.Id == id);
+                    var winner = _winnerRepository.GetWinnerLast(id);
 
-                  
                     //TODO: Нужно проверять есть ли не завершенные трейды!!!!
 
 
@@ -60,10 +64,11 @@ namespace test_app.api.Controllers
                     }
 
                     user.Balance += winner.Skin.Price * 0.8M;
-                    try{
-                        context.Update(winner);
-                        context.Update(user);
-                        var res = context.SaveChanges();
+                    try
+                    {
+                        _unitOfWork.Context.Update(winner);
+                        _unitOfWork.Context.Update(user);
+                        var res = _unitOfWork.SaveChanges();
 
                         transaction.Commit();
                         return Json(BaseHttpResult.GenerateSuccess(winner.Skin.Price * 0.8M, "Item was sold"));
@@ -76,7 +81,9 @@ namespace test_app.api.Controllers
 
                 }
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(BaseHttpResult.GenerateError("Server error", ResponseType.ServerError));
             }
         }
@@ -84,56 +91,9 @@ namespace test_app.api.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [Route("take")]
         [HttpGet]
-        public async Task<IActionResult> Take(Int32 id)
+        public IActionResult Take(Int32 id)
         {
-            try
-            {
-
-                var context = (ApplicationDbContext)HttpContext.RequestServices.GetService(typeof(ApplicationDbContext));
-
-
-                using (var transaction = context.Database.BeginTransaction())
-                {
-                    var winner = context.Winners.Include(x => x.Skin).Include(x => x.User).LastOrDefault(x => x.Id == id);
-
-                    if (winner.State != Winner.WinnerState.None)
-                    {
-                        throw new Exception("wtf");
-                    }
-
-                    winner.State = Winner.WinnerState.Sold;
-
-                    var user = await _userManager.GetUserAsync(HttpContext.User);
-
-                    if (user.Id != winner.User.Id)
-                    {
-                        throw new Exception("wtf");
-                    }
-
-                    user.Balance += winner.Skin.Price * 0.8M;
-                    try
-                    {
-                        context.Update(winner);
-                        context.Update(user);
-                        var res = context.SaveChanges();
-
-                        transaction.Commit();
-                        return Json(BaseHttpResult.GenerateSuccess(winner.Skin.Price * 0.8M, "Item was sold"));
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw ex;
-                    }
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(BaseHttpResult.GenerateError("Server error", ResponseType.ServerError));
-            }
-
+            return BadRequest(BaseHttpResult.GenerateError("Server error", ResponseType.ServerError));
         }
 
 

@@ -16,7 +16,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class SkinsService {
-  serviceEndPoint: String = 'admin/';
+  serviceEndPoint: String = 'skin/';
   apiEndPoint: String;
   data: Array<any> = new Array<object>();
   data$: BehaviorSubject<any[]>;

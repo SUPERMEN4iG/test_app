@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using test_app.api.Data;
 using test_app.api.Extensions;
 using test_app.api.Models;
+using test_app.shared;
 
 namespace test_app.api.Helper {
     public class ChanceCalc {

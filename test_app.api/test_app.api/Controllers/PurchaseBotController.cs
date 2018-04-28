@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using test_app.api.Data;
 using test_app.api.Logic;
 using test_app.api.Logic.Bot;
 using test_app.api.Models;
+using test_app.shared;
+using test_app.shared.Data;
+using test_app.shared.Repositories;
+using test_app.shared.ViewModels;
 
 namespace test_app.api.Controllers
 {
@@ -20,47 +23,47 @@ namespace test_app.api.Controllers
     {
         private const int QUEUE_ITEMS_LIMIT_PER_REQUEST = 7;
 
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IBotRepository _botRepository;
 
         public PurchaseBotController(
             UserManager<ApplicationUser> userManager,
-            ApplicationDbContext context)
+            IUnitOfWork<ApplicationDbContext> unitOfWork,
+            IBotRepository botRepository)
         {
             _userManager = userManager;
-            _context = context;
+            _botRepository = botRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [Route("getqueue")]
         [ClaimRequirement("Premission", "CanBotUses")]
         [HttpGet]
-        public async Task<IActionResult> GetQueue(int count)
+        public IActionResult GetQueue(int count)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _unitOfWork.Context.Database.BeginTransaction())
             {
                 try
                 {
                     var botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
 
-                    if (!_context.Bots.Any(x => x.Id == botId))
+                    if (!_botRepository.Any(botId))
                     {
                         throw new Exception("bot not found");
                     }
-                    
-                    var items = _context.PurshaseBotQueues
-                       .OrderBy(x => x.TriesCount)
-                       .Take(count)
-                       .ToList();
+
+                    var items = _botRepository.GetQueue(count);
 
                     items.ForEach((it) =>
                     {
                         it.TriesCount += 1;
                         it.LastBot.Id = botId;
                         it.DateLastRequest = DateTime.Now;
-                        _context.Update(it);
                     });
 
-                    _context.SaveChanges();
+                    _unitOfWork.Context.UpdateRange(items);
+                    _unitOfWork.Context.SaveChanges();
 
                     transaction.Commit();
 
@@ -110,45 +113,31 @@ namespace test_app.api.Controllers
         //    }
         //}
 
-        public class InsertNewPurchaseViewModel
-        {
-            public string market_hash_name { get; set; }
-
-            public Int64 queue_id { get; set; }
-
-            public decimal price_usd { get; set; }
-
-            public string platform { get; set; }
-
-            public Int64 bot_id { get; set; }
-        }
-
         [Route("insertnewpurchase")]
         [ClaimRequirement("Premission", "CanBotUses")]
         [HttpPost]
-        public async Task<IActionResult> InsertNewPurchase([FromBody] List<InsertNewPurchaseViewModel> list)
+        public IActionResult InsertNewPurchase([FromBody] List<InsertNewPurchaseViewModel> list)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _unitOfWork.Context.Database.BeginTransaction())
             {
                 try
                 {
                     var botId = (long)HttpContext.Items.FirstOrDefault(x => x.Key == "botId").Value;
 
-                    list.ForEach((it) =>
+                    var deleted = _botRepository.GetQueue(list);
+
+                    var added = list.Select(x => new PurchasebotPurchases
                     {
-                        var added = new PurchasebotPurchases();
-                        added.Bot.Id = botId;
-                        added.MarketHashName = it.market_hash_name;
-                        added.Platform = it.platform;
-                        added.PriceUSD = it.price_usd;
-
-                        var deleted = _context.PurshaseBotQueues.FirstOrDefault(x => x.Id == it.queue_id);
-
-                        _context.Add(added);
-                        _context.Remove(deleted);
+                        Bot = new Bot() { Id = botId },
+                        MarketHashName = x.market_hash_name,
+                        Platform = x.platform,
+                        PriceUSD = x.price_usd
                     });
 
-                    _context.SaveChanges();
+                    _unitOfWork.Context.AddRange(added);
+                    _unitOfWork.Context.RemoveRange(deleted);
+
+                    _unitOfWork.Context.SaveChanges();
 
                     transaction.Commit();
 
