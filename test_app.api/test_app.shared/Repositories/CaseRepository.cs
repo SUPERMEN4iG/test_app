@@ -85,7 +85,7 @@ namespace test_app.shared.Repositories
 
         public CaseOpenResult OpenCaseTest(IEnumerable<CasesDrop> caseDrop)
         {
-            CasesDrop selected = caseDrop.RandomElementByWeight(x => (float)x.Chance);
+            CasesDrop selected = caseDrop.RandomElementByWeight(x => x.Chance);
 
             return CaseOpenResult.GenerateSuccessTest(new WinnerViewModel()
             {
