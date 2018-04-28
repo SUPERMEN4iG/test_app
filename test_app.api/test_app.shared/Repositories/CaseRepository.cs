@@ -90,7 +90,7 @@ namespace test_app.shared.Repositories
             return CaseOpenResult.GenerateSuccessTest(new WinnerViewModel()
             {
                 MarketHashName = selected.Skin.MarketHashName,
-                Price = selected.Skin.Price,
+                Price = (double)selected.Skin.Price,
                 Image = selected.Skin.Image,
                 Skin = selected.Skin
             }, selected.Chance.ToString());
@@ -143,7 +143,7 @@ namespace test_app.shared.Repositories
                     return CaseOpenResult.GenerateSuccess(new WinnerViewModel
                     {
                         MarketHashName = winner.Skin.MarketHashName,
-                        Price = winner.Skin.Price * 0.8M,
+                        Price = (double)winner.Skin.Price * 0.8,
                         Image = winner.Skin.Image,
                         Id = winner.Id,
                         DateCreate = winner.Skin.DateCreate,
