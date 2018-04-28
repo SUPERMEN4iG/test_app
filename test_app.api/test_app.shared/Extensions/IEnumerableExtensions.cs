@@ -7,9 +7,9 @@ namespace test_app.shared.Extensions
 {
     public static class IEnumerableExtensions
     {
-        public static T RandomElementByWeight<T>(this IEnumerable<T> sequence, Func<T, float> weightSelector)
+        public static T RandomElementByWeight<T>(this IEnumerable<T> sequence, Func<T, double> weightSelector)
         {
-            float totalWeight = sequence.Sum(weightSelector);
+            double totalWeight = sequence.Sum(weightSelector);
             double itemWeightIndex = new Random().NextDouble() * totalWeight;
 
 

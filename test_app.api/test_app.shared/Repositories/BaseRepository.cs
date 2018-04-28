@@ -15,6 +15,7 @@ namespace test_app.shared.Repositories
         void Add(T entity);
         void Delete(T entity);
         void Update(T entity);
+        void Update(params T [] entities);
     }
 
     public interface IRepositoryFactory

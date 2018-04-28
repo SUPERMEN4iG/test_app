@@ -345,13 +345,13 @@ namespace test_app.shared
                         {
                             Case = cases[index],
                             Skin = skins[0],
-                            Chance = new decimal(0.5),
+                            Chance = 0.5,
                         },
                         new CasesDrop()
                         {
                             Case = cases[index],
                             Skin = skins[1],
-                            Chance = new decimal(0.5),
+                            Chance = 0.5,
                         }
                     });
                     index++;

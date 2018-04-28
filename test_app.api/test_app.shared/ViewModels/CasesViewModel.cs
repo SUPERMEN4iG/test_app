@@ -17,7 +17,7 @@ namespace test_app.shared.ViewModels
 
     public class AdminSkinsViewModel : SkinsViewModel
     {
-        public decimal Chance { get; set; }
+        public double Chance { get; set; }
     }
 
     public class CasesViewModel

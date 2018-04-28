@@ -15,7 +15,7 @@ namespace test_app.shared.Data
         public Int64 SkinId { get; set; }
         public virtual Skin Skin { get; set; }
 
-        public Decimal Chance { get; set; }
+        public double Chance { get; set; }
 
         // Mapping
         internal class CasesDropConfiguration : DbEntityConfiguration<CasesDrop, Int64>
@@ -34,8 +34,8 @@ namespace test_app.shared.Data
                     .WithMany(c => c.CaseSkins)
                     .HasForeignKey(cs => cs.CaseId);
 
-                entity
-                    .Property(x => x.Chance).HasColumnType("decimal(9, 8)");
+                //entity
+                    //.Property(x => x.Chance).HasColumnType("decimal(9, 8)");
             }
         }
     }

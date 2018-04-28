@@ -9,7 +9,7 @@ namespace test_app.shared.ViewModels
     {
         public Int64 Id { get; set; }
 
-        public Decimal Chance { get; set; }
+        public double Chance { get; set; }
 
         public Skin Skin { get; set; }
     }
