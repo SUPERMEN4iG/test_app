@@ -8,9 +8,11 @@ namespace test_app.shared.ViewModels
     {
         public class TestOpenCaseTotalsViewModel
         {
-            public double TotalCasePrice { get; set; }
+            public decimal TotalCasePrice { get; set; }
 
-            public double TotalSkinPrice { get; set; }
+            public decimal TotalSkinPrice { get; set; }
+            
+            public decimal TotalMarginality { get; set; }
         }
 
         public TestOpenCaseTotalsViewModel Totals { get; set; } = new TestOpenCaseTotalsViewModel();

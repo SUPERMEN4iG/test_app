@@ -60,7 +60,7 @@
             <th scope="row">{{ skin.id }}</th>
             <td>{{ skin.marketHashName }}</td>
             <td>{{ skin.price | currency }}</td>
-            <td><input style="max-width: 250px;" type="number" step="0.01" class="form-control" [(ngModel)]="skin.chance"></td>
+            <td><input style="max-width: 250px;" type="number" step="0.000001" class="form-control" [(ngModel)]="skin.chance"></td>
             <td><button (click)="onRemoveSkin(skin)" type="button" class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
           </tr>
         </tbody>
@@ -85,6 +85,7 @@
         <h5>Case: <span [ngClass]="currentCaseStatistic.totals.totalCasePrice > currentCaseStatistic.totals.totalSkinPrice ? 'plus' : 'minus'">{{ currentCaseStatistic.totals.totalCasePrice | currency }}</span></h5>
         <h5>Skin: <span [ngClass]="currentCaseStatistic.totals.totalSkinPrice < currentCaseStatistic.totals.totalCasePrice ? 'plus' : 'minus'">{{ currentCaseStatistic.totals.totalSkinPrice | currency }}</span></h5>
         <h5>Income: <span [ngClass]="currentCaseStatistic.totals.totalIncome > 0 ? 'plus' : 'minus'">{{ currentCaseStatistic.totals.totalIncome | currency }}</span> </h5>
+        <h5>Marginality: <span [ngClass]="currentCaseStatistic.totals.totalMarginality > 0 ? 'plus' : 'minus'">{{ currentCaseStatistic.totals.totalMarginality | percent }}</span> </h5>
       </div>
 
       <h4>Details: </h4>

@@ -15,6 +15,7 @@ using test_app.shared.Data;
 using test_app.shared.Logic;
 using test_app.shared.Repositories;
 using test_app.shared.ViewModels;
+using test_app.shared.Extensions;
 
 namespace test_app.api_admin.Controllers
 {
@@ -159,15 +160,20 @@ namespace test_app.api_admin.Controllers
         public async Task<IActionResult> TestOpenCase(Int64 caseId, Int64 count)
         {
             var casea = _caseRepository.GetCaseSkins(caseId);
+            var caseDrops = casea.CaseSkins.ToList();
 
             List<CaseOpenResult> openResults = new List<CaseOpenResult>();
 
             for (int i = 0; i < count; i++)
             {
-                openResults.Add(_caseRepository.OpenCaseTest(casea.CaseSkins.AsEnumerable()));
+                var redd = _caseRepository.OpenCaseTest(caseDrops);
+                openResults.Add(redd);
             }
 
             var res = new TestOpenCaseViewModel();
+
+            res.Totals.TotalCasePrice = casea.Price * count;
+            res.Totals.TotalSkinPrice = openResults.Sum(x => x.Winner.Price);
 
             res.Result.AddRange(openResults
                 .GroupBy(x => ((WinnerViewModel)x.Winner).Skin)
@@ -179,9 +185,7 @@ namespace test_app.api_admin.Controllers
                 })
                 .OrderBy(x => x.Skin.Id)
                 .ToList());
-
-            res.Totals.TotalCasePrice = (double)casea.Price * count;
-            res.Totals.TotalSkinPrice = openResults.Sum(x => ((WinnerViewModel)x.Winner).Price * 0.8);
+            res.Totals.TotalMarginality = (100 - (res.Totals.TotalSkinPrice / res.Totals.TotalCasePrice * 100)) / 100;
 
             return Json(res);
         }

@@ -119,10 +119,8 @@ export class CasesEditComponent {
   onCaclulateChances() {
     this._caseService.caclulateChances(this.currentCase.id, this.margine).subscribe(
       (data) => {
-        let i = 0;
         var s = _.map(this.currentCase.skins, (skin) => {
-          skin.chance = data[i].chance;
-          i++;
+          skin.chance = _.findWhere(data, { id: skin.id }).chance;
           return skin;
         });
         this._notificationService.success("Recalculation was successful, please save", `Case ${this.currentCase.fullName} (${this._currencyPipe.transform(this.currentCase.price)})`);
