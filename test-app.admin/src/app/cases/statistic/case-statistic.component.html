@@ -1,4 +1,34 @@
 <div *ngIf="currentCase">
-  <h1>Case {{ currentCase.fullName }}</h1>
+  <h1><a [routerLink]="['../', 'edit']">Case {{ currentCase.fullName }}</a> - Statistic</h1>
+  <hr>
+  <div *ngIf="currentStatistic">
+    <h3>Итог:</h3>
+    <h4>Всего открытий: {{ currentStatistic.totalCount }}</h4>
+    <h4>Всего потрачено: {{ currentStatistic.sumCase | currency }}</h4>
+    <h4>Общая стоимость предметов (80% от Steam): {{ currentStatistic.sumSkin | currency }}</h4>
+    <h4>Текущая маржа: {{ currentStatistic.margine | percent:'1.1-3' }}</h4>
+
+    <h4>Details: </h4>
+    <table *ngIf="currentStatistic.drops.length > 0" class="table table-sm">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Market Hash Name</th>
+          <th>Выпало</th>
+          <th>Сумма</th>
+          <th>Шанс</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let stat of currentStatistic.drops | sort: '-count'">
+          <td>{{ stat.skin.id }}</td>
+          <td>{{ stat.skin.marketHashName }}</td>
+          <td>{{ stat.count }}</td>
+          <td>{{ stat.sum | currency }}</td>
+          <td>{{ stat.chance | percent:'2.2-3' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 

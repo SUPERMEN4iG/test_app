@@ -196,12 +196,20 @@ namespace test_app.api_admin.Controllers
         public IActionResult GetStatistic(Int64 caseId)
         {
             var winnersCount = _winnerRepository.Get(x => x.CaseId == caseId).Count();
-            var totalCase = new {
-                Count = winnersCount,
-                Sum = _caseRepository.Get(x => x.Id == caseId).FirstOrDefault().Price * winnersCount
-            };
+            var statCase = new StatisticViewModel();
+            statCase.TotalCount = winnersCount;
 
-            var winners = _winnerRepository
+            if (winnersCount > 0)
+            {
+                statCase.SumCase = _caseRepository.Get(x => x.Id == caseId).FirstOrDefault().Price * winnersCount;
+                statCase.SumSkin = _winnerRepository
+                    .Get(x => x.CaseId == caseId)
+                    .Include(x => x.Skin)
+                    .Sum(x => x.Skin.Price * 0.8M);
+                statCase.Margine = (100 - (statCase.SumSkin / statCase.SumCase * 100)) / 100;
+            }
+
+            statCase.Drops = _winnerRepository
                 .Get(x => x.CaseId == caseId)
                 .Include(x => x.Skin)
                 .Select(x => new
@@ -210,16 +218,16 @@ namespace test_app.api_admin.Controllers
                     x.State,
                     Skin = x.Skin,
                 })
-                .GroupBy(x => x.Skin, (key, g) => new
+                .GroupBy(x => x.Skin, (key, g) => new WinnerStatisticViewModel()
                 {
                     Skin = key,
-                    Count = g.Count(),
+                    Count = g.LongCount(),
                     Sum = g.Sum(p => p.Skin.Price),
-                    Chance = (float)g.Count() / winnersCount,
+                    Chance = (decimal)g.Count() / winnersCount,
                 })
                 .ToList();
 
-            return Json(winners);
+            return Json(statCase);
         }
     }
 }

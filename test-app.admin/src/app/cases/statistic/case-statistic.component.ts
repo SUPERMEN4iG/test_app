@@ -25,6 +25,7 @@ export class CasesStatisticComponent {
   private sub: any;
   id: number;
   currentCase;
+  currentStatistic;
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -48,6 +49,7 @@ export class CasesStatisticComponent {
               this._caseService.getStatistic(this.id).subscribe(
                 (data) => {
                   console.info(data);
+                  this.currentStatistic = data;
                 },
                 (err) => {
                   console.error(err);
