@@ -8,6 +8,8 @@ namespace test_app.shared.ViewModels
     {
         public Int64 Id { get; set; }
 
+        public bool IsAvalible { get; set; }
+
         public string StaticName { get; set; }
 
         public string FullName { get; set; }

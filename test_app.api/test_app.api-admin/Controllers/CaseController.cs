@@ -111,6 +111,7 @@ namespace test_app.api_admin.Controllers
             currentCase.FullName = caseData.FullName;
             currentCase.StaticName = currentCase.FullName.ToLower().Replace(' ', '-');
             currentCase.Price = caseData.Price;
+            currentCase.IsAvalible = caseData.IsAvalible;
 
             caseData.Skins.ForEach((skin) => {
                 var founded = currentCase.CaseSkins.FirstOrDefault(x => x.SkinId == skin.Id);

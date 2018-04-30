@@ -46,7 +46,6 @@ namespace test_app.shared.Repositories
                         CaseSkins = x.CaseSkins
                     })
                     .ToList()
-                    .Where(x => x.IsAvalible == true)
                     .GroupBy(x => x.Category,
                         (key, group) => new CaseCategoryViewModel()
                         {
@@ -54,6 +53,7 @@ namespace test_app.shared.Repositories
                             Cases = group.Select(c => new CasesViewModel()
                             {
                                 Id = c.Id,
+                                IsAvalible = c.IsAvalible,
                                 StaticName = c.StaticName,
                                 FullName = c.FullName,
                                 Image = c.Image,
@@ -117,6 +117,11 @@ namespace test_app.shared.Repositories
                     if (caseDrop.LongCount() == 0)
                     {
                         throw new Exception("case not have drop items");
+                    }
+
+                    if (!casea.IsAvalible)
+                    {
+                        throw new Exception("case not avalible now");
                     }
 
                     if (user.Balance < casea.Price)
