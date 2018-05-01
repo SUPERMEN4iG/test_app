@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { ErrorResponse } from '../Responses';
 
@@ -68,6 +69,24 @@ export class CasesService {
       .catch(this.handleError);
   }
 
+  getCategories() {
+    return this._http.get(`${this.apiEndPoint}getcategorydata`)
+      .map((x: any) => {
+        try {
+          const response = x;
+
+          if (!_.isObject(response)) {
+            throw new Error(response);
+          }
+
+          return response;
+        } catch (error) {
+          throw new Error(error);
+        }
+      })
+      .catch(this.handleError);
+  }
+
   getByCaseId(id) {
 
     var results = _.map(this.data, function(row) {
@@ -114,6 +133,20 @@ export class CasesService {
 
   saveCase(dataCase) {
     return this._http.post(`${this.apiEndPoint}savecase`, JSON.stringify(dataCase))
+      .map((x: any) => {
+        try {
+          const response = x;
+
+          return response;
+        } catch (error) {
+          throw new Error(error);
+        }
+      })
+      .catch(this.handleError);
+  };
+
+  createCase(dataCase) {
+    return this._http.post(`${this.apiEndPoint}createcase`, JSON.stringify(dataCase))
       .map((x: any) => {
         try {
           const response = x;

@@ -36,6 +36,7 @@ import { SkinsService } from './_services/data/skins.service';
 
 import { NgProgressModule, NgProgressInterceptor  } from 'ngx-progressbar';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DndModule } from 'ng2-dnd';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
       preventDuplicates: true,
     }),
     NgProgressModule,
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    DndModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

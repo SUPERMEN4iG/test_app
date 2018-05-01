@@ -1,3 +1,6 @@
+<div class="col-lg-12" style="text-align:right;">
+  <a class="btn btn-primary" [routerLink]="['../', 'create']">Create</a>
+</div>
 <div *ngIf="cases.length > 0">
   <div *ngFor="let caseCategory of cases">
     <h1>{{ caseCategory.category.fullName }}</h1>

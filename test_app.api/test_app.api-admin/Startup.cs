@@ -112,6 +112,7 @@ namespace test_app.api_admin
             services.AddScoped<IStockRepository, StockRepository>();
             services.AddScoped<ISkinRepository, SkinRepository>();
             services.AddScoped<ICaseDropRepository, CaseDropRepository>();
+            services.AddScoped<ICaseCategoryRepository, CaseCategoryRepository>();
             #endregion
 
             //services.AddWebSocketManager();

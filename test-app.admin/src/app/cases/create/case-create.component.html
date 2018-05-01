@@ -1,0 +1,122 @@
+<h1>Case creator</h1>
+
+<div class="b-skins">
+  <ul>
+    <li *ngFor="let skin of skins" class="skin row">
+        <div dnd-draggable [dragEnabled]="true" [dragData]="skin" (onDragStart)="onDragStart($event)" (onDragEnd)="onDragEnd($event)" style="display: flex; width: 100%;">
+          <div class="col-md-4 col-img">
+            <img [src]="skin.image" alt="">
+          </div>
+          <div class="col-md-8 col-text">
+            <span class="skin__name">{{ skin.marketHashName }}</span>
+            <span class="skin__price">{{ skin.price | currency }}</span>
+          </div>
+        </div>
+    </li>
+  </ul>
+</div>
+
+<div class="main-container row">
+  <div class="col-md-12">
+    <h2>Preview</h2>
+
+    <div class="col-12" style="padding: 0;">
+      <div class="col-md-8 b-preview">
+
+          <div class="b-case" *ngIf="currentCase != null">
+              <div #caseContainer class="b-case-header">
+                <div class="b-case-header__inner">
+                  <h2>{{ currentCase.fullName }}</h2>
+                  <img [ngClass]="currentCase.categoryName" [src]="currentCase.image" alt="">
+                  <div class="hover" [ngClass]="currentCase.caseClass"></div>
+                  <div class="price">{{ currentCase.price | currency }}</div>
+                  <button type="button" class="btn btn-outline-success btn-open-case">Open case</button>
+                </div>
+              </div>
+
+              <div class="b-case-drop">
+                <div class="b-case-drop__inner ">
+                  <h3>Items in {{ currentCase.fullName }}</h3>
+
+                  <div class="col-12 row droppable-skin" [ngClass]="isDropProgress ? 'dropped' : ''" dnd-droppable (onDropSuccess)="onSkinAdd($event)" (onDragEnter)="onDragEnter($event)">
+                    <div *ngIf="isDropProgress" class="dropdown-hover">
+                      <h3>Move here</h3>
+                    </div>
+                    <div dnd-sortable-container style="display: contents;" [sortableData]="currentCase.skins">
+                    <div  *ngFor="let skin of currentCase.skins; let i = index"
+                          dnd-sortable
+                          [dragEnabled]="true"
+                          [dragData]="skin"
+                          [sortableIndex]="i"
+                          class="b-item-drop col-6 col-md-4 col-lg-3">
+                        <div class="border">
+                          <div class="b-item-drop__inner">
+                              <h6>{{ skin.marketHashName }}</h6>
+                              <div class="hover"></div>
+                              <img [src]="skin.image" alt="Card image cap">
+                            </div>
+                        </div>
+                        <!-- <img class="card-img-top" [src]="skin.image" alt="Card image cap">
+                        <div class="card-block">
+                          <h4 class="card-title">{{ skin.marketHashName }}</h4>
+                        </div> -->
+                    </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-md-12 mb-2">
+    <h2>Settings</h2>
+    <div class="b-settings col-md-6">
+        <div class="form-group row">
+          <label for="case-name" class="col-2 col-form-label">Name</label>
+          <div class="col-10">
+            <input class="form-control" type="text" [(ngModel)]="currentCase.fullName" id="case-name">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="case-name" class="col-2 col-form-label">Image</label>
+          <div class="col-10">
+              <label class="custom-file">
+                <input type="file" id="file" class="custom-file-input" (change)="onFileChange($event)">
+                <span class="custom-file-control"></span>
+              </label>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="case-name" class="col-2 col-form-label">Price</label>
+          <div class="col-10">
+            <input class="form-control" type="number" step="0.01" [(ngModel)]="currentCase.price" id="case-name">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="case-category" class="col-2 col-form-label">Category</label>
+          <div class="col-10">
+            <select class="form-control" id="case-category" [(ngModel)]='currentCase.category' (change)="onCategoryChange(currentCase.category)">
+              <option value="-1">Add more</option>
+              <option *ngFor='let category of categories' [ngValue]='category'>{{category.fullName}}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-check">
+          <label class="form-check-label">
+            <input type="checkbox" class="form-check-input" [(ngModel)]='currentCase.isNeedRecalc'>
+            Recalc chances
+          </label>
+        </div>
+
+        <button (click)="onClickSave()" type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</div>

@@ -18,6 +18,8 @@ import { DataSharedModule } from '../app.shared.module';
 // Modal Component
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { CasesStatisticComponent } from './statistic/case-statistic.component';
+import { CaseCreateComponent } from './create/case-create.component';
+import { DndModule } from 'ng2-dnd';
 
 @NgModule({
   imports: [
@@ -27,12 +29,14 @@ import { CasesStatisticComponent } from './statistic/case-statistic.component';
     DataSharedModule,
     SortPipeModule,
     ModalModule.forRoot(),
+    DndModule,
   ],
   declarations: [
     CasesComponent,
     CasesListComponent,
     CasesEditComponent,
     CasesStatisticComponent,
+    CaseCreateComponent,
     SkinsAvailablePipe
   ],
   providers: [

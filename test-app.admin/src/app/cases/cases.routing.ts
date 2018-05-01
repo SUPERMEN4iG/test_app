@@ -6,6 +6,7 @@ import { CasesComponent } from './cases.component';
 import { CasesListComponent  } from './list/cases-list.component';
 import { CasesEditComponent } from './edit/case-edit.component';
 import { CasesStatisticComponent } from './statistic/case-statistic.component';
+import { CaseCreateComponent } from './create/case-create.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: 'list',
         component: CasesListComponent,
+      },
+      {
+        path: 'create',
+        component: CaseCreateComponent,
       },
       {
         path: ':id',

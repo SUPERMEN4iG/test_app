@@ -12,12 +12,14 @@ export class SkinsAvailablePipe implements PipeTransform {
           return {
             id: el.id,
             marketHashName: el.marketHashName,
+            image: (el.image != null) ? el.image : null,
             price: el.price
           };
         }), function(obj){ return !_.findWhere(_.map(filter, (el) => {
           return {
             id: el.id,
             marketHashName: el.marketHashName,
+            image: (el.image != null) ? el.image : null,
             price: el.price
           };
         }), obj); });

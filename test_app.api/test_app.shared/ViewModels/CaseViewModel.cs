@@ -8,6 +8,8 @@ namespace test_app.shared.ViewModels
     {
         public Int64 Id { get; set; }
 
+        public CaseCategoryDataViewModel Category { get; set; }
+
         public bool IsAvalible { get; set; }
 
         public string StaticName { get; set; }
@@ -23,6 +25,10 @@ namespace test_app.shared.ViewModels
         public int Index { get; set; }
 
         public string CategoryName { get; set; }
+
+        public bool IsCaseCreator { get; set; }
+
+        public bool IsNeedRecalc { get; set; }
 
         public List<AdminSkinsViewModel> Skins { get; set; }
     }
