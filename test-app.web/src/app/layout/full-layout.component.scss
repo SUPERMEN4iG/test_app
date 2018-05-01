@@ -227,7 +227,7 @@ header {
 
 footer {
   .footer__inner {
-    height: 200px;
+    height: 250px;
     position: relative;
     z-index: 2;
     text-align: center;
@@ -254,6 +254,10 @@ footer {
         float: right;
         // padding-right: 20px;
         width: 240px;
+
+        &.analyst {
+          opacity: 0.5;
+        }
       }
 
       .b-help {
